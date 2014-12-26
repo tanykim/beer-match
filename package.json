@@ -1,0 +1,30 @@
+{
+  "name": "Beer-Match",
+  "version": "0.0.1",
+  "description": "Beer Match is a web-based visualization project powered by data from Untapped (http://untappd.com). This code includes both server-side (based on NodeJS) and client-side. Beer Match is not affiliated or endorsed by Untapped.",
+  "main": "app.js",
+  "dependencies": {
+    "d3": "^3.4.13",
+    "express": "^4.9.7",
+    "fs": "^0.0.2",
+    "geocoder": "^0.2.0",
+    "http": "^0.0.0",
+    "jquery": "^2.1.1",
+    "moment": "^2.8.3",
+    "nconf": "^0.6.9",
+    "node-untappd": "^0.2.0",
+    "querystring": "^0.2.0",
+    "socket.io": "^1.1.0",
+    "timezoner": "^0.1.9",
+    "underscore": "^1.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tanykim/beer-match.git"
+  },
+  "author": "Tanyoung Kim",
+  "bugs": {
+    "url": "https://github.com/tanykim/beer-match/issues"
+  },
+  "homepage": "https://github.com/tanykim/beer-match"
+}
