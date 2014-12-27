@@ -1,0 +1,52 @@
+@charset "UTF-8";
+/*Montserrat*/
+/*@import url(http://fonts.googleapis.com/css?family=Lato:400,700);*/
+
+/* font size */
+@huge: 30px;
+@large: 20px;
+@middle: 16px;
+@small: 14px;
+@tiny: 12px;
+
+/* colors */
+@dark: #000;
+@light: #ccc;
+
+/*common */
+.bold {
+	font-weight: 700;
+}
+.link {
+	cursor: pointer;
+}
+.underline {
+	text-decoration: underline;
+}
+.disabled {
+	color: #999;
+}
+.unselectable {
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: default;
+}
+body {
+	margin: 0;
+	padding: 0;
+	/*'Open Sans',*/
+	font-family: Helvetica, arial, sans-serif;
+}
+
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	display: inline;
+}
+
+@import 'intro';
+@import 'vis';

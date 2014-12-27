@@ -12,7 +12,6 @@
     "jquery": "^2.1.1",
     "moment": "^2.8.3",
     "nconf": "^0.6.9",
-    "node-untappd": "^0.2.0",
     "querystring": "^0.2.0",
     "socket.io": "^1.1.0",
     "timezoner": "^0.1.9",

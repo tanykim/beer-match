@@ -1,0 +1,434 @@
+/* lines */
+@mainLine: #000;
+@visHeaderH: 40px; 
+
+.vis {
+	margin: 0;
+	padding: 0;
+}
+
+/* vis header */
+.vis-header-wrapper {
+	position: fixed;
+	top: 0;	
+	width: 100%;
+}
+.vis-header {
+	background-color: #e5e5e5;
+	width: 100%;
+	ul {
+		padding: @visHeaderH/4;	
+		display: table;
+	}
+	li {
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.pic {
+		width: @visHeaderH;
+		height: @visHeaderH;
+		border-radius: @visHeaderH/2;
+		-webkit-border-radius: @visHeaderH/2;
+		-moz-border-radius: @visHeaderH/2;
+		background-size: @visHeaderH;
+	}
+	.profile, .info {
+		font-size: @small;
+		padding: 0 @visHeaderH/4;
+	}
+	.info {
+		border-left: 1px solid #999;
+	}
+	.more, .more-expanded {
+		float: right;
+		height: @visHeaderH;
+	}
+	.more-expanded {
+		float: right;
+		background: #333;
+		color: #fff;
+		li {
+			padding: 0 @visHeaderH/6;
+		}
+	}
+}
+.vis-menu {
+	background: #666;
+	color: #fff;
+	line-height: @visHeaderH;
+	text-align: center;
+	width: 100%;
+	position: absolute;
+	bottom: @visHeaderH;
+	/*overflow: hidden;*/
+	li {
+		display: inline-block;
+	}
+	.item {
+		margin: 0 20px;
+		.link();
+	}
+	.selected {
+		.underline();
+	}
+}
+.vis-menu-dots {
+	margin: 0 auto;
+	width: 120px;
+	text-align: center;
+	li {
+		display: inline-block;
+	}
+	.item {
+	    width: 10px;
+	    height: 10px;
+	    -webkit-border-radius: 5px;
+	    -moz-border-radius: 5px;
+	    border-radius: 5px; 
+	    background-color: #efefef;
+	    border: 1px solid #000;
+	    margin: 0 4px;
+	    .link();
+	}
+	.selected {
+		background-color: #000;
+	}
+}
+.menu-toggle {
+	.link();
+}
+.vis-title-overlaid {
+	position: fixed;
+	top: @visHeaderH + @visHeaderH/2;
+	font-weight: 700;
+	font-size: @large;
+	margin-bottom: 1em;
+	padding-top: @visHeaderH/2;
+	background: #efefef;
+	padding-left: @visHeaderH/2;
+}
+
+/* contents */
+.vis-contents-wrapper {
+	/*background: #FFF;*/
+	width: 100%;
+	position: absolute;
+	margin-top: @visHeaderH + @visHeaderH/2;
+}
+.vis-contents {
+	background-color: #fff;
+	padding: @visHeaderH+@visHeaderH/2 @visHeaderH/2 @visHeaderH @visHeaderH/2 ;
+	box-sizing: border-box;
+	overflow: hidden;
+	border-bottom: 1px dashed #999;
+}	
+.vis-contents-title {
+	font-weight: 700;
+	font-size: @huge;
+	margin-bottom: 1em;
+	padding-top: @visHeaderH/2;
+	background: #efefef;
+	width: 100%;
+}
+.vis-contents-footer {
+	text-align: center;
+	min-height: @visHeaderH;
+	font-size: @large;
+}
+/*.vis-contents-main {
+	position: relative;
+	top: 56px;
+}*/
+
+/* count */
+.count {
+	width: 20%;
+	float: left;
+	.avg-checkin {
+		font-weight: 700;
+	}
+	.avg-count {
+		font-size: @huge;
+		font-weight: 700;
+	}
+}
+.calendar {
+	width: 80%;
+	float: right;
+	overflow: hidden;
+	background: #efefef;
+}
+.frequency {
+	width: 80%;
+	float: right;
+	overflow: hidden;	
+}
+
+/* categories */
+.categories {
+	width: 100%;
+	overflow: hidden;
+}
+/* ratings */
+.ratings-option {
+
+}
+.ratings-option-sub {
+	margin-top: 20px;
+}
+.score-average {
+	width: 100%;
+	text-align: center;
+}
+.score {
+	width: 100%;
+}
+
+/* favorite */
+.favorites-title {
+	text-align: center;
+	.name {
+		.bold();
+		font-size: @large;
+	}
+	.count {
+		font-size: @small;
+	}
+	.count-number {
+		.bold();
+	}
+}
+.favorites {
+	width: 100%;
+	overflow: hidden;
+}
+.favorites-beer {
+	width: 70%;
+	float: left;
+}
+.label-image {
+	border-radius: 20px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #666;
+	vertical-align: middle;
+	margin: 4px;
+}
+.label-image--selected {
+	border-width: 2px !important;
+	border-color: #000 !important;
+	margin: 3px !important;
+}
+.favorites-list {
+	width: 30%;
+	float: left;
+}
+.favorites-list-title {
+	background-color: #efefef;
+	font-weight: 700;
+	padding: 0.5em;
+}
+.favorites-list-beers {
+	border: 1px solid #efefef;
+	padding: 0.5em;
+}
+
+/* when */
+.day {
+	width: 30%;
+	margin: 0 auto;
+	/*background-color: #efefef;*/
+	float: left;
+}
+.hour {
+	width: 70%;
+	float: left;
+}
+.hour-block-total {
+	fill: #000;
+	stroke: none;
+}
+.hour-block-seg {
+	fill : #999;
+	stroke: none;
+}
+
+/* venue */
+.venue-list {
+	width: 30%;
+	float: left;
+}
+.venue-title {
+	width: 100%;
+	/*text-align: center;*/
+	.name {
+		font-size: @large;
+		font-weight: 700;
+	}
+	.desc {
+		font-size: @small;
+	}
+}
+.venue-name {
+	width: 100%;
+}
+.venue-detail {
+	width: 70%;
+	float: right;
+}
+.venue-map {
+	width: 100%;
+	height: 200px;
+}
+.venue-type, .venue-city {
+	width: 50%;
+	float: left;
+}
+
+
+/* d3 */
+path, line{
+  shape-rendering: geometricPrecision;
+}
+.axis text {
+	font-size: @tiny;
+}
+.axis .tick line {
+	stroke: #999;
+}
+.freq-label {
+	text-anchor: end;
+	font-size: @tiny;	
+}
+.freq-line-avg {
+	stroke: #000;
+	stroke-width: 2;
+}
+.freq-text-avg {
+	text-anchor: middle;
+}
+.freq-block {
+	stroke: #000;
+	stroke-width: 1px;
+	stroke-opacity: 1;
+}
+.freq-label-block {
+	text-anchor: middle;
+	font-size: @tiny;
+}
+
+.cal-y-label {
+	text-anchor: end;
+	font-size: @tiny;
+}
+.cal-x-year {
+	font-size: @tiny;
+	color: #000;
+	font-weight: 700;
+}
+.cal-x-month {
+	font-size: @tiny;
+	color: #666;
+}
+.cal-divide {
+	stroke: #000;
+	stroke-width: 1;
+	fill: none;
+}
+.cal-day {
+	stroke: none;
+	/*fill: #999999;*/
+}
+.cal-week {
+	stroke: none;
+	fill: #666;
+	display: none;
+}
+.cal-year {
+	stroke: #000;
+	stroke-opacity: 0.5;
+	stroke-width: 2;
+	fill: #cc0000;
+	opacity: 0.3;
+}
+.cal-day--before {
+	stroke: none;
+	fill: #e5e5e5;	
+}
+.cal-tooltip {
+	fill: #000;
+	font-size: @tiny;
+}
+
+.ratings-arc-over {
+	font-size: @small;
+	text-anchor: middle;
+}
+
+.fav-divide {
+	stroke: #999;
+	stroke-width: 1;
+}
+.fav-radial-0 {
+	stroke: #999;
+	stroke-width: 1;
+	fill: none;
+}
+.fav-radial-1 {
+	stroke: #e5e5e5;
+	stroke-width: 1;
+	fill: none;
+}
+.fav-radial-y {
+	stroke: #999;
+	stroke-dasharray: 5, 3;
+	stroke-width: 1;	
+}
+.fav-radial-y-tick {
+	text-anchor: middle;
+}
+.fav-score-text {
+	font-size: @small;
+}
+.fav-beer-img {
+	stroke: #999;
+	stroke-width: 1;
+}
+.fav-beer-line {
+	stroke: #000;
+	stroke-width: 2;
+}
+.fav-beer-text {
+	font-size: @large;
+	.unselectable();
+}
+.fav-beer-text--small, .fav-beer-text-count {
+	font-size: @small;
+	fill: #999;
+	.unselectable();
+}
+.fav-beer-dot-text {
+	font-size: @small;
+	text-anchor: middle;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.ratings-avg {
+	stroke: #000;
+	stroke-width: 2;
+
+}
+.period-path {
+	stroke: #000;
+	stroke-width: 2px;
+	fill: rgba(0, 0, 0, .5);
+}
+.period-dots {
+	stroke: #000;
+	stroke-width: 2px;
+	fill: #fff;
+}
