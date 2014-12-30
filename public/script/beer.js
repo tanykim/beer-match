@@ -1,4 +1,4 @@
-define(['jquery', 'momentTZ', 'underscore', 'vis'], function ($, moment, _, Vis) {
+define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 
 	var timeConvert = {
 		timezoned: function (t, timezone) {

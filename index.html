@@ -33,8 +33,10 @@
 </div>
 
 <!-- match -->
-<div class="vis-contents-wrapper js-match-wrapper" style="display:none;">
-	Two users data come here
+<div class="vis js-vis-match" style="display:none;">
+	<div class="vis-contents-wrapper">
+		Two users data come here
+	</div>
 </div>
 
 <!-- visualization -->
@@ -137,29 +139,7 @@
 
 <!--header & menu -->
 <div class="vis-header-wrapper">
-<div class="vis-header">
-	<ul class="more js-header-open">
-		<li class="link">open</li>
-	</ul>
-	<ul class="more-expanded js-more" style="display:none;">
-		<li class="link js-header-close">close</li>
-		<li class="link underline js-link-extra" data-value="about">About the project</li>
-		<li class="link underline js-link-extra" data-value="contact">Contact me</li>
-		<li class="link underline js-signout js-header-close">Sign out</li>
-		<li class="link underline js-Add">Add another user</li>
-	</ul>
-	<ul>
-		<li class="js-user-pic pic"></li>
-		<li class="profile">
-			<span class="js-user-name bold"></span>
-			<span class="js-address location"></span>
-		</li>
-		<li class="info">Drinking since <span class="js-since bold"></span></li>
-		<li class="info"><span class="js-checkin bold"></span> Check-ins</li>
-		<li class="info"><span class="js-beer bold"></span> Distinctive Beers</li>
-	</ul>
-</div>
-<div class="vis-menu js-vis-menu" style="display:none">
+<div class="vis-menu js-vis-menu" style="display:none;">
 	<ul>
 		<li class="item js-slide selected js-vis-menu-0" data-value="0">How much do I drink?</li>
 		<li class="item js-slide js-vis-menu-1" data-value="1">What matters?</li>
@@ -183,6 +163,29 @@
 </div> <!--header wrapper -->
 </div> <!--vis-->
 
+<div class="js-vis js-vis-match vis-header" style="display:none;">
+	<ul class="more js-header-open">
+		<li class="link">open</li>
+	</ul>
+	<ul class="more-expanded js-more" style="display:none;">
+		<li class="link js-header-close">close</li>
+		<li class="link underline js-link-extra" data-value="about">About the project</li>
+		<li class="link underline js-link-extra" data-value="contact">Contact me</li>
+		<li class="link underline js-signout js-header-close">Sign out</li>
+		<li class="link underline js-Add">Add another user</li>
+	</ul>
+	<ul>
+		<li class="js-user-pic pic"></li>
+		<li class="profile">
+			<span class="js-user-name bold"></span>
+			<span class="js-address location"></span>
+		</li>
+		<li class="info">Drinking since <span class="js-since bold"></span></li>
+		<li class="info"><span class="js-checkin bold"></span> Check-ins</li>
+		<li class="info"><span class="js-beer bold"></span> Distinctive Beers</li>
+	</ul>
+</div>
+
 <!-- about the project -->
 <div class="extra-wrapper js-extra" style="display:none;">
 	<div class="extra js-extra">
@@ -197,8 +200,20 @@
 <!-- backbone render templates -->
 <script type="text/template" id="intro-start">
 	<div class="intro-status"><%= warning %></div>
+	<% if (friends) { %>
+	<select class="js-friend-select">
+		<option>Select a user from friends.</option>
+	<%  _.each(friends, function (f) { %>
+        <option value="<%= f %>"><%= f %></option>
+  	<% }); %>
+  	</select>
+  	<% } %>
 	<div class="intro-name"><%= desc %></div>
-	<input type="text" class="intro-input js-intro-input" value="<%= userId %>" <%= userId ? ' disabled' : 'autofocus' %> >
+	<input type="text" class="intro-input js-intro-input" value="<%= userId %>" <%= userId ? ' disabled' : '' %> >
+	<% if (prevUser) { %>
+	<div class="js-single link underline">Explore <%= prevUser %> only</div>
+  	<% } %>
+	
 </script>
 
 <script type="text/template" id="intro-userinfo">
@@ -303,7 +318,18 @@
                 <option value="Pacific/Kiritimati">(UTC+14:00) Kiritimati</option>
 			</select>
 		</div>
-		<div class="js-start <%= address ? 'link underline' : 'disabled' %>">Start Exploration</div>
+		<div class="js-start <%= address ? 'link underline' : 'disabled' %>">Download Data</div>
 </script>
+
+<script type="text/template" id="intro-option">
+	<div class="intro-status"><%= msg %></div>
+	<div class="intro-user">
+		<div class="pic" style="background-image: url(<%= avatar %>)"></div>
+		<div class="name"><%= username %></div>
+	</div>
+	<div class="js-single link underline">Explore <%= username %>&#39;s taste </div>
+	<div class="js-match link underline">See the match with another person </div>	
+</script>
+
 
 </body>

@@ -157,7 +157,12 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 		
 	};
 
+	var startVisMatch = function (m) {
+		console.log('---match view');
+	};
+
 	return {
-		startVis: startVis
+		startVis: startVis,
+		startVisMatch: startVisMatch
 	};
 });

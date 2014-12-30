@@ -33,7 +33,6 @@ var credentials = {
 untappd.setClientId(credentials.clientId);
 untappd.setClientSecret(credentials.clientSecret);
 
-//emit profile
 function emitProfile(userinfo, timezone) {
 	io.emit('profile', {
 		userinfo: userinfo,
@@ -50,7 +49,8 @@ function getTimezone(user) {
 		username: user.first_name + ' ' + user.last_name,
 		since: user.date_joined,
 		beerCount: user.stats.total_beers,
-		checkinCount: user.stats.total_checkins
+		checkinCount: user.stats.total_checkins,
+		friendCount: user.stats.total_friends
 	};
 
 	geocoder.geocode(userinfo.address, function (err, data) {
@@ -81,15 +81,14 @@ function getTimezone(user) {
 
 function getUserFeed(id, data) {
 
-	// var userId = data.userId;
 	var userinfo = data.userinfo;
 	var userId = userinfo.userId;
 	console.log('userid----', userId);
 	var checkins = [];
 
 	//max 50 feeds per call
-	var apiCallsNeeded = Math.ceil(userinfo.checkinCount / 50);
-	var apiCallCount = 0;
+	var feedCallsNeeded = Math.ceil(userinfo.checkinCount / 50);
+	var feedCallCount = 0;
 
 	function callUserFeedAPI(id) {
 
@@ -98,17 +97,16 @@ function getUserFeed(id, data) {
 			if (obj && obj.response && obj.response.checkins && obj.response.checkins.items) {
 				checkins.push(obj.response.checkins.items);
 				if (obj.response.pagination.max_id) {
-					//consold log print twice
+					//FIXME: often called twice
 					console.log('feed api call---', id);
-					apiCallCount = apiCallCount + 1;
-					io.emit('progress', { total: apiCallsNeeded, count: apiCallCount });
+					feedCallCount = feedCallCount + 1;
+					io.emit('progress', { total: feedCallsNeeded, count: feedCallCount });
 					callUserFeedAPI(obj.response.pagination.max_id);
-					prevId = obj.response.pagination.max_id;
 				} else {
 					var all = { userinfo: userinfo, timezone: data.name, checkins: _.flatten(checkins) };
 					fs.writeFileSync('public/users/' + userId + '.json', JSON.stringify(all));
 					console.log('---file written');
-					io.emit('success', { userId: userId, data: all });
+					io.emit('success', { data: all });
 				}
 			}
 			else {
@@ -117,7 +115,6 @@ function getUserFeed(id, data) {
 			}
 		}, userId, 50, id);
 	}
-
 	callUserFeedAPI();
 }
 
@@ -149,18 +146,64 @@ function getUserInfo(userId) {
 	}
 }
 
+function getFriendsList(userId, count) {
+
+	console.log('----friends', userId, count);
+
+	//max 25 feeds per call, upto 100 friends
+	var friendCallsNeeded = Math.min(count, 100);
+	var friendCallCount = 0;
+
+	var friends = [];
+
+	function callFriendsFeedAPI(offset) {
+	  	untappd.userFriends(function (err,obj) {
+			if (obj && obj.response && obj.response.items && obj.response.count > 0) {
+				friends.push(_.pluck(_.pluck(obj.response.items, 'user'), 'user_name'));
+				friendCallCount = friendCallCount + 25;
+				if (friendCallCount < friendCallsNeeded) {
+					console.log('----', offset);
+					callFriendsFeedAPI(friendCallCount);
+				}
+				else {
+					io.emit('friends', { friends: _.flatten(friends).sort() });
+				}
+			}
+		}, userId, 25, offset);
+	}
+	callFriendsFeedAPI();
+}
+
+function checkFileExists(users) {
+	var u0 = fs.existsSync('public/users/' + users[0] + '.json') ? true : false; 	
+	var u1 = fs.existsSync('public/users/' + users[1] + '.json') ? true : false;
+	if (u0 && u1) {
+		console.log('---both file exist');
+		io.emit('pairDataExist', { users: users });
+	} else {
+		io.emit('error', { error_detail: 'No previous data exist. Please restart.' });
+	}
+}
+
 io.on('connection', function (socket) {
 	socket.on('userId', function (data) {
-		console.log(data);
+		console.log('userId---', data);
     	getUserInfo(data.userId.toLowerCase());
   	});
+  	socket.on('pair', function (data) {
+  		console.log('pair---', data);
+  		checkFileExists(data.users);
+  	});
   	socket.on('timezone', function (data) {
-  		console.log(data);
+  		console.log('timezone---', data);
   		getUserFeed(undefined, data);
-  	})
+  	});
+  	socket.on('friends', function (data) {
+  		console.log('friends---', data);
+  		getFriendsList(data.userId.toLowerCase(), data.count);
+  	});
   	socket.on('signout', function (data) {
   		console.log('singout---', data);
-  		//do actions
   		io.emit('signout', { userId: data.userId });
-  	})
+  	});
 });
