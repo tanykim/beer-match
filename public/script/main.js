@@ -15,22 +15,25 @@ require.config({
         underscore: '../bower_components/underscore/underscore',
         d3: '../bower_components/d3/d3',
         moment: '../bower_components/moment/moment',
+        momentTZ: '../bower_components/moment-timezone/moment-timezone',
         socketio: '../socket.io/socket.io',
-        beer: 'beer'
+        beer: 'beer',
+        vis: 'vis'
   }
 
 });
- 
+
 require([
     'jquery',
     'underscore',
     'd3',
     'moment',
     'socketio',
-    'beer'
-], function ($, _, d3, moment, io, Beer)  {
+    'beer',
+    'vis'
+], function ($, _, d3, moment, io, Beer, Vis) {
 
-    //test
+    /*test
     console.log('---test');
     // console.log(getDistance(3, 3, 0, 0));
     function getCos(v) {
@@ -48,107 +51,42 @@ require([
         return (-1 * (lenA * lenA) + lenB * lenB + lenC * lenC) / (2 * lenB * lenC);
     }
     console.log(getCos([3, 0]));
-
+    */
 
     //communication with server
     var socket = io.connect('http://localhost:8080');
 
-    function putIntroUserInfo(data) {
+    function initVis(data, vis) {
 
-        function callStart() {
-            $('.js-start').show().removeClass('disabled').addClass('link underline')
-                .click(function() {
-                    window.history.pushState('object or string', 'Title', userinfo.userId);
-                    $(this).hide();
-                    socket.emit('timezone', {
-                        userinfo: userinfo,
-                        name: newTimezone ? newTimezone : data.timezone.name
-                    });
-            });     
-        }
-
-        var userinfo = data.userinfo;
-
-        //show and hide
-        $('.js-intro-status').html('We found you!');
-        $('.js-intro-enter').hide();
-        $('.js-intro-user').show();
-            
-        $('.js-user-pic').css('background-image', 'url(' + userinfo.avatar + ')');
-        $('.js-user-name').html(userinfo.username);
-        if (userinfo.address) {
-            $('.js-location').html('from ' + userinfo.address);
-            $('.js-timezone-noData').hide();
-            $('.js-timezone-data-id').html(data.timezone.name +
-                ' (UTC' + (data.timezone.offset >= 0 ? '+' : '') + data.timezone.offset/3600 + 'h)');
-            callStart();
-        } else {
-            $('.js-location').hide();
-            $('.js-timezone-data').hide();
-            $('.js-timezone-list').show();
-        }
-
-        //timezone select
-        var newTimezone;
-        $('.js-timezone-switch').click(function() {
-            $('.js-timezone-list').show();
-        });
-        $('.js-timezone-select').change(function() {
-            console.log('----', $(this).val());
-            newTimezone = $(this).val();
-            callStart();
-        });
-    }
-
-    function initIntroUserInfo(data, vis) {
-
-        function createBeerData(data, callback) {       
+        function createBeerData(data, callback) {
             var beer = new Beer(data.userinfo, data.timezone, data.checkins);
             callback(beer);
         }
 
         createBeerData(data, function (b) {
             window.history.pushState('object or string', 'Title', b.userId);
-            b.startVis();
+            $('.js-intro').hide();
+            $('.js-vis').show();
+            Vis.startVis(b);
         });
     }
 
-    function getJSONfile(userId) {
-        $.ajax({
-            url: '/users/' + userId + '.json'
-        }).done(function(data) {
-            initIntroUserInfo(data, true);
-        });
-    }
-
-    //intro interaction functions
-    function resetInputBox() {
-            $('.js-intro-input').removeAttr('disabled').val('');
-            $('.js-intro-input').focus();       
-        window.history.pushState('object or string', 'Title', '/');     
-    }
-    function resetIntro() {
-        $('.js-intro-user').hide();
-        $('.js-intro-enter').show();
-        $('.js-location').show();
-        $('.js-timezone-data').show();
-        $('.js-timezone-noData').show();
-        $('.js-timezone-list').hide();
-    }
-
-    //FIXME for testing
-    var testMode = false;
-    if (testMode) {
-        getJSONfile('gregavola');
-    }
+    var introMsgs = {
+        init: 'Enter your UNTAPPD user name',
+        diffName: 'Try a different name',
+        shortInput: 'Should be at least 5 characters',
+        userIdCheck: 'Checking user name...',
+    };
 
     //check url first
     var urlParts = window.location.href.split('/');
     var userId = urlParts[urlParts.length-1];
     if (userId) {
-        $('.js-intro-status').html('...');
-        $('.js-intro-input').attr('value', userId);
+        renderIntro(introMsgs.init, introMsgs.userIdCheck, userId);
         socket.emit('userId', { userId: userId });
+    }
+    else {
+        renderIntro(introMsgs.init, '', '');
     }
 
     //text input
@@ -165,58 +103,96 @@ require([
     }).keydown(function(event) {
         if (event.keyCode == 13) {
             //at least five haracters
-            if ($(this).val().length < 5) {
-                $('.js-intro-status').html('Should be at least 5 characters.' +
-                    '<br/> Try a different name.');
-                resetInputBox();
+            var userId = $(this).val();
+            if (userId.length < 5) {
+                renderIntro(introMsgs.diffName, introMsgs.shortInput);
             } else {
-                socket.emit('userId', { userId: $(this).val() });
-                $(this).attr('disabled', 'disabled');
-                $('.js-intro-status').html('...');
+                renderIntro(introMsgs.init, introMsgs.userIdCheck, userId);
+                socket.emit('userId', { userId: userId });
             }
         }
     });
+
+    function renderIntro(desc, warning, userId) {
+        var template = _.template($('#intro-start').html());
+        $('.js-intro-content').html(template({ desc: desc, warning: warning, userId: userId }));﻿
+    }
+
+    function renderUserInfo(data) {
+
+        var template = _.template($('#intro-userinfo').html());
+        var userinfo = data.userinfo;
+        var timezone = 'No address/timezone info available';
+        if (userinfo.address) {
+            timezone = data.timezone.name +
+                ' (UTC' + (data.timezone.offset >= 0 ? '+' : '') +
+                data.timezone.offset/3600 + 'h)<br/>' +
+                'If it\'s not correct, please <span class="link underline js-timezone-switch">choose another timezone.</span>'
+        }
+        $('.js-intro-content').html(template({
+            avatar: userinfo.avatar,
+            username: userinfo.username,
+            address: userinfo.address,
+            timezone: timezone
+        }));﻿
+
+        //timezone select
+        $('.js-timezone-switch').click(function() {
+            $('.js-timezone-list').show();
+        });
+        $('.js-timezone-select').change(function() {
+            var newTimezone = $(this).val();
+            $('.js-start').removeClass('disabled').addClass('link underline')
+                .click(function() {
+                    socket.emit('timezone', {
+                        userinfo: data.userinfo,
+                        name: newTimezone ? newTimezone : data.timezone.name
+                    });
+            });
+        });
+    }
 
     //receive data from the server
     socket.on('dataExist', function (data) {
         userId = data.userId;
         console.log('---json exists');
-        getJSONfile(data.userId);
+        $.ajax({
+            url: '/users/' + userId + '.json'
+        }).done(function(data) {
+            initVis(data, true);
+        });
     });
 
     socket.on('error', function (data) {
         console.log(data);
-        $('.js-intro-status').html(data.error_detail +
-            '<br/> Try a different name.');
-        resetInputBox();
+        renderIntro(introMsgs.diffName, data.error_detail);
     });
 
     socket.on('profile', function (data) {
         $('.js-intro-status').html('');
-        putIntroUserInfo(data);
+        renderUserInfo(data);
     });
 
     socket.on('progress', function (data) {
-        $('.js-intro-status').html(data.count + '/' + data.total);
+        $('.js-start').html(data.count + '/' + data.total);
     });
 
     socket.on('success', function (data) {
         userId = data.userId;
         console.log(data.userId);
         console.log(data.data);
-        initIntroUserInfo(data.data);
+        initVis(data.data);
     });
 
     //sign out
     $('.js-signout').click(function() {
         socket.emit('signout', { userId: userId });
     });
-    socket.on('signout', function (data) {      
-        $('.js-vis').hide();        
+    socket.on('signout', function (data) {
+        $('.js-vis').hide();
         $('.js-intro').show();
-        $('.js-intro-status').html(data.userId.toUpperCase() + ' is safely signed out!');
-        resetIntro();
-        resetInputBox();
+        window.history.pushState('object or string', 'Title', '/');
+        renderIntro(introMsgs.diffName, 'Safely signed out!');
     });
 
     //about and contact

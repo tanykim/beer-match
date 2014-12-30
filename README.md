@@ -33,6 +33,13 @@ $ cp settings.local settings.json
 
 #### 3. Create a CSS file
 
+> Less is needed. If you don't have Less installed yet, please install this first:
+
+```
+$ sudo npm install -g less
+```
+Then
+
 ```
 $ lessc less/style.less public/style/style.css
 ```
@@ -42,13 +49,13 @@ $ lessc less/style.less public/style/style.css
 > Bower is needed. If you don't have Bower installed yet, please install this first:
 
 ```
-$ sudo install -g bower
+$ sudo npm install -g bower
 ```
 Then go to the public folder and install necessary libraries.
 
 ```
 $ cd public
-$ sudo install bower install d3 moment-timezone moment underscore jquery
+$ bower install d3 moment-timezone moment underscore jquery
 ```
 
 ## Start the server

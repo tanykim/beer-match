@@ -90,10 +90,9 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 	var startVis = function(b) {
 
 		//view change
-		$('.js-intro').hide();
-		$('.js-vis').show();
 		$('.js-vis-svg').empty();
 
+		
 		//header
 		putProfile(b.avatar, b.username, b.address, b.checkinCount, b.beerCount, b.since);
 		// console.log(b.avgUnit);
@@ -152,9 +151,10 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 		var w3 = $('.js-venue-city').width();
 		Where.putVenues(venues, w1, w2, w3);
 		
+		*/
 		//call interaction
 		callInteraction();
-		*/
+		
 	};
 
 	return {

@@ -1,4 +1,4 @@
-define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, moment, _, Vis) {
+define(['jquery', 'momentTZ', 'underscore', 'vis'], function ($, moment, _, Vis) {
 
 	var timeConvert = {
 		timezoned: function (t, timezone) {
@@ -55,7 +55,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 			var count = { day: 0, week: 0, month: 0 };
 			if (!_.isUndefined(byDay[dayFormatted])) {
 				count.day = byDay[dayFormatted];
-			} 
+			}
 			if (!_.isUndefined(byWeek[dayId.week])) {
 				count.week = byWeek[dayId.week];
 			}
@@ -72,7 +72,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 		};
 
 		var frequency = _.map([byDay, byWeek, byMonth], function (unit) {
-			
+
 			//max 10 slots, include last dummy slot
 			var maxCount = _.max(unit);
 			var gap = Math.ceil(Math.ceil(maxCount / 10) * 10 / 10);
@@ -116,7 +116,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 		var maxCount = {};
 
 		function getGroupedRatingList(obj, key) {
-			var allList = _.map(_.groupBy(_.map(checkins, function (d) { 
+			var allList = _.map(_.groupBy(_.map(checkins, function (d) {
 					var subObj;
 					if (obj === 'beer') {
 						subObj = 'beer_' + key;
@@ -164,7 +164,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 
 			function sortList(by) {
 				var sorted = _.sortBy(allList, function (d) {
-					return d[by]; 
+					return d[by];
 				});
 				if (by !== 'name') {
 					sorted.reverse();
@@ -174,8 +174,8 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 					var arr = [ d.name, { order: i, accCount: acc }];
 					acc = acc + d.count;
 					return arr;
-				}));	
-			}		
+				}));
+			}
 			var sortedVal = _.object(_.map(['rating', 'count', 'name'], function (by) {
 				return [by, sortList(by)];
 			}));
@@ -188,7 +188,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 				 	rating: d.rating,
 				 	beers: d.beers,
 				 	order: {
-				 		rating: sortedVal.rating[d.name].order, 
+				 		rating: sortedVal.rating[d.name].order,
 				 		count: sortedVal.count[d.name].order,
 				 		name: sortedVal.name[d.name].order
 				 	},
@@ -252,7 +252,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 		if (!_.isEmpty(currentList)) {
 			lastScoreIds = _.pluck(currentList[currentList.length - 1].list, 'bid');
 		}
-		
+
 		var list = _.map(_.groupBy(_.filter(checkins, function (d) {
 				return d.rating_score === score && !_.contains(lastScoreIds, d.beer.bid);
 			}), function (d) {
@@ -277,7 +277,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 	}
 
 	function getFavorites(checkins, ratings) {
-		
+
 		var loves = [];
 		var highest = _.max(_.pluck(checkins, 'rating_score'));
 		var highCount = 0;
@@ -305,7 +305,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 		}
 
 		//beers drank most
-		var mostCount = _.max(_.countBy(_.pluck(checkins, 'beer'), function (d) { 
+		var mostCount = _.max(_.countBy(_.pluck(checkins, 'beer'), function (d) {
 				return d.bid;
 			}));
 		var mostList = _.map(_.filter(_.map(_.groupBy(checkins, function (d) {
@@ -363,7 +363,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 			}), function (d, i) {
 				var byDayObj = _.countBy(_.pluck(d, 'day'));
 				var byDay = _.map(_.range(7), function (i) {
-						return byDayObj[i] ? byDayObj[i]: 0; 
+						return byDayObj[i] ? byDayObj[i]: 0;
 					});
 				var total = _.reduce(_.values(byDay), function (memo, num) {
 						return memo + num;
@@ -382,7 +382,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 				return d.points;
 			}), function (d, key) {
 				var lanLng = key.split(':');
-				return { latitude: lanLng[0], longitude: lanLng[1], value: d};			
+				return { latitude: lanLng[0], longitude: lanLng[1], value: d};
 			}), function (d) {
 				return d.value;
 			}).reverse();
@@ -414,7 +414,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 				}
 				return type;
 			}), 'undefined'), function (d, key) {
-				return [key, 
+				return [key,
 					d.length,
 					d[0].venue.venue_icon.sm
 				];
@@ -433,7 +433,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 				var venuesCount = _.size(_.unique(_.map(d, function (d) {
 						return d.venue.venue_id;
 					})));
-				return [key, 
+				return [key,
 					d.length,
 					venuesCount
 				];
@@ -458,10 +458,10 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 					type = primary[0].category_name;
 				}
 				var city = getCityName(d[0].venue.location);
-				var scoreAvg = getScoreAvg(d); 
+				var scoreAvg = getScoreAvg(d);
 				return {
-						id: d[0].venue.venue_id, 
-						name: d[0].venue.venue_name, 
+						id: d[0].venue.venue_id,
+						name: d[0].venue.venue_name,
 						count: d.length,
 						lat: d[0].venue.location.lat,
 						lng: d[0].venue.location.lng,
@@ -474,7 +474,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 			}), function (d) {
 				return d.count;
 			}).reverse().slice(0, 10);
-		
+
 		return {
 			name: venueNames,
 			type: venueTypes,
@@ -485,7 +485,7 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 	var beer = function (userinfo, timezone, checkins) {
 
 		var timezoned = timeConvert.timezoned(userinfo.since, timezone);
-		
+
 		//---from user info
 		this.avatar = userinfo.avatar;
 		this.userId = userinfo.userId;
@@ -493,8 +493,8 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 		this.address = userinfo.address;
 		var since = timeConvert.userinfo(timezoned);
 		this.since = since;
-		
-		//--count 
+
+		//--count
 		var checkinCount = userinfo.checkinCount;
 		var avgCount = _.map(['days', 'weeks', 'months'], function (unit) {
 			var count = moment().diff(moment(since, 'MMM d, YYYY'), unit, true);
@@ -515,9 +515,9 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 		//ratings
 		this.scoreAvg = getScoreAvg(checkins);
 		var ratings = getRatings(checkins);
-		this.ratingsList = ratings.list; 
-		this.maxCount = ratings.maxCount;	
-		
+		this.ratingsList = ratings.list;
+		this.maxCount = ratings.maxCount;
+
 		//beer list
 		this.beerCount = userinfo.beerCount;
 		this.beerList = getFavorites(checkins, this.ratingsList);
@@ -532,11 +532,6 @@ define(['jquery', 'lib/moment-timezone', 'underscore', 'vis'], function ($, mome
 		//by venue
 		this.loationList = getLocationList(checkins);
 		this.venues = getVenueList(checkins);
-
-		this.startVis = function() {
-			console.log('----start vis');
-			Vis.startVis(this);
-		};
 	};
 	return beer;
 });

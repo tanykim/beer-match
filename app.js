@@ -152,14 +152,6 @@ function getUserInfo(userId) {
 io.on('connection', function (socket) {
 	socket.on('userId', function (data) {
 		console.log(data);
-		//two users comparison
-        // if (data.userId.indexOf('-') === -1) {
-        // 	data.userId.toLowerCase()
-        //     socket.emit('userId', { userId: userId });
-        // }
-        // //one user
-        // else {
-
     	getUserInfo(data.userId.toLowerCase());
   	});
   	socket.on('timezone', function (data) {
