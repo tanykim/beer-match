@@ -237,23 +237,6 @@ require([
     var urlParts = window.location.href.split('/');
     var userId = urlParts[urlParts.length-1];
 
-    //FIXME: temporary
-    // if (userId === 'timm3h+gregavola') {
-    //      $.ajax({
-    //         url: '/users/timm3h.json'
-    //     }).done(function (d1) {
-    //         $.ajax({
-    //             url: '/users/gregavola.json'
-    //         }).done(function (d2) {
-    //             // initVisMatch(d);
-    //             $('.js-intro').hide();
-    //             $('.js-vis-match').show();
-    //             var m = new Match([d1, d2]);
-    //             Vis.startVisMatch([d1, d2]);
-    //         });
-    //     });       
-    // }
-    // else 
     if (userId.indexOf('+') > -1) {
         console.log('1---two users');
         //FIXME: loading needed
