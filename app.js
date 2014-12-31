@@ -159,7 +159,10 @@ function getFriendsList(userId, count) {
 	function callFriendsFeedAPI(offset) {
 	  	untappd.userFriends(function (err,obj) {
 			if (obj && obj.response && obj.response.items && obj.response.count > 0) {
-				friends.push(_.pluck(_.pluck(obj.response.items, 'user'), 'user_name'));
+				var fList = _.map(obj.response.items, function (d) { 
+					return d.user.user_name.toLowerCase();
+				});
+				friends.push(fList);
 				friendCallCount = friendCallCount + 25;
 				if (friendCallCount < friendCallsNeeded) {
 					console.log('----', offset);

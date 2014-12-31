@@ -35,26 +35,6 @@ require([
     'vis'
 ], function ($, _, d3, moment, io, Beer, Match, Vis) {
 
-    /*test
-    console.log('---test');
-    // console.log(getDistance(3, 3, 0, 0));
-    function getCos(v) {
-        function getDistance(p1, p2) {
-            var x1 = p1[0];
-            var y1 = p1[1];
-            var x2 = p2[0];
-            var y2 = p2[1];
-            return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-        }
-        var avgR = [3, 0];
-        var lenA = getDistance(avgR, v);
-        var lenB = getDistance(v, [0, 0]);
-        var lenC = getDistance(avgR, [0, 0]);
-        return (-1 * (lenA * lenA) + lenB * lenB + lenC * lenC) / (2 * lenB * lenC);
-    }
-    console.log(getCos([3, 0]));
-    */
-
     //communication with server
     var socket = io.connect('http://localhost:8080');
     var singleUserData;
@@ -67,23 +47,41 @@ require([
     };
 
     //create data & initiate vis
+    //single user
     function initVis(data) {
 
+        var u = data.userinfo;
         function createBeerData(data, callback) {
-            var beer = new Beer(data.userinfo, data.timezone, data.checkins);
+            var beer = new Beer(u, data.timezone, data.checkins);
             callback(beer);
         }
 
         createBeerData(data, function (b) {
             console.log('----init single vis');
-            window.history.pushState('object or string', 'Title', b.userId);
+
+            window.history.pushState('object or string', 'Title', u.userId);
+
             $('.js-intro').hide();
             $('.js-vis').show();
+            
+            var template = _.template($('#header-single').html());
+            $('.js-vis-header').html(template({
+                avatar: u.avatar,
+                username: u.username,
+                address: u.address,
+                since: moment(u.since, 'ddd, DD MMM YYYY HH:mm:ssZ').format('MMM D, YYYY'),
+                checkinCount: u.checkinCount,
+                beerCount: u.beerCount
+            }));﻿
+
+            $('.js-header-switch').html('<span class="link underline js-add">Match with another user </span>');
+
             Vis.startVis(b);
         });
     }
+    //match
     function initVisMatch(data) {
-        
+
         function createBeerMatchData(dataSet, callback) {
             var match = new Match(dataSet);
             callback(match);
@@ -91,9 +89,26 @@ require([
 
         createBeerMatchData([singleUserData, data], function (m) {
             console.log('----init match vis');
+
             window.history.pushState('object or string', 'Title', m.url);
+
             $('.js-intro').hide();
             $('.js-vis-match').show();
+
+            var template = _.template($('#header-match').html());
+            $('.js-vis-header').html(template({
+                avatar1: singleUserData.userinfo.avatar,
+                username1: singleUserData.userinfo.username,
+                checkinCount1: singleUserData.userinfo.checkinCount,
+                avatar2: data.userinfo.avatar,
+                username2: data.userinfo.username,
+                checkinCount2: data.userinfo.checkinCount,
+            }));﻿
+            $('.js-header-switch').html(_.template($('#header-switch-match').html())({
+                userId1: singleUserData.userinfo.userId,
+                userId2: data.userinfo.userId
+            }));
+
             Vis.startVisMatch(m);
         });
     }
@@ -124,24 +139,35 @@ require([
         });
     }
 
+    // default text input
     function renderIntro(desc, warning, userId, friends) {
-        
+
         window.history.pushState('object or string', 'Title', '/');
 
         var template = _.template($('#intro-start').html());
         var prevUser = singleUserData ? singleUserData.userinfo.userId.toUpperCase() : '';
-        $('.js-intro-content').html(template({ desc: desc, warning: warning, userId: userId, friends: friends, prevUser: prevUser }));﻿
+        $('.js-intro-content').html(template({
+            desc: desc,
+            warning: warning,
+            userId: userId,
+            friends: friends,
+            prevUser: prevUser
+        }));﻿
+
         checkTextInput();
+
         if (!userId) {
             $('.js-intro-input').focus();
         }
+        //select a single user, not the match
         if (prevUser) {
             $('.js-single').click(function() {
                 initVis(singleUserData);
             });
-        }     
+        }
     }
 
+    // after search of user
     function renderUserInfo(data) {
 
         var userinfo = data.userinfo;
@@ -162,6 +188,7 @@ require([
 
         function startDownload(d, tz) {
             $('.js-start').click(function() {
+                console.log('2---. downloading feeds')
                 socket.emit('timezone', {
                     userinfo: d.userinfo,
                     name: tz ? tz : d.timezone.name
@@ -183,51 +210,58 @@ require([
         });
     }
 
+    // after loading the first user
     function renderIntroOptions(msg, data) {
 
         singleUserData = data;
 
         var userId = data.userinfo.userId;
         var template = _.template($('#intro-option').html());
-        $('.js-intro-content').html(template({ msg: msg, username: userId, avatar: data.userinfo.avatar }));﻿
+        $('.js-intro-content').html(template({
+            msg: msg,
+            username: userId,
+            avatar: data.userinfo.avatar
+        }));﻿
+
         $('.js-single').click(function() {
+            console.log('3--. single user vis');
             initVis(data);
         });
         $('.js-match').click(function() {
             isMatch = true;
-            console.log(data);
-            console.log('match----', userId, data.userinfo.friendCount);
+            console.log('3--. two users match', userId, data.userinfo.friendCount);
             socket.emit('friends', { userId: userId, count: data.userinfo.friendCount });
             socket.on('friends', function (d) {
-                console.log(d.friends);
                 var friends = d.friends;
-                var msg = friends ? 'Or enter an Untapped user name.' : 'No friends found. Enter an Untapped user name.';      
+                var msg = friends ? 'Or enter an Untapped user name.' : 'No friends found. Enter an Untapped user name.';
                 renderIntro(msg, 'Explore the match with ' + userId.toUpperCase(), '', friends);
                 $('.js-friend-select').change(function() {
                     var friend = $(this).val();
-                    console.log(friend);
                     socket.emit('userId', { userId: friend});
                 });
             });
         });
     }
 
-    //check url first
+    //--1. check url
     var urlParts = window.location.href.split('/');
     var userId = urlParts[urlParts.length-1];
     if (userId.indexOf('+') > -1) {
-        console.log('---multiple users');
+        console.log('1---two users');
+        //FIXME: loading needed
         socket.emit('pair', { users: userId.split('+') });
     } else if (userId) {
+        console.log('1---single user');
         renderIntro(introMsgs.init, introMsgs.userIdCheck, userId);
         socket.emit('userId', { userId: userId });
     } else {
+        console.log('1---no url');
         renderIntro(introMsgs.init, '', '');
     }
 
     //receive data from the server
     socket.on('error', function (data) {
-        console.log(data);
+        console.log('---error', data);
         renderIntro(introMsgs.diffName, data.error_detail);
     });
 
@@ -240,7 +274,9 @@ require([
             if (isMatch) {
                 initVisMatch(d, true);
             } else {
-                renderIntroOptions('Welcome back!', d);
+                //FIXME: temporarily
+                initVis(d);
+                // renderIntroOptions('Welcome back!', d);
             }
         });
     });
@@ -255,10 +291,11 @@ require([
                 url: '/users/' + users[1] + '.json'
             }).done(function (d) {
                 initVisMatch(d);
-            });    
-        });    
-                
+            });
+        });
+
     });
+
     socket.on('profile', function (data) {
         $('.js-intro-status').html('');
         renderUserInfo(data);
@@ -270,11 +307,20 @@ require([
 
     socket.on('success', function (data) {
         if (isMatch) {
-            initVisMatch(data, true);
+            initVisMatch(data.data, true);
         } else {
-            // singleUserData = data.data;
             renderIntroOptions('Download completed!', data.data);
         }
+    });
+
+    //vis header more
+    $('.js-header-open').click(function() {
+        $(this).hide();
+        $('.js-more').show();
+    });
+    $('.js-header-close').click(function() {
+        $('.js-more').hide();
+        $('.js-header-open').show();
     });
 
     //sign out
@@ -286,6 +332,8 @@ require([
         $('.js-vis-match').hide();
         $('.js-intro').show();
         window.history.pushState('object or string', 'Title', '/');
+        singleUserData = null;
+        isMatch = false;
         renderIntro(introMsgs.diffName, 'Safely signed out!');
     });
 

@@ -2,16 +2,6 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 
 	function callInteraction() {
 
-		//vis header more
-		$('.js-header-open').click(function() {
-			$(this).hide();
-			$('.js-more').show();
-		});
-		$('.js-header-close').click(function() {
-			$('.js-more').hide();
-			$('.js-header-open').show();
-		});
-
 		//vis menu show/hide
 		$('.js-menu-open').click(function() {
 			$('.js-menu-close').show();
@@ -74,30 +64,11 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 	    }
 	}
 
-	function putProfile(avatar, username, address, checkin, beer, since){
-		$('.js-user-pic').css('background-image', 'url(' + avatar + ')');
-		$('.js-user-name').html(username);
-		if (address) {
-			$('.js-address').html('<br/>from ' + address);
-		} else {
-			$('.js-address').hide();
-		}
-		$('.js-checkin').html(checkin);
-		$('.js-beer').html(beer);
-		$('.js-since').html(since);
-	}
-
 	var startVis = function(b) {
 
 		//view change
 		$('.js-vis-svg').empty();
-
 		
-		//header
-		putProfile(b.avatar, b.username, b.address, b.checkinCount, b.beerCount, b.since);
-		// console.log(b.avgUnit);
-
-		/*
 		//1--count
 		$('.js-count-sort-' + b.avgUnit).prop('checked', true);
 		Count.putCount(b.checkinCount, b.avgCount, b.avgUnit);
@@ -106,7 +77,6 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 		$('input[name=period]').click(function() {
 			Count.transformCount(b.countByPeriod, b.avgCount, calBlock, vF);
 		});
-
 		
 		//2--ratings chart 
 		Ratings.drawScoresStats(b.scoreAvg, b.scoreCount);
@@ -132,8 +102,6 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 		var vB= Beers.drawFavoritesCenter(b.ratingsList);
 		Beers.drawCenterBeer(vB, b.beerList.loves[0].list[0], b.maxCount);
 		Beers.putFavorites(b.beerList, b.ratingsList, b.maxCount, vB);
-		//most drank beers
-		// Beers.putMostDrankBeers(b.mostDrank);
 		
 		//4--when
 		//by day coxcomb chart
@@ -141,17 +109,14 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 		//by hour bar chart
 		When.drawHourStats(b.byHour);
 
-		
 		//5--venue
-		Where.createHeatmap(b.loationList);
+		Where.createHeatmap(b.locationList);
 		var venues = b.venues;
-		// putVenueTypes(venues.byType);
 		var w1 = $('.js-venue-name').width();
 		var w2 = $('.js-venue-type').width();
 		var w3 = $('.js-venue-city').width();
 		Where.putVenues(venues, w1, w2, w3);
 		
-		*/
 		//call interaction
 		callInteraction();
 		

@@ -485,14 +485,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 	var beer = function (userinfo, timezone, checkins) {
 
 		var timezoned = timeConvert.timezoned(userinfo.since, timezone);
-
-		//---from user info
-		this.avatar = userinfo.avatar;
-		this.userId = userinfo.userId;
-		this.username = userinfo.username;
-		this.address = userinfo.address;
 		var since = timeConvert.userinfo(timezoned);
-		this.since = since;
 
 		//--count
 		var checkinCount = userinfo.checkinCount;
@@ -519,7 +512,6 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 		this.maxCount = ratings.maxCount;
 
 		//beer list
-		this.beerCount = userinfo.beerCount;
 		this.beerList = getFavorites(checkins, this.ratingsList);
 		this.scoreCount = _.countBy(_.pluck(checkins, 'rating_score'), function (d) {
 				return d;
@@ -530,7 +522,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 		this.byHour = getByHour(checkins, timezone);
 
 		//by venue
-		this.loationList = getLocationList(checkins);
+		this.locationList = getLocationList(checkins);
 		this.venues = getVenueList(checkins);
 	};
 	return beer;

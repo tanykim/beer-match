@@ -135,34 +135,11 @@
 <!-- footer -->
 <div class="vis-contents-footer js-vis-contents-footer">FOOTER</div>
 
-</div>
+</div> <!-- vis contents -->
 
-<!--header & menu -->
-<div class="vis-header-wrapper">
-<div class="vis-menu js-vis-menu" style="display:none;">
-	<ul>
-		<li class="item js-slide selected js-vis-menu-0" data-value="0">How much do I drink?</li>
-		<li class="item js-slide js-vis-menu-1" data-value="1">What matters?</li>
-		<li class="item js-slide js-vis-menu-2" data-value="2">Beers I love &amp; hate</li>
-		<li class="item js-slide js-vis-menu-3" data-value="3">When do I drink?</li>
-		<li class="item js-slide js-vis-menu-4" data-value="4">Where do I drink?</li>
-	</ul>	
-</div>
-<div class="vis-title-overlaid js-title-overlaid">How much do I drink?</div>
-<div class="vis-menu-dots">
-	<div class="menu-toggle js-menu-open">open</div>
-	<div class="menu-toggle js-menu-close" style="display:none;">close</div>
-	<ul>
-		<li class="item selected js-slide js-vis-menu-0" data-value="0"></li>
-		<li class="item js-slide js-vis-menu-1" data-value="1"></li>
-		<li class="item js-slide js-vis-menu-2" data-value="2"></li>
-		<li class="item js-slide js-vis-menu-3" data-value="3"></li>
-		<li class="item js-slide js-vis-menu-4" data-value="4"></li>
-	</ul>	
-</div>
-</div> <!--header wrapper -->
-</div> <!--vis-->
+</div> <!-- vis -->
 
+<!-- header -->
 <div class="js-vis js-vis-match vis-header" style="display:none;">
 	<ul class="more js-header-open">
 		<li class="link">open</li>
@@ -172,18 +149,35 @@
 		<li class="link underline js-link-extra" data-value="about">About the project</li>
 		<li class="link underline js-link-extra" data-value="contact">Contact me</li>
 		<li class="link underline js-signout js-header-close">Sign out</li>
-		<li class="link underline js-Add">Add another user</li>
+		<li class="js-header-switch"></li>
 	</ul>
-	<ul>
-		<li class="js-user-pic pic"></li>
-		<li class="profile">
-			<span class="js-user-name bold"></span>
-			<span class="js-address location"></span>
-		</li>
-		<li class="info">Drinking since <span class="js-since bold"></span></li>
-		<li class="info"><span class="js-checkin bold"></span> Check-ins</li>
-		<li class="info"><span class="js-beer bold"></span> Distinctive Beers</li>
+	<ul class="js-vis-header">
 	</ul>
+</div>
+
+<!--vis menu -->
+<div class="js-vis vis-header-wrapper" style="display:none;">
+	<div class="vis-menu js-vis-menu" style="display:none;">
+		<ul>
+			<li class="item js-slide selected js-vis-menu-0" data-value="0">How much do I drink?</li>
+			<li class="item js-slide js-vis-menu-1" data-value="1">What matters?</li>
+			<li class="item js-slide js-vis-menu-2" data-value="2">Beers I love &amp; hate</li>
+			<li class="item js-slide js-vis-menu-3" data-value="3">When do I drink?</li>
+			<li class="item js-slide js-vis-menu-4" data-value="4">Where do I drink?</li>
+		</ul>	
+	</div>
+	<div class="vis-title-overlaid js-title-overlaid">How much do I drink?</div>
+	<div class="vis-menu-dots">
+		<div class="menu-toggle js-menu-open">open</div>
+		<div class="menu-toggle js-menu-close" style="display:none;">close</div>
+		<ul>
+			<li class="item selected js-slide js-vis-menu-0" data-value="0"></li>
+			<li class="item js-slide js-vis-menu-1" data-value="1"></li>
+			<li class="item js-slide js-vis-menu-2" data-value="2"></li>
+			<li class="item js-slide js-vis-menu-3" data-value="3"></li>
+			<li class="item js-slide js-vis-menu-4" data-value="4"></li>
+		</ul>	
+	</div>
 </div>
 
 <!-- about the project -->
@@ -197,7 +191,7 @@
 	</div>
 </div>
 
-<!-- backbone render templates -->
+<!-- intro render templates -->
 <script type="text/template" id="intro-start">
 	<div class="intro-status"><%= warning %></div>
 	<% if (friends) { %>
@@ -213,7 +207,6 @@
 	<% if (prevUser) { %>
 	<div class="js-single link underline">Explore <%= prevUser %> only</div>
   	<% } %>
-	
 </script>
 
 <script type="text/template" id="intro-userinfo">
@@ -331,5 +324,33 @@
 	<div class="js-match link underline">See the match with another person </div>	
 </script>
 
+<!-- vis header templates -->
+<script type="text/template" id="header-single">
+	<li class="pic" style="background-image: url(<%= avatar %>)"></li>
+	<li class="profile">
+		<span class="bold"><%= username %></span>
+		<span class="location"><%= address %></span>
+	</li>
+	<li class="info">Drinking since <span class="bold"><%= since %></span></li>
+	<li class="info"><span class="bold"><%= checkinCount %></span> Check-ins</li>
+	<li class="info"><span class="bold"><%= beerCount %></span> Distinctive Beers</li>	
+</script>
+
+<script type="text/template" id="header-match">
+	<li class="pic" style="background-image: url(<%= avatar1 %>)"></li>
+	<li class="profile">
+		<span class="bold"><%= username1 %></span>
+		(<span class="bold"><%= checkinCount1 %></span> Check-ins)
+	</li>
+	<li class="pic" style="background-image: url(<%= avatar2 %>)"></li>
+	<li class="profile">
+		<span class="bold"><%= username2 %></span>
+		(<span class="bold"><%= checkinCount2 %></span> Check-ins)
+	</li>
+</script>
+
+<script type="text/template" id="header-switch-match">
+	Explore only <span class="link underline js-switch"><%= userId1 %></span> or <span class="link underline js-switch"><%= userId2 %></span>  
+</script>
 
 </body>
