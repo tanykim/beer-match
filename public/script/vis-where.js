@@ -49,7 +49,6 @@ define(['vis-settings'], function (Settings) {
 	};
 
 	function addMarker(id, num) {
-		console.log(num);
 		map.set('center', [id.lat, id.lng]);
 		map.objects.remove(marker);
 		map.update(-1, 0);

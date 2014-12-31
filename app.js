@@ -33,6 +33,9 @@ var credentials = {
 untappd.setClientId(credentials.clientId);
 untappd.setClientSecret(credentials.clientSecret);
 
+//data processing
+var User = require('./lib/BeerMatch-user.js');
+
 function emitProfile(userinfo, timezone) {
 	io.emit('profile', {
 		userinfo: userinfo,
@@ -79,6 +82,18 @@ function getTimezone(user) {
 	});
 }
 
+function writeJSON(data) {
+    function createBeerData(data, callback) {
+        var user = new User(data.userinfo, data.timezone, data.checkins);
+        callback(user);
+    }
+    createBeerData(data, function (u) {
+		fs.writeFileSync('public/users/' + data.userinfo.userId + '.json', JSON.stringify(u));
+		console.log('---file written');
+		io.emit('success', { data: u });
+    });
+}
+
 function getUserFeed(id, data) {
 
 	var userinfo = data.userinfo;
@@ -104,9 +119,7 @@ function getUserFeed(id, data) {
 					callUserFeedAPI(obj.response.pagination.max_id);
 				} else {
 					var all = { userinfo: userinfo, timezone: data.name, checkins: _.flatten(checkins) };
-					fs.writeFileSync('public/users/' + userId + '.json', JSON.stringify(all));
-					console.log('---file written');
-					io.emit('success', { data: all });
+					writeJSON(all);
 				}
 			}
 			else {

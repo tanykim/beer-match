@@ -1,4 +1,4 @@
-define(['jquery', 'momentTZ', 'underscore', 'beer'], function ($, moment, _, Beer) {
+define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 
     /*test
     console.log('---test');
@@ -19,11 +19,10 @@ define(['jquery', 'momentTZ', 'underscore', 'beer'], function ($, moment, _, Bee
     }
     console.log(getCos([3, 0]));
     */
-    
-	var match = function (dataset) {
 
-		var b1 = new Beer(dataset[0].userinfo, dataset[0].timezone, dataset[0].checkins);
-		var b2 = new Beer(dataset[1].userinfo, dataset[1].timezone, dataset[1].checkins);
+	var match = function (dataset) {
+		
+		console.log(dataset[0].ratingsList, dataset[0].checkinCount, dataset[0].maxCount);
 
 		this.url = dataset[0].userinfo.userId + '+' + dataset[1].userinfo.userId;	
 	};

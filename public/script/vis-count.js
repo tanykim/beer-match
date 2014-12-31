@@ -1,4 +1,4 @@
-define(['vis-settings'], function (Settings) {
+define(['vis-settings', 'moment'], function (Settings, moment) {
 
 	var colors = Settings.colors;
 
@@ -196,12 +196,15 @@ define(['vis-settings'], function (Settings) {
 				.text(dateStr)
 	}
 
-	var drawCalendar = function (range, data, unit) {
+	var drawCalendar = function (rangeStr, data, unit) {
 		
+		var sT = moment(rangeStr[0]);
+		var eT = moment(rangeStr[1]);
+
 		//number of days - start with the first day of the month
-		var startDate = range[0].clone().startOf('month');
-		var endDate = range[1].clone().endOf('month'); 
-		var daysCount = range[1].diff(startDate, 'days');
+		var startDate = sT.clone().startOf('month');
+		var endDate = eT.clone().endOf('month'); 
+		var daysCount = eT.diff(startDate, 'days');
 		var count = endDate.diff(startDate, 'days') + 1;
 
 		// w & h of each day block
@@ -254,7 +257,7 @@ define(['vis-settings'], function (Settings) {
 			var dataStr = date.format('YYYYMMDD');
 			var style = {};
 			var value;
-			if (i <= range[0].date() || i > daysCount) {
+			if (i <= sT.date() || i > daysCount) {
 				style.opacity = 1;
 				style.fill = '#e5e5e5';
 				value = '--:--:--';
@@ -287,11 +290,11 @@ define(['vis-settings'], function (Settings) {
 				.attr('width', bW)
 				.attr('height', bH)
 				.attr('data-value', value)
-				.attr('class', (i <= range[0].date() || i > daysCount) ? '' : 'js-cal-block')
+				.attr('class', (i <= sT.date() || i > daysCount) ? '' : 'js-cal-block')
 				.attr('fill', style.fill)
 				.attr('opacity', style.opacity)
 				.on('mouseover', function() {
-					if (i > range[0].date() && i <= daysCount) {
+					if (i > sT.date() && i <= daysCount) {
 						showTooltip(svg, ttX, ttY, date, data.list[dataStr]);
 					}
 				})
@@ -300,7 +303,7 @@ define(['vis-settings'], function (Settings) {
 				});
 
 			//month label
-			if (i === 0 ||  date.date() === 1) {
+			if (i === 0 || date.date() === 1) {
 				putXLabel(date, x, row, colL, 'month');
 			}
 			//year label

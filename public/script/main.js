@@ -17,7 +17,6 @@ require.config({
         moment: '../bower_components/moment/moment',
         momentTZ: '../bower_components/moment-timezone/moment-timezone',
         socketio: '../socket.io/socket.io',
-        beer: 'beer',
         match: 'match',
         vis: 'vis'
   }
@@ -30,10 +29,9 @@ require([
     'd3',
     'moment',
     'socketio',
-    'beer',
     'match',
     'vis'
-], function ($, _, d3, moment, io, Beer, Match, Vis) {
+], function ($, _, d3, moment, io, Match, Vis) {
 
     //communication with server
     var socket = io.connect('http://localhost:8080');
@@ -51,33 +49,23 @@ require([
     function initVis(data) {
 
         var u = data.userinfo;
-        function createBeerData(data, callback) {
-            var beer = new Beer(u, data.timezone, data.checkins);
-            callback(beer);
-        }
+        window.history.pushState('object or string', 'Title', u.userId);
 
-        createBeerData(data, function (b) {
-            console.log('----init single vis');
-
-            window.history.pushState('object or string', 'Title', u.userId);
-
-            $('.js-intro').hide();
-            $('.js-vis').show();
-            
-            var template = _.template($('#header-single').html());
-            $('.js-vis-header').html(template({
-                avatar: u.avatar,
-                username: u.username,
-                address: u.address,
-                since: moment(u.since, 'ddd, DD MMM YYYY HH:mm:ssZ').format('MMM D, YYYY'),
-                checkinCount: u.checkinCount,
-                beerCount: u.beerCount
-            }));﻿
-
-            $('.js-header-switch').html('<span class="link underline js-add">Match with another user </span>');
-
-            Vis.startVis(b);
-        });
+        $('.js-intro').hide();
+        $('.js-vis').show();
+        
+        var template = _.template($('#header-single').html());
+        $('.js-vis-header').html(template({
+            avatar: u.avatar,
+            username: u.username,
+            address: u.address,
+            since: moment(u.since, 'ddd, DD MMM YYYY HH:mm:ssZ').format('MMM D, YYYY'),
+            checkinCount: u.checkinCount,
+            beerCount: u.beerCount
+        }));﻿
+        $('.js-header-switch').html('<span class="link underline js-add">Match with another user </span>');
+        
+        Vis.startVis(data);
     }
     //match
     function initVisMatch(data) {
@@ -197,7 +185,9 @@ require([
         }
 
         var newTimezone;
-        startDownload(data, newTimezone);
+        if (userinfo.address) {
+            startDownload(data, newTimezone);
+        }
 
         //timezone select
         $('.js-timezone-switch').click(function() {
@@ -246,6 +236,24 @@ require([
     //--1. check url
     var urlParts = window.location.href.split('/');
     var userId = urlParts[urlParts.length-1];
+
+    //FIXME: temporary
+    // if (userId === 'timm3h+gregavola') {
+    //      $.ajax({
+    //         url: '/users/timm3h.json'
+    //     }).done(function (d1) {
+    //         $.ajax({
+    //             url: '/users/gregavola.json'
+    //         }).done(function (d2) {
+    //             // initVisMatch(d);
+    //             $('.js-intro').hide();
+    //             $('.js-vis-match').show();
+    //             var m = new Match([d1, d2]);
+    //             Vis.startVisMatch([d1, d2]);
+    //         });
+    //     });       
+    // }
+    // else 
     if (userId.indexOf('+') > -1) {
         console.log('1---two users');
         //FIXME: loading needed
@@ -285,12 +293,12 @@ require([
         var users = data.users;
         $.ajax({
             url: '/users/' + users[0] + '.json'
-        }).done(function (d) {
-            singleUserData = d;
+        }).done(function (d1) {
+            singleUserData = d1;
             $.ajax({
                 url: '/users/' + users[1] + '.json'
-            }).done(function (d) {
-                initVisMatch(d);
+            }).done(function (d2) {
+                initVisMatch(d2);
             });
         });
 
