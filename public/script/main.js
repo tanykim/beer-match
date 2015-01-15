@@ -34,7 +34,7 @@ require([
 ], function ($, _, d3, moment, io, Match, Vis) {
 
     //communication with server
-    var socket = io.connect('http://localhost:8080');
+    var socket = io.connect('http://beer.tany.kim');
     var singleUserData;
     var isMatch = false;
 
