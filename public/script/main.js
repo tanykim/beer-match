@@ -52,7 +52,7 @@ require([
         window.history.pushState('object or string', 'Title', u.userId);
 
         $('.js-intro').hide();
-        $('.js-vis').show();
+        $('.js-single').show();
         
         var template = _.template($('#header-single').html());
         $('.js-vis-header').html(template({
@@ -81,7 +81,7 @@ require([
             window.history.pushState('object or string', 'Title', m.url);
 
             $('.js-intro').hide();
-            $('.js-vis-match').show();
+            $('.js-match').show();
 
             var template = _.template($('#header-match').html());
             $('.js-vis-header').html(template({
@@ -319,8 +319,8 @@ require([
         socket.emit('signout', { userId: userId });
     });
     socket.on('signout', function (data) {
-        $('.js-vis').hide();
-        $('.js-vis-match').hide();
+        $('.js-single').hide();
+        $('.js-match').hide();
         $('.js-intro').show();
         window.history.pushState('object or string', 'Title', '/');
         singleUserData = null;

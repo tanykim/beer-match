@@ -1,4 +1,4 @@
-define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], function (Count, Ratings, Beers, When, Where) {
+define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where', 'vis-match'], function (Count, Ratings, Beers, When, Where, Match) {
 
 	function callInteraction() {
 
@@ -35,7 +35,7 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 		};
 		function getHeightSum (num) {
 	        return _.reduce(_.map(_.range(0, num), function(i) {
-	                    return $('.js-vis-contents-' + i).outerHeight();
+	                    return $('.js-single-contents-' + i).outerHeight();
 	                }), function (memo, num) {
 	        			return memo + num;
 	        		}, 0);
@@ -58,20 +58,20 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 	    $(window).scroll(scrolled);
 
 	    //add footer height
-	    var hDiff = $(window).height() - $('.js-vis-contents-4').outerHeight();
+	    var hDiff = $(window).height() - $('.js-single-contents-4').outerHeight();
 	    if (hDiff > 0) {
-	    	$('.js-vis-contents-dummy').css('height', (hDiff - 100) + 'px');
+	    	$('.js-single-contents-dummy').css('height', (hDiff - 100) + 'px');
 	    }
 	}
 
 	var startVis = function(b) {
 
 		//view change
-		$('.js-vis-svg').empty();
+		$('.js-single-svg').empty();
 		
 		//1--count
 		$('.js-count-sort-' + b.avgUnit).prop('checked', true);
-		Count.putCount(b.checkinCount, b.avgCount, b.avgUnit);
+		Count.putCount(b.userinfo.checkinCount, b.avgCount, b.avgUnit);
 		var vF = Count.drawFrequency(b.countByPeriod, b.avgCount, b.avgUnit);
 		var calBlock = Count.drawCalendar(b.timeRange, b.countByPeriod, b.avgUnit);
 		$('input[name=period]').click(function() {
@@ -81,7 +81,7 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 		//2--ratings chart 
 		Ratings.drawScoresStats(b.scoreAvg, b.scoreCount);
 		var ratingsKey = 'style';
-		var vC = Ratings.drawCategories(b.checkinCount, b.ratingsList);
+		var vC = Ratings.drawCategories(b.userinfo.checkinCount, b.ratingsList);
 		var vR = Ratings.drawRatings(b.ratingsList);
 		Ratings.drawRatingsBar(vR, b.ratingsList[ratingsKey], ratingsKey, b.scoreAvg);
 		//select ratings key
@@ -124,6 +124,10 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where'], funct
 
 	var startVisMatch = function (m) {
 		console.log('---match view');
+		Match.putMatch(m.matchScore, m.matchList);
+		Match.drawBehavior(m.behavior);
+		Match.drawBoth(m.beersList);
+		Match.drawWeekend(m.byDay, m.userinfo.checkinCount);
 	};
 
 	return {

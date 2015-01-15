@@ -1,6 +1,8 @@
 /* lines */
 @mainLine: #000;
 @visHeaderH: 40px; 
+@user1: #cc0000;
+@user2: #00cc00;
 
 .vis {
 	margin: 0;
@@ -432,4 +434,34 @@ path, line{
 	stroke: #000;
 	stroke-width: 2px;
 	fill: #fff;
+}
+
+/* match */
+.behavior .domain {
+	stroke: none;
+}
+.behavior path {
+	fill: none;
+	stroke-width: 2px;
+}
+.behavior-line-center {
+	stroke: #000;
+	stroke-width: 2px;
+}
+.behavior-line-0 {
+	stroke: @user1;
+}
+.behavior-line-1 {
+	stroke: @user2;
+}
+.behavior-circle-0 {
+	stroke: @user1;
+	fill: #fff;
+}
+.behavior-circle-1 {
+	stroke: @user2;
+	fill: #fff;
+}
+.both {
+	text-align: center;
 }
