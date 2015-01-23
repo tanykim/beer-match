@@ -1,4 +1,4 @@
-define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where', 'vis-match'], function (Count, Ratings, Beers, When, Where, Match) {
+define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where', 'vis-match', 'vis-match-style'], function (Count, Ratings, Beers, When, Where, Match, Styles) {
 
 	function callInteraction() {
 
@@ -125,7 +125,9 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where', 'vis-m
 	var startVisMatch = function (m) {
 		console.log('---match view');
 		Match.putMatch(m.matchScore, m.matchList);
+		Match.drawCount(m.avgCount);
 		Match.drawBehavior(m.behavior);
+		Styles.drawChord(m.styles);
 		Match.drawBoth(m.beersList);
 		Match.drawWeekend(m.byDay, m.userinfo.checkinCount);
 	};

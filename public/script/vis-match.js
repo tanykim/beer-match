@@ -77,6 +77,42 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 		});	
 	};
 
+	var drawCount = function (count) {
+		var avgUnit = 'week';
+		if (count[0][avgUnit] + count[1][avgUnit] < 2) {
+			avgUnit = 'month';
+		} else if (count[0][avgUnit] + count[1][avgUnit] > 40) {
+			avgUnit = 'day';
+		}
+		var avgCount = _.pluck(count, avgUnit);
+
+		var dim = { w: $('.counts').width(), h: 200 };
+		var svg = d3.select('#vis-counts').append('svg')
+			.attr('width', dim.w)
+			.attr('height', dim.h)
+			.append('g');
+
+		var maxR = dim.h / 2;
+
+		var gap = 20;
+		_.each(avgCount, function (d, i)  {
+			var x = dim.w / 2 + (dim.h / 2 + gap / 2) * (i === 0 ? -1 : 1);
+			var r =  Math.sqrt(d * (dim.h / 2) * (dim.h / 2) / _.max(avgCount));
+			svg.append('circle')
+				.attr('cx', x)
+				.attr('cy', dim.h / 2)
+				.attr('r', r)
+				.attr('class', 'counts-circle');
+			svg.append('text')
+				.attr('x', x)
+				.attr('y', dim.h/2 + 8)
+				.text(d)
+				.attr('class', 'counts-text')
+		});
+		$('.js-counts').html(avgUnit.toUpperCase());
+
+	};
+
 	var drawBoth = function (beersList) {
 		var labels = ['Both you love', 'Both you hate', 'Love - Hate', 'Hate - Love'];
 		_.each(_.range(4), function (i) {
@@ -141,7 +177,8 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 	return {
 		putMatch: putMatch,
 		drawBehavior: drawBehavior,
+		drawCount: drawCount,
 		drawBoth: drawBoth,
 		drawWeekend: drawWeekend
-	}
+	};
 });

@@ -5,8 +5,11 @@ define(function() {
 	var colors = { style: '#ffc61e', abv: '#d86018', 
 				brewery: '#7c2529', country: '#3f2021'};
 
+	var users = ['#cc0000', '#00cc00'];
+
 	return {
-		colors: colors
+		colors: colors,
+		users: users
 	};
 
 });
