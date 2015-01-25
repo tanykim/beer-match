@@ -34,7 +34,7 @@ require([
 ], function ($, _, d3, moment, io, Match, Vis) {
 
     //communication with server
-    var socket = io.connect('http://beer.tany.kim');
+    var socket = io.connect('http://localhost:8080');
     var singleUserData;
     var isMatch = false;
 
@@ -53,7 +53,7 @@ require([
 
         $('.js-intro').hide();
         $('.js-single').show();
-        
+
         var template = _.template($('#header-single').html());
         $('.js-vis-header').html(template({
             avatar: u.avatar,
@@ -64,7 +64,7 @@ require([
             beerCount: u.beerCount
         }));﻿
         $('.js-header-switch').html('<span class="link underline js-add">Match with another user </span>');
-        
+
         Vis.startVis(data);
     }
     //match

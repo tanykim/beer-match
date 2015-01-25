@@ -14,7 +14,7 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where', 'vis-m
 			$('.js-vis-menu').fadeOut();
 		});
 
-		//get vis position 
+		//get vis position
     	var titleStr = [
     		'How much do I drink?',
     		'What matters?',
@@ -52,7 +52,7 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where', 'vis-m
 	        		changeVisTitle(i-1);
 	        		break;
 	        	}
-	        } 
+	        }
 	    }
 	    var scrolled = _.debounce(positionVisTitle, 100);
 	    $(window).scroll(scrolled);
@@ -68,7 +68,7 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where', 'vis-m
 
 		//view change
 		$('.js-single-svg').empty();
-		
+
 		//1--count
 		$('.js-count-sort-' + b.avgUnit).prop('checked', true);
 		Count.putCount(b.userinfo.checkinCount, b.avgCount, b.avgUnit);
@@ -77,9 +77,10 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where', 'vis-m
 		$('input[name=period]').click(function() {
 			Count.transformCount(b.countByPeriod, b.avgCount, calBlock, vF);
 		});
-		
-		//2--ratings chart 
-		Ratings.drawScoresStats(b.scoreAvg, b.scoreCount);
+
+		//2--ratings chart
+		// Ratings.drawScoresStats(b.scoreAvg, b.scoreCount);
+		Ratings.drawNetwork(b.network);
 		var ratingsKey = 'style';
 		var vC = Ratings.drawCategories(b.userinfo.checkinCount, b.ratingsList);
 		var vR = Ratings.drawRatings(b.ratingsList);
@@ -102,7 +103,7 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where', 'vis-m
 		var vB= Beers.drawFavoritesCenter(b.ratingsList);
 		Beers.drawCenterBeer(vB, b.beerList.loves[0].list[0], b.maxCount);
 		Beers.putFavorites(b.beerList, b.ratingsList, b.maxCount, vB);
-		
+
 		//4--when
 		//by day coxcomb chart
 		When.drawDayStats(b.byDay);
@@ -116,10 +117,10 @@ define(['vis-count', 'vis-ratings', 'vis-beers', 'vis-when', 'vis-where', 'vis-m
 		var w2 = $('.js-venue-type').width();
 		var w3 = $('.js-venue-city').width();
 		Where.putVenues(venues, w1, w2, w3);
-		
+
 		//call interaction
 		callInteraction();
-		
+
 	};
 
 	var startVisMatch = function (m) {

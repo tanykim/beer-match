@@ -172,7 +172,7 @@ function getFriendsList(userId, count) {
 	function callFriendsFeedAPI(offset) {
 	  	untappd.userFriends(function (err,obj) {
 			if (obj && obj.response && obj.response.items && obj.response.count > 0) {
-				var fList = _.map(obj.response.items, function (d) { 
+				var fList = _.map(obj.response.items, function (d) {
 					return d.user.user_name.toLowerCase();
 				});
 				friends.push(fList);
@@ -191,7 +191,7 @@ function getFriendsList(userId, count) {
 }
 
 function checkFileExists(users) {
-	var u0 = fs.existsSync('public/users/' + users[0] + '.json') ? true : false; 	
+	var u0 = fs.existsSync('public/users/' + users[0] + '.json') ? true : false;
 	var u1 = fs.existsSync('public/users/' + users[1] + '.json') ? true : false;
 	if (u0 && u1) {
 		console.log('---both file exist');
