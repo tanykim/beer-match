@@ -83,6 +83,9 @@ function getTimezone(user) {
 }
 
 function writeJSON(data) {
+
+	fs.writeFileSync('public/users/row' + data.userinfo.userId + '.json', JSON.stringify(data));
+
     function createBeerData(data, callback) {
         var user = new User(data.userinfo, data.timezone, data.checkins);
         callback(user);
@@ -202,6 +205,12 @@ function checkFileExists(users) {
 }
 
 io.on('connection', function (socket) {
+	socket.on('dataset', function (data) {
+		console.log('data generating mode---', data.userId);
+		var data = JSON.parse(fs.readFileSync('public/users/row/' + data.userId + '.json', 'utf8'));
+		console.log(data.userinfo.userId);
+		writeJSON(data);
+  	});
 	socket.on('userId', function (data) {
 		console.log('userId---', data);
     	getUserInfo(data.userId.toLowerCase());

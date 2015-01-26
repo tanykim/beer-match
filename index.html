@@ -51,7 +51,7 @@
 		<div class="vis-contents js-match-contents-1">
 			How Much
 			<div id="vis-counts" class="js-match-svg counts"></div>
-			<div class="counts-label">BEER / <span class="js-counts"></span></div>	
+			<div class="counts-label">BEER / <span class="js-counts"></span></div>
 		</div>
 		<div class="vis-contents js-match-contents-2">
 			Beers Both of You Drink
@@ -73,8 +73,14 @@
 		<div class="vis-contents js-match-contents-4">
 			Day / Hour
 			<div id="vis-weekend" class="js-weekend weekend"></div>
+			<div id="vis-timeline" class="js-timeline timeline">
+				<span class="link underline bold js-timeline-switch" data-value="absolute">Check-in Count</span>
+				<span class="link underline js-timeline-switch" data-value="relative">Relative Ratio</span>
+				<span class="link underline bold js-timeline-group" data-value="day">byDay</span>
+				<span class="link underline js-timeline-group" data-value="hour">byHour</span>
+			</div>
 		</div>
-		<div class="vis-contents js-match-contents-4">
+		<div class="vis-contents js-match-contents-5">
 			Venues
 		</div>
 	</div>
@@ -92,7 +98,7 @@
 	<div>
 		<input type="radio" name="period" value="day" class="js-count-sort-day"> Day
 		<input type="radio" name="period" value="week" class="js-count-sort-week"> Week
-		<input type="radio" name="period" value="month" class="js-count-sort-month"> Month		
+		<input type="radio" name="period" value="month" class="js-count-sort-month"> Month
 	</div>
 	<div class="count">
 		<div class="avg">
@@ -113,7 +119,7 @@
 	<div id="vis-score" class="js-single-svg score"></div>
 	<div id="vis-network" class="js-single-svg network"></div>
 	<div id="vis-categories" class="js-single-svg categories"></div>
-	<div class="ratings-option-sub js-ratings-options-bar"> Sort By 
+	<div class="ratings-option-sub js-ratings-options-bar"> Sort By
 		<input type="radio" name="sortBy" value="count" checked> Count
 		<input type="radio" name="sortBy" value="rating"> Average score
 		<input type="radio" name="sortBy" value="name"> Alphabetical
@@ -145,7 +151,7 @@
 </div>
 
 <!-- when -->
-<div class="vis-contents js-single-contents-3"> 
+<div class="vis-contents js-single-contents-3">
 	<!-- <div class="vis-contents-title">When do I drink?</div> -->
 	<div id="vis-day" class="js-single-svg day"></div>
 	<div id="vis-hour" class="js-single-svg hour"></div>
@@ -205,7 +211,7 @@
 			<li class="item js-slide js-vis-menu-2" data-value="2">Beers I love &amp; hate</li>
 			<li class="item js-slide js-vis-menu-3" data-value="3">When do I drink?</li>
 			<li class="item js-slide js-vis-menu-4" data-value="4">Where do I drink?</li>
-		</ul>	
+		</ul>
 	</div>
 	<div class="vis-title-overlaid js-title-overlaid">How much do I drink?</div>
 	<div class="vis-menu-dots">
@@ -217,7 +223,7 @@
 			<li class="item js-slide js-vis-menu-2" data-value="2"></li>
 			<li class="item js-slide js-vis-menu-3" data-value="3"></li>
 			<li class="item js-slide js-vis-menu-4" data-value="4"></li>
-		</ul>	
+		</ul>
 	</div>
 </div>
 
@@ -362,7 +368,7 @@
 		<div class="name"><%= username %></div>
 	</div>
 	<div class="js-single link underline">Explore <%= username %>&#39;s taste </div>
-	<div class="js-match link underline">See the match with another person </div>	
+	<div class="js-match link underline">See the match with another person </div>
 </script>
 
 <!-- vis header templates -->
@@ -374,7 +380,7 @@
 	</li>
 	<li class="info">Drinking since <span class="bold"><%= since %></span></li>
 	<li class="info"><span class="bold"><%= checkinCount %></span> Check-ins</li>
-	<li class="info"><span class="bold"><%= beerCount %></span> Distinctive Beers</li>	
+	<li class="info"><span class="bold"><%= beerCount %></span> Distinctive Beers</li>
 </script>
 
 <script type="text/template" id="header-match">
@@ -391,7 +397,7 @@
 </script>
 
 <script type="text/template" id="header-switch-match">
-	Explore only <span class="link underline js-switch"><%= userId1 %></span> or <span class="link underline js-switch"><%= userId2 %></span>  
+	Explore only <span class="link underline js-switch"><%= userId1 %></span> or <span class="link underline js-switch"><%= userId2 %></span>
 </script>
 
 </body>

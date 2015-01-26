@@ -5,7 +5,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
             return memo + num;
         }, 0);
     }
-     
+
     function getBeersList(allBeers, common) {
 
         var loves = function (list) {
@@ -90,7 +90,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         return getSum(vector) / vector.length;
     }
 
-    function getMatchByAttr(dataset, attr, scoreAvgs) {    
+    function getMatchByAttr(dataset, attr, scoreAvgs) {
         var all = _.unique(_.flatten(_.map(dataset, function (d) {
             return _.pluck(d.ratingsList[attr], 'name');
         })));
@@ -128,7 +128,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
                 var value = 0
                 if ((isContains && !same || !isContains && same) && d.name === user.name) {
                 // if ((isContains && !same) && d.name === user.name) {
-                   
+
                     value = user.count;
                 }
                 return value;
@@ -141,7 +141,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
             });
             return row;
         }
-        
+
         var matrix = [];
         var names = [];
 
@@ -167,7 +167,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 	var match = function (dataset) {
 
         console.log(dataset);
-        
+
         /* match by taste by
         - common beer similarity
         - styles similarity
@@ -190,7 +190,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         };
         var weight = {
             beer: 0.2,
-            style: 0.5, 
+            style: 0.5,
             abv: 0.3
         };
         var weighted = _.map(matchList, function (by, key) {
@@ -199,7 +199,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         this.matchList = matchList;
         this.matchScore = Math.round(getSum(weighted) * 10) / 10;
 
-        console.log('Match Score---', this.matchList, this.matchScore); 
+        console.log('Match Score---', this.matchList, this.matchScore);
 
         /* behavior compasition stats -1 to 1
         - Beer Lover - light drinker: count
@@ -216,7 +216,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         var stExplorer = _.map(dataset, function (d) {
             // 1: all differnt, -1: all same
             return d.userinfo.beerCount / d.userinfo.checkinCount * 2 - 1;
-        });   
+        });
         var days = _.map(dataset, function (d) {
             return _.pluck(d.byDay, 'total');
         });
@@ -261,7 +261,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         console.log('stats social--', stSocial);
         console.log('stats segments--', stDaytime);
 
-        /* dataset for vis 
+        /* dataset for vis
         - URL
         - userinfo
         - avgCount
@@ -277,15 +277,21 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         if (commonBeers) {
             this.beersList = getBeersList(_.pluck(dataset, 'allBeers'), commonBeers);
         }
-        
+
         this.styles = getStyles(dataset);
-
-        // console.log(matrix);
-        // this.styles = matrix;
-
         this.byDay = days;
         this.byHour = hours;
-        
+
+        this.byDayHour = _.map(dataset, function (d) {
+            return _.map(_.range(7), function (day, i) {
+                return _.object(_.map(d.byHour, function (hour, j) {
+                    return [j, hour.byDay[i]];
+                }));
+            });
+        });
+
+        console.log(this.byDayHour);
+
         var commonVenues = _.intersection(_.pluck(dataset[0].allVenues, 'id'), _.pluck(dataset[1].allVenues, 'id'));
         this.topVenueTypes = _.map(dataset, function (d) {
                 return _.sortBy(_.map(d.venues.type, function (t, key) {
@@ -303,7 +309,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         console.log('by day and hour--', this.byDay, this.byHour);
         console.log('top venues--', this.topVenueTypes);
         console.log('common venues--', this.venues);
-        // console.log('match by venues--', this.matchByVenue); 
+        // console.log('match by venues--', this.matchByVenue);
 	};
 
 	return match;

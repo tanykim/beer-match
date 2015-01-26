@@ -237,7 +237,10 @@ require([
     var urlParts = window.location.href.split('/');
     var userId = urlParts[urlParts.length-1];
 
-    if (userId.indexOf('+') > -1) {
+    if (userId.indexOf('---') > -1) {
+        console.log('---dataset generating mode');
+        socket.emit('dataset', { userId: userId.split('---')[1] });
+    } else if (userId.indexOf('+') > -1) {
         console.log('1---two users');
         //FIXME: loading needed
         socket.emit('pair', { users: userId.split('+') });
