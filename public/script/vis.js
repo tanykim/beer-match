@@ -105,11 +105,12 @@ define(['single-count', 'single-ratings', 'single-beers', 'single-when', 'single
 		Beers.putFavorites(b.beerList, b.ratingsList, b.maxCount, vB);
 
 		//4--when
+		When.drawMatrix(b.byDay, b.byHour);
 		//by day coxcomb chart
 		When.drawDayStats(b.byDay);
 		//by hour bar chart
 		When.drawHourStats(b.byHour);
-
+		
 		//5--venue
 		Where.createHeatmap(b.locationList);
 		var venues = b.venues;

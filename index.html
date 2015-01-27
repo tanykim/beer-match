@@ -90,103 +90,108 @@
 	</div>
 </div>
 
-<!-- visualization -->
+<!-- single -->
 <div class="vis js-single" style="display:none;">
 
-<!-- vis contents -->
-<div class="vis-contents-wrapper">
+	<!-- vis contents -->
+	<div class="vis-contents-wrapper">
 
-<!-- basic stats -->
-<div class="vis-contents js-single-contents-0">
-	<!-- <div class="vis-contents-title">How much do I drink?</div> -->
-	<div>
-		<input type="radio" name="period" value="day" class="js-count-sort-day"> Day
-		<input type="radio" name="period" value="week" class="js-count-sort-week"> Week
-		<input type="radio" name="period" value="month" class="js-count-sort-month"> Month
-	</div>
-	<div class="count">
-		<div class="avg">
-			<div>Since <span class="js-since"></span></div>
-			<div>Total <span class="js-avg-checkin avg-checkin"></span> check-ins</div>
-			<div class="js-avg-count avg-count"></div>
-			<div class="avg-unit">beers / <span class="js-avg-unit"></span></div>
-		</div>
-	</div>
-	<div id="vis-frequency" class="js-single-svg frequency"></div>
-	<div id="vis-calendar" class="js-single-svg calendar"></div>
-</div>
-
-<!-- ratings -->
-<div class="vis-contents js-single-contents-1">
-	<!-- <div class="vis-contents-title">What matters?</div> -->
-	<div class="score-average"> average rating: <span class="js-score-avg"></span></div>
-	<div id="vis-score" class="js-single-svg score"></div>
-	<div id="vis-network" class="js-single-svg network"></div>
-	<div id="vis-categories" class="js-single-svg categories"></div>
-	<div class="ratings-option-sub js-ratings-options-bar"> Sort By
-		<input type="radio" name="sortBy" value="count" checked> Count
-		<input type="radio" name="sortBy" value="rating"> Average score
-		<input type="radio" name="sortBy" value="name"> Alphabetical
-	</div>
-	<div id="vis-ratings" class="js-single-svg ratings"></div>
-</div>
-
-<!-- beers like and hate -->
-<div class="vis-contents js-single-contents-2">
-	<!-- <div class="vis-contents-title">Beers I love &amp; hate</div> -->
-	<div class="favorites-beer">
-		<div id="vis-favorites" class="js-single-svg favorites-beer-chart"></div>
-	</div>
-	<div class="favorites-list">
-		<div class="favorites-title">
-			<div class="name js-fav-name"></div>
+		<!-- basic stats -->
+		<div class="vis-contents js-single-contents-0">
+			<!-- <div class="vis-contents-title">How much do I drink?</div> -->
 			<div>
-				total <span class="count-number js-fav-count"></span>
-				<span class="js-fav-times"></span>
+				<input type="radio" name="period" value="day" class="js-count-sort-day"> Day
+				<input type="radio" name="period" value="week" class="js-count-sort-week"> Week
+				<input type="radio" name="period" value="month" class="js-count-sort-month"> Month
+			</div>
+			<div class="count">
+				<div class="avg">
+					<div>Since <span class="js-since"></span></div>
+					<div>Total <span class="js-avg-checkin avg-checkin"></span> check-ins</div>
+					<div class="js-avg-count avg-count"></div>
+					<div class="avg-unit">beers / <span class="js-avg-unit"></span></div>
+				</div>
+			</div>
+			<div id="vis-frequency" class="js-single-svg frequency"></div>
+			<div id="vis-calendar" class="js-single-svg calendar"></div>
+		</div>
+
+		<!-- ratings -->
+		<div class="vis-contents js-single-contents-1">
+			<!-- <div class="vis-contents-title">What matters?</div> -->
+			<div class="score-average"> average rating: <span class="js-score-avg"></span></div>
+			<div id="vis-score" class="js-single-svg score"></div>
+			<div id="vis-network" class="js-single-svg network"></div>
+			<div id="vis-categories" class="js-single-svg categories"></div>
+			<div class="ratings-option-sub js-ratings-options-bar"> Sort By
+				<input type="radio" name="sortBy" value="count" checked> Count
+				<input type="radio" name="sortBy" value="rating"> Average score
+				<input type="radio" name="sortBy" value="name"> Alphabetical
+			</div>
+			<div id="vis-ratings" class="js-single-svg ratings"></div>
+		</div>
+
+		<!-- beers like and hate -->
+		<div class="vis-contents js-single-contents-2">
+			<!-- <div class="vis-contents-title">Beers I love &amp; hate</div> -->
+			<div class="favorites-beer">
+				<div id="vis-favorites" class="js-single-svg favorites-beer-chart"></div>
+			</div>
+			<div class="favorites-list">
+				<div class="favorites-title">
+					<div class="name js-fav-name"></div>
+					<div>
+						total <span class="count-number js-fav-count"></span>
+						<span class="js-fav-times"></span>
+					</div>
+				</div>
+				<div class="favorites-list-title js-fav-loves">Beers Your Love</div>
+				<div class="favorites-list-beers js-single-svg js-fav-loves-list"></div>
+				<div class="favorites-list-title js-fav-hates">Beers Your Hate</div>
+				<div class="favorites-list-beers js-single-svg js-fav-hates-list"></div>
+				<div class="favorites-list-title js-fav-mosts">Beers You drink most time</div>
+				<div class="favorites-list-beers js-single-svg js-fav-mosts-list"></div>
 			</div>
 		</div>
-		<div class="favorites-list-title js-fav-loves">Beers Your Love</div>
-		<div class="favorites-list-beers js-single-svg js-fav-loves-list"></div>
-		<div class="favorites-list-title js-fav-hates">Beers Your Hate</div>
-		<div class="favorites-list-beers js-single-svg js-fav-hates-list"></div>
-		<div class="favorites-list-title js-fav-mosts">Beers You drink most time</div>
-		<div class="favorites-list-beers js-single-svg js-fav-mosts-list"></div>
-	</div>
-</div>
 
-<!-- when -->
-<div class="vis-contents js-single-contents-3">
-	<!-- <div class="vis-contents-title">When do I drink?</div> -->
-	<div id="vis-day" class="js-single-svg day"></div>
-	<div id="vis-hour" class="js-single-svg hour"></div>
-</div>
+		<!-- when -->
+		<div class="vis-contents js-single-contents-3">
+			<!-- <div class="vis-contents-title">When do I drink?</div> -->
+			<span class="link underline bold js-dayHour-switch" data-value="matrix">Both Day and Hour</span>
+			<span class="link underline js-dayHour-switch" data-value="day">Only Day</span>
+			<span class="link underline js-dayHour-switch" data-value="hour">Only Hour</span>
+			<div id="vis-dayHour" class="js-single-svg dayHour">
+			</div>
+			<div id="vis-day" class="js-single-svg day"></div>
+			<div id="vis-hour" class="js-single-svg hour"></div>
+		</div>
 
-<!-- where -->
-<div class="vis-contents js-single-contents-4">
-	<!-- <div class="vis-contents-title">Where do I drink?</div> -->
-	<div class="venue-title">
-		<div class="name js-venue-title-name"></div>
-		<div class="desc js-venue-title-score"></div>
-		<div class="desc js-venue-title-type"></div>
-		<div class="desc js-venue-title-city"></div>
-	</div>
-	<div class="venue-detail">
-		<div id="vis-venue-map" class="venue-map"></div>
-		<div id="vis-venue-type" class="js-single-svg venue-type js-venue-type"></div>
-		<div id="vis-venue-city" class="js-single-svg venue-city js-venue-city"></div>
-	</div>
-	<div class="js-venue-list venue-list">
-		<div id="vis-venue-name" class="js-single-svg js-venue-name venue-name"></div>
-	</div>
-</div>
+		<!-- where -->
+		<div class="vis-contents js-single-contents-4">
+			<!-- <div class="vis-contents-title">Where do I drink?</div> -->
+			<div class="venue-title">
+				<div class="name js-venue-title-name"></div>
+				<div class="desc js-venue-title-score"></div>
+				<div class="desc js-venue-title-type"></div>
+				<div class="desc js-venue-title-city"></div>
+			</div>
+			<div class="venue-detail">
+				<div id="vis-venue-map" class="venue-map"></div>
+				<div id="vis-venue-type" class="js-single-svg venue-type js-venue-type"></div>
+				<div id="vis-venue-city" class="js-single-svg venue-city js-venue-city"></div>
+			</div>
+			<div class="js-venue-list venue-list">
+				<div id="vis-venue-name" class="js-single-svg js-venue-name venue-name"></div>
+			</div>
+		</div>
 
-<!-- dummy for scrooll -->
-<div class="js-single-contents-dummy"></div>
+		<!-- dummy for scrooll -->
+		<div class="js-single-contents-dummy"></div>
 
-<!-- footer -->
-<div class="vis-contents-footer js-single-contents-footer">FOOTER</div>
+		<!-- footer -->
+		<div class="vis-contents-footer js-single-contents-footer">FOOTER</div>
 
-</div> <!-- vis contents -->
+	</div> <!-- vis contents -->
 
 </div> <!-- vis -->
 
