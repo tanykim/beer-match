@@ -130,7 +130,7 @@ define(['single-count', 'single-ratings', 'single-beers', 'single-when', 'single
 		Score.drawBehavior(m.behavior);
 		Styles.drawChord(m.styles);
 		Score.drawBoth(m.beersList);
-		Time.drawTimeline(m.byDayHour);
+		Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
 	};
 
 	return {

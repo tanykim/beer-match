@@ -281,7 +281,6 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         this.styles = getStyles(dataset);
         this.byDay = days;
         this.byHour = hours;
-
         this.byDayHour = _.map(dataset, function (d) {
             return _.map(_.range(7), function (day, i) {
                 return _.object(_.map(d.byHour, function (hour, j) {
@@ -289,8 +288,6 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
                 }));
             });
         });
-
-        console.log(this.byDayHour);
 
         var commonVenues = _.intersection(_.pluck(dataset[0].allVenues, 'id'), _.pluck(dataset[1].allVenues, 'id'));
         this.topVenueTypes = _.map(dataset, function (d) {

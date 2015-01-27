@@ -74,10 +74,14 @@
 			Day / Hour
 			<div id="vis-weekend" class="js-weekend weekend"></div>
 			<div id="vis-timeline" class="js-timeline timeline">
-				<span class="link underline bold js-timeline-switch" data-value="absolute">Check-in Count</span>
-				<span class="link underline js-timeline-switch" data-value="relative">Relative Ratio</span>
-				<span class="link underline bold js-timeline-group" data-value="day">byDay</span>
-				<span class="link underline js-timeline-group" data-value="hour">byHour</span>
+				<span class="link underline bold js-timeline-switch js-timeline-value" data-type="value" data-value="absolute">Check-in Count</span>
+				<span class="link underline js-timeline-switch js-timeline-value" data-type="value" data-value="relative">Relative Ratio</span>
+				-----
+				<span class="link underline bold js-timeline-switch js-timeline-group" data-type="group" data-value="day">byDay</span>
+				<span class="link underline js-timeline-switch js-timeline-group" data-type="group" data-value="hour">byHour</span>
+				-----
+				<span class="link underline bold js-timeline-switch js-timeline-type" data-type="type" data-value="bars">Bars</span>
+				<span class="link underline js-timeline-switch js-timeline-type" data-type="type" data-value="bubble">Bubble</span>
 			</div>
 		</div>
 		<div class="vis-contents js-match-contents-5">
