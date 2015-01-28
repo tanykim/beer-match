@@ -1,4 +1,4 @@
-define(['single-count', 'single-ratings', 'single-beers', 'single-when', 'single-where', 'match-score', 'match-style', 'match-time'], function (Count, Ratings, Beers, When, Where, Score, Styles, Time) {
+define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when', 'single-where', 'match-score', 'match-style', 'match-time'], function (moment, Count, Ratings, Beers, When, Where, Score, Styles, Time) {
 
 	function callInteraction() {
 
@@ -68,7 +68,16 @@ define(['single-count', 'single-ratings', 'single-beers', 'single-when', 'single
 
 		//view change
 		$('.js-single-svg').empty();
+		var timeRange = _.map(b.timeRange, function (d) {
+            return moment(d.slice(0, 9), 'YYYY-MM-DD').startOf('month')._d;
+        });
+        var monthDiff = moment(timeRange[1]).diff(timeRange[0], 'months');
 
+        if (monthDiff > 0) {
+			Beers.drawTrends(b.allBeers, timeRange, monthDiff);
+		}
+
+		/*
 		//1--count
 		$('.js-count-sort-' + b.avgUnit).prop('checked', true);
 		Count.putCount(b.userinfo.checkinCount, b.avgCount, b.avgUnit);
@@ -119,6 +128,7 @@ define(['single-count', 'single-ratings', 'single-beers', 'single-when', 'single
 		var w3 = $('.js-venue-city').width();
 		Where.putVenues(venues, w1, w2, w3);
 
+		*/
 		//call interaction
 		callInteraction();
 

@@ -142,8 +142,6 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 
 	var drawMatrix = function (byDay, byHour) {
 
-		console.log(byDay, byHour);
-
 		//max vals
 		var maxVals = {
 			matrix: _.max(_.map(byHour, function (hour) {
@@ -152,7 +150,6 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 			day : _.max(_.pluck(byDay, 'total')),
 			hour: _.max(_.pluck(byHour, 'total'))
 		} 
-		console.log(maxVals);
 
 		var margin = { top: 10, right: 20, bottom: 20, left: 40 };
 		var dim = { w: $('.dayHour').width() - margin.left - margin.right,
@@ -208,7 +205,6 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 		});
 		var dataset = _.flatten(_.map(byHour, function (hour, i) {
 			return _.map(hour.byDay, function (d, day) {
-				console.log(i, day, x.day(getSum(hourly[day], i)), x.day(d));
 				return {
 					x: {
 						matrix: x.matrix(i),

@@ -1,7 +1,7 @@
 @headerH: 10%;
 @footerH: 10%;
 body {
-	background: url('../images/stripe.png');
+	background: url('../images/stripe.png') #000;
 	background-size: 20px 20px;
 }
 .intro {
@@ -9,10 +9,10 @@ body {
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	background: url('../images/intro.png') center;
-	background-size: auto 80%;
-	background-repeat: no-repeat;
-	min-height: 800px;
+	/*background: url('../images/intro.png') center;*/
+	/*background-size: auto 80%;*/
+	/*background-repeat: no-repeat;*/
+	/*min-height: 800px;*/
 	ul.intro-main {
 		display: table;
 		height: 100% - @headerH - @footerH;
@@ -34,17 +34,31 @@ body {
 		}
 	}
 }
+.intro-content-top, .intro-content-bottom {
+	width: 100%;
+	background: #efefef;
+}
+.intro-content-main {
+	background: #fff;
+	padding: 2em 0;
+}
 .intro-header {
 	height: @headerH;
 	text-align: right;
-	/*background-color: #e5e5e5;		*/
+	overflow: hidden;
+}
+.intro-icons {
 	li {
 		display: inline;
 	}
 }
+.intro-headline {
+	width: 100%;
+	text-align: center;
+}
 .intro-footer {
-	background-color: #e5e5e5;
-	padding-top: 20px;
+	/*background-color: #e5e5e5;*/
+	/*padding-top: 20px;*/
 	height: @footerH;
 	text-align: center;
 	overflow: hidden;

@@ -13,15 +13,20 @@
 <!-- intro -->
 <div class="intro js-intro">
 	<div class="intro-header">
-        <ul>
+        <ul class="intro-icons">
             <li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.google.com" target="_blank"><img class="share-icon" src="/images/facebook.png"></a></li>
             <li><a href="https://twitter.com/intent/tweet?text=Explore your beer taste and see the match rate with others at http%3A%2F%2Fbeermatch.tanykim.co" target="_blank"><img class="share-icon" src="/images/twitter.png"></a></li>
             <li><a href="mailto:?Subject=Check out this! - Beer Match&Body=Explore your beer taste and see the match rate with others at http%3A%2F%2Fbeermatch.tanykim.co"><img class="share-icon" src="/images/email.png"></a></li>
         </ul>
+		<div class="intro-headline"> Explore your beer taste and drinking behavior & <br/> see the match with friends! </div>
 	</div>
 	<ul class="intro-main">
 		<li>
-			<div class="intro-content js-intro-content"></div>
+			<div class="intro-content">
+				<div class="intro-content-top">BEER MATCH</div>
+				<div class="intro-content-main js-intro-content"></div>
+				<div class="intro-content-bottom">POWERED BY UNTAPPED</div>
+			</div>
 		</li>
 	</ul>
 	<div class="intro-footer">
@@ -134,8 +139,12 @@
 		<!-- beers like and hate -->
 		<div class="vis-contents js-single-contents-2">
 			<!-- <div class="vis-contents-title">Beers I love &amp; hate</div> -->
+			<div class="favorites-trend">
+				Your taste change overtime
+				<div id="vis-fav-trend" class="js-single-svg fav-trend"></div>
+			</div>
 			<div class="favorites-beer">
-				<div id="vis-favorites" class="js-single-svg favorites-beer-chart"></div>
+				<div id="vis-fav-chart" class="js-single-svg favorites-beer-chart"></div>
 			</div>
 			<div class="favorites-list">
 				<div class="favorites-title">
