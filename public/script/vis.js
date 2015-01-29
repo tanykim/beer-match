@@ -68,15 +68,9 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 
 		//view change
 		$('.js-single-svg').empty();
-		var timeRange = _.map(b.timeRange, function (d) {
-            return moment(d.slice(0, 9), 'YYYY-MM-DD').startOf('month')._d;
-        });
-        var monthDiff = moment(timeRange[1]).diff(timeRange[0], 'months');
 
-        if (monthDiff > 0) {
-			Beers.drawTrends(b.allBeers, timeRange, monthDiff);
-		}
-
+		console.log(b.venues);
+		Where.drawVenueConnection(b.venues);
 		/*
 		//1--count
 		$('.js-count-sort-' + b.avgUnit).prop('checked', true);
@@ -108,7 +102,14 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 			Ratings.transformRatingsBar(b.ratingsList[ratingsKey], vR.baseH);
 		});
 
-		//3--beers loved and htated
+		//3--beers loved and hated
+		var timeRange = _.map(b.timeRange, function (d) {
+            return moment(d.slice(0, 9), 'YYYY-MM-DD').startOf('month')._d;
+        });
+        var monthDiff = moment(timeRange[1]).diff(timeRange[0], 'months');
+        if (monthDiff > 0) {
+			Beers.drawTrends(b.allBeers, timeRange, monthDiff);
+		}
 		var vB= Beers.drawFavoritesCenter(b.ratingsList);
 		Beers.drawCenterBeer(vB, b.beerList.loves[0].list[0], b.maxCount);
 		Beers.putFavorites(b.beerList, b.ratingsList, b.maxCount, vB);
@@ -122,11 +123,10 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 		
 		//5--venue
 		Where.createHeatmap(b.locationList);
-		var venues = b.venues;
 		var w1 = $('.js-venue-name').width();
 		var w2 = $('.js-venue-type').width();
 		var w3 = $('.js-venue-city').width();
-		Where.putVenues(venues, w1, w2, w3);
+		Where.putVenues(b.venues, w1, w2, w3);
 
 		*/
 		//call interaction
