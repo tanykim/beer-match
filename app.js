@@ -11,7 +11,8 @@ var nconf = require('nconf');
 var timezoner = require('timezoner');
 
 //run server
-server.listen(8080);
+var port = process.env.PORT || 8080;
+server.listen(port);
 app.use(express.static(__dirname + '/public'));
 app.get('/', function (req, res) {
 	console.log('server started--');
@@ -140,7 +141,11 @@ function getUserInfo(userId) {
 	//file check first
 	if (fs.existsSync('public/users/' + userId + '.json')) {
     	console.log('---file exists');
-    	io.emit('dataExist', { userId: userId });
+    	// io.emit('dataExist', { userId: userId });
+
+    	var data = JSON.parse(fs.readFileSync('public/users/raw/' + userId + '.json', 'utf8'));
+		io.emit('success', { data: data });
+
 	} else {
 		untappd.userInfo(function (err,obj) {
 			if (obj && obj.response && obj.response.user) {
@@ -208,9 +213,9 @@ function checkFileExists(users) {
 io.on('connection', function (socket) {
 	socket.on('dataset', function (data) {
 		console.log('data generating mode---', data.userId);
-		var data = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId + '.json', 'utf8'));
-		console.log(data.userinfo.userId);
-		writeJSON(data);
+		var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId + '.json', 'utf8'));
+		console.log(d.userinfo.userId);
+		writeJSON(d);
   	});
 	socket.on('userId', function (data) {
 		console.log('userId---', data);

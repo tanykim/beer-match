@@ -201,8 +201,100 @@ define(['vis-settings'], function (Settings) {
 
     };
 
+    function drawBubbles(data, sort, dim, maxR, unitH, maxRVal, svg, links) {
+
+        var angle = sort === 'city' ? 30 : -30;
+        var anchor = sort === 'city' ? 'end' : 'start';
+        var xPos = sort === 'city' ? maxR : dim.w - maxR;
+
+        svg.selectAll('.js-connection-circle-' + sort)
+            .data(data)
+            .enter().append('circle')
+            .attr('cx', xPos)
+            .attr('cy', function (d, i) {
+                return maxR + unitH * i;
+            })
+            .attr('r', function (d) {
+                return Math.sqrt(maxR * maxR * d.count / maxRVal); })
+            .style('fill', Settings.arr[0])
+            .style('opacity', 0.5)
+            .attr('class', function (d, i) {
+                return 'js-connection-category js-connection-circle-' + sort + ' js-connection-circle-' + sort + '-' + i;
+            })
+            .on('mouseover', function (d, i) {
+
+                d3.selectAll('.js-connection-category').style('opacity', 0.1);
+
+                $(this).css('cursor', 'pointer');
+                d3.select(this).style('opacity', 1);
+                d3.select('.js-connection-text-' + sort + '-' + i).style('opacity', 1);
+
+                _.map(links[sort][d.name], function (link) {
+                    d3.select('.js-connection-line-city-' + link).style('opacity', 1);
+                    d3.select('.js-connection-venue-' + link).style('fill', Settings.arr[0]);
+                    d3.select('.js-connection-count-' + link).style('fill', '#000');
+                });
+            })
+            .on('mouseout', function (d, i) {
+                d3.selectAll('.js-connection-category').style('opacity', 0.5);
+                d3.selectAll('.js-connection-venue').style('fill', '#000');
+                d3.selectAll('.js-connection-count').style('fill', '#fff');
+            });
+
+        _.each(data, function (d, i) {
+            svg.append('circle')
+                .attr('cx', xPos)
+                .attr('cy', maxR + unitH * i)
+                .attr('r', 0)
+                .style('fill', '#000')
+                .style('opacity', 0.5)
+                .attr('class', 'js-connection-' + sort + '-' + i);
+            svg.append('circle')
+                .attr('cx', xPos)
+                .attr('cy', maxR + unitH * i)
+                .attr('r', 2)
+                .style('fill', '#000');
+            svg.append('text')
+                .attr('x', xPos)
+                .attr('y', maxR + unitH * i)
+                .text(d.name)
+                .style('text-anchor', anchor)
+                .style('font-size', '0.8em')
+                .style('opacity', 0.5)
+                .attr('transform', 'rotate(' + angle + ', ' + xPos + ', ' + (i * unitH + maxR - 14) + ')')
+                .attr('class', 'js-connection-category js-connection-text-' + sort + '-' + i);
+        });
+    }
+
+    function getLinkedId(data, name) {
+        var id = '';
+        _.each(data, function (d, i) { 
+            if (d.name === name) {
+                id = i;
+            }
+        });
+        return id;
+    }
+
     var drawVenueConnection = function (data) {
 
+        var temp = _.map(data.type, function (d) {
+            return {
+                name: d.name,
+                count: d.count,
+                appIds: d.venueIds
+            };
+        });
+        var temp2 = _.map(data.name, function (d) {
+            return {
+                name: d.name,
+                count: d.count,
+                type: d.type
+            };
+        })
+        console.log(JSON.stringify(temp));
+        console.log(JSON.stringify(temp2));
+        
         var unitH = 50;
 
         var margin = { top: 20, right: 200, bottom: 0, left: 200 };
@@ -217,76 +309,12 @@ define(['vis-settings'], function (Settings) {
         var maxR = unitH;
         var maxRVal = _.max(_.union(_.pluck(data.city, 'count'), _.pluck(data.type, 'count')));
 
-        function drawBubbles(sort, xPos, angle, anchor) {
-
-            var order = 0;
-            var arr = _.map(data[sort], function (d) {
-                return d;
-            });
-
-            svg.selectAll('.js-connection-circle-' + sort)
-                .data(arr).enter().append('circle')
-                    .attr('cx', xPos)
-                    .attr('cy', function (d, i) { return maxR + unitH * i; })
-                    .attr('r', function (d) {
-                        return Math.sqrt(maxR * maxR * d.count / maxRVal); })
-                    .style('fill', Settings.arr[0])
-                    .style('opacity', 0.5)
-                    .attr('class', function (d, i) {
-                        return 'js-connection-category js-connection-circle-' + sort + ' js-connection-circle-' + sort + '-' + i;
-                    })
-                    .on('mouseover', function (d, i) {
-
-                        d3.selectAll('.js-connection-category').style('opacity', 0.1);
-
-                        $(this).css('cursor', 'pointer');
-                        d3.select(this).style('opacity', 1);
-                        d3.select('.js-connection-text-' + sort + '-' + i).style('opacity', 1);
-
-                        _.map(links[sort][i], function (link) {
-                            d3.select('.js-connection-line-city-' + link).style('opacity', 1);
-                            d3.select('.js-connection-venue-' + link).style('fill', Settings.arr[0]);
-                            d3.select('.js-connection-count-' + link).style('fill', '#000');
-                        });
-                    })
-                    .on('mouseout', function (d, i) {
-                        d3.selectAll('.js-connection-category').style('opacity', 0.5);
-                        d3.selectAll('.js-connection-venue').style('fill', '#000');
-                        d3.selectAll('.js-connection-count').style('fill', '#fff');
-                    });
-
-            _.each(data[sort], function (d, key) {
-                svg.append('circle')
-                    .attr('cx', xPos)
-                    .attr('cy', maxR + unitH * order)
-                    .attr('r', 0)
-                    .style('fill', '#000')
-                    .style('opacity', 0.5)
-                    .attr('class', 'js-connection-' + sort + '-' + order);
-                svg.append('circle')
-                    .attr('cx', xPos)
-                    .attr('cy', maxR + unitH * order)
-                    .attr('r', 2)
-                    .style('fill', '#000');
-                svg.append('text')
-                    .attr('x', xPos)
-                    .attr('y', maxR + unitH * order)
-                    .text(key)
-                    .style('text-anchor', anchor)
-                    .style('font-size', '0.8em')
-                    .style('opacity', 0.5)
-                    .attr('transform', 'rotate(' + angle + ', ' + xPos + ', ' + (order * unitH + maxR - 14) + ')')
-                    .attr('class', 'js-connection-category js-connection-text-' + sort + '-' + order);
-                order = order + 1;
-            });
-        }
-
-        drawBubbles('city', maxR, 30, 'end');
-        drawBubbles('type', dim.w - maxR, -30, 'start');
-
         //name
         var x = d3.scale.linear().range([0, dim.w / 2]).domain([0, _.max(_.pluck(data.name, 'count'))])
         var links = { city: {}, type: {} };
+
+        drawBubbles(data.city, 'city', dim, maxR, unitH, maxRVal, svg, links);
+        drawBubbles(data.type, 'type', dim, maxR, unitH, maxRVal, svg, links);
 
         svg.selectAll('.js-connection-venue')
             .data(data.name)
@@ -308,16 +336,19 @@ define(['vis-settings'], function (Settings) {
                 d3.selectAll('.js-connection-category').style('opacity', 0.1);
 
                 //circles
-                d3.select('.js-connection-circle-city-' + d.cityId).style('opacity', 1);
-                d3.select('.js-connection-circle-type-' + d.typeId).style('opacity', 1);
-                d3.selectAll('.js-connection-city-' + d.cityId).transition()
+                var cityId = getLinkedId('city', d.city);
+                var typeId = getLinkedId('type', d.type);
+                
+                d3.select('.js-connection-circle-city-' + cityId).style('opacity', 1);
+                d3.select('.js-connection-circle-type-' + typeId).style('opacity', 1);
+                d3.selectAll('.js-connection-city-' + cityId).transition()
                     .attr('r', Math.sqrt(maxR * maxR * d.count / maxRVal));
-                d3.selectAll('.js-connection-type-' + d.typeId).transition()
+                d3.selectAll('.js-connection-type-' + typeId).transition()
                     .attr('r', Math.sqrt(maxR * maxR * d.count / maxRVal));
 
                 //text
-                d3.select('.js-connection-text-city-' + d.cityId).style('opacity', 1);
-                d3.select('.js-connection-text-type-' + d.typeId).style('opacity', 1);
+                d3.select('.js-connection-text-city-' + cityId).style('opacity', 1);
+                d3.select('.js-connection-text-type-' + typeId).style('opacity', 1);
 
                 //line
                 d3.selectAll('.js-connection-line-' + i).style('opacity', 1);
@@ -327,15 +358,20 @@ define(['vis-settings'], function (Settings) {
                 d3.select(this).style('fill', '#000');
                 d3.select('.js-connection-count-' + i).style('fill', '#fff');
 
+                //circles
+                var cityId = getLinkedId('city', d.city);
+                var typeId = getLinkedId('type', d.type);
+
                 //circle
-                d3.selectAll('.js-connection-city-' + d.cityId).transition()
+                d3.selectAll('.js-connection-city-' + cityId).transition()
                     .attr('r', 0);
-                d3.selectAll('.js-connection-type-' + d.typeId).transition()
+                d3.selectAll('.js-connection-type-' + typeId).transition()
                     .attr('r', 0);
 
                 //all -- circles, lines, text
                 d3.selectAll('.js-connection-category').style('opacity', 0.5);
             });
+
 
         _.each(data.name, function (d, i) {
             svg.append('text')
@@ -349,33 +385,35 @@ define(['vis-settings'], function (Settings) {
                 .text(d.count)
                 .style('text-anchor', 'middle')
                 .style('fill', '#fff')
-                .attr('class', 'js-connection-count-' + i)
-            if (!_.isUndefined(d.cityId)) {
-                if (links.city[d.cityId]) {
-                    links.city[d.cityId].push(i);
+                .attr('class', 'js-connection-count js-connection-count-' + i)
+            if (d.city) {
+                if (links.city[d.city]) {
+                    links.city[d.city].push(i);
                 } else {
-                    links.city[d.cityId] = [i];
+                    links.city[d.city] = [i];
                 }
+                var linkedId = getLinkedId(data.city, d.city);
                 svg.append('line')
                     .attr('x1', dim.w / 2 - x(d.count) / 2)
                     .attr('y1', maxR + i * unitH)
                     .attr('x2', 0 + maxR)
-                    .attr('y2', d.cityId * unitH + maxR)
+                    .attr('y2', linkedId * unitH + maxR)
                     .style('stroke', '#999')
                     .style('opacity', 0.5)
                     .attr('class', 'js-connection-category js-connection-line-' + i + ' js-connection-line-city-' + i);
             }
-            if (!_.isUndefined(d.typeId)) {
-                if (links.type[d.typeId]) {
-                    links.type[d.typeId].push(i);
+            if (d.type) {
+                if (links.type[d.type]) {
+                    links.type[d.type].push(i);
                 } else {
-                    links.type[d.typeId] = [i];
+                    links.type[d.type] = [i];
                 }
+                var linkedId = getLinkedId(data.type, d.type);
                 svg.append('line')
                     .attr('x1', dim.w / 2 + x(d.count) / 2)
                     .attr('y1', maxR + i * unitH)
                     .attr('x2', dim.w - maxR)
-                    .attr('y2', d.typeId * unitH + maxR)
+                    .attr('y2', linkedId * unitH + maxR)
                     .style('stroke', '#999')
                     .style('opacity', 0.5)
                     .attr('class', 'js-connection-category js-connection-line-' + i + ' js-connection-line-type-' + i);

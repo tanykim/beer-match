@@ -291,8 +291,8 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 
         var commonVenues = _.intersection(_.pluck(dataset[0].allVenues, 'id'), _.pluck(dataset[1].allVenues, 'id'));
         this.topVenueTypes = _.map(dataset, function (d) {
-                return _.sortBy(_.map(d.venues.type, function (t, key) {
-                    return { type: key, icon: t.icon, count: t.count };
+                return _.sortBy(_.map(d.venues.type, function (t) {
+                    return { type: t.name, icon: t.icon, count: t.count, venueIds: t.venueIds };
                 }), function (v) {
                     return v.count;
                 }).reverse();

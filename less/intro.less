@@ -1,18 +1,14 @@
 @headerH: 10%;
 @footerH: 10%;
 body {
-	background: url('../images/stripe.png') #000;
-	background-size: 20px 20px;
+	background: url('../images/intro_bg.png') #000;
+	background-size: 20px 10px;
 }
 .intro {
 	width: 100%;
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	/*background: url('../images/intro.png') center;*/
-	/*background-size: auto 80%;*/
-	/*background-repeat: no-repeat;*/
-	/*min-height: 800px;*/
 	ul.intro-main {
 		display: table;
 		height: 100% - @headerH - @footerH;
@@ -34,16 +30,23 @@ body {
 		}
 	}
 }
-.intro-content-top, .intro-content-bottom {
-	width: 100%;
-	background: #efefef;
+.intro-content-top {
+	background: url('../images/intro_top_bg.png') repeat-x;
+	background-position: left bottom;
+	background-size: 32px 61px;
+	height: 190px;
+}
+.intro-content-bottom {
+	background: url('../images/intro_bottom_bg.png') repeat-x;
+	background-size: 6px 19px;
+	height: 103px;
 }
 .intro-content-main {
 	background: #fff;
-	padding: 2em 0;
+	padding: 1em 0 2em;
 }
 .intro-header {
-	height: @headerH;
+	min-height: @headerH;
 	text-align: right;
 	overflow: hidden;
 }
@@ -55,17 +58,25 @@ body {
 .intro-headline {
 	width: 100%;
 	text-align: center;
+	color: @light;
 }
 .intro-footer {
-	/*background-color: #e5e5e5;*/
-	/*padding-top: 20px;*/
-	height: @footerH;
+	min-height: @footerH;
 	text-align: center;
-	overflow: hidden;
+	display: table;
+	width: 100%;
+	.contents {
+		font-size: @small;
+		background-color: @dark;
+		color: @light;
+		display: table-cell;
+		vertical-align: middle;
+	}
 }
+
 .share-icon {
 	border: 0;
-	width: 20px;	
+	width: 20px;
 }
 
 .intro-name {

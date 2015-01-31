@@ -66,7 +66,7 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 			.attr('height', dim.h + margin.top + margin.bottom)
 			.append('g')
 			.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-		
+
 		svg.append('g')
 			.attr('class', 'x axis')
 			.attr('transform', 'translate(0, ' + dim.h + ')')
@@ -88,7 +88,7 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 				.attr('width', dim.w/24)
 				.attr('height', dim.h - y(val.total))
 				.attr('class', 'hour-block-total');
-			_.each(val.byDay, function (day, i) {			
+			_.each(val.byDay, function (day, i) {
 				var accCount = getSum(val.byDay, i);
 				svg.append('rect')
 					.attr('x', x(+key))
@@ -128,7 +128,7 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 			if (!$(this).hasClass('bold')) {
 				$('.js-dayHour-switch').removeClass('bold');
 				$(this).addClass('bold');
-				updateGraph(val);			
+				updateGraph(val);
 			}
 
 		});
@@ -149,12 +149,12 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 				})),
 			day : _.max(_.pluck(byDay, 'total')),
 			hour: _.max(_.pluck(byHour, 'total'))
-		} 
+		}
 
 		var margin = { top: 10, right: 20, bottom: 20, left: 40 };
 		var dim = { w: $('.dayHour').width() - margin.left - margin.right,
 					h: 300 - margin.top - margin.bottom };
-		
+
 		var x = {
 			matrix: d3.scale.linear().range([0, dim.w]).domain([0, 24]),
 			day: d3.scale.linear().range([0, dim.w]).domain([0, Math.ceil(maxVals.day / 10) * 10]),
@@ -188,7 +188,7 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 			.attr('height', dim.h + margin.top + margin.bottom)
 			.append('g')
 			.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-		
+
 		svg.append('g')
 			.attr('class', 'x axis js-matrix-x')
 			.attr('transform', 'translate(0, ' + dim.h + ')')
@@ -196,11 +196,11 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 		svg.append('g')
 			.attr('class', 'y axis js-matrix-y')
 			.call(yAxis.matrix);
-		
+
 		//matrix dataset
 		var hourly = _.map(_.range(7), function (d) {
 			return _.map(_.range(24), function (h) {
-				return byHour[h] ? byHour[h].byDay[d] : 0; 
+				return byHour[h] ? byHour[h].byDay[d] : 0;
 			});
 		});
 		var dataset = _.flatten(_.map(byHour, function (hour, i) {

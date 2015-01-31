@@ -69,7 +69,7 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 		//view change
 		$('.js-single-svg').empty();
 
-		console.log(b.venues);
+		When.drawMatrix(b.byDay, b.byHour);
 		Where.drawVenueConnection(b.venues);
 		/*
 		//1--count
@@ -122,6 +122,7 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 		When.drawHourStats(b.byHour);
 		
 		//5--venue
+		Where.drawVenueConnection(b.venues);
 		Where.createHeatmap(b.locationList);
 		var w1 = $('.js-venue-name').width();
 		var w2 = $('.js-venue-type').width();
