@@ -268,7 +268,7 @@ define(['vis-settings'], function (Settings) {
 
     function getLinkedId(data, name) {
         var id = '';
-        _.each(data, function (d, i) { 
+        _.each(data, function (d, i) {
             if (d.name === name) {
                 id = i;
             }
@@ -278,23 +278,6 @@ define(['vis-settings'], function (Settings) {
 
     var drawVenueConnection = function (data) {
 
-        var temp = _.map(data.type, function (d) {
-            return {
-                name: d.name,
-                count: d.count,
-                appIds: d.venueIds
-            };
-        });
-        var temp2 = _.map(data.name, function (d) {
-            return {
-                name: d.name,
-                count: d.count,
-                type: d.type
-            };
-        })
-        console.log(JSON.stringify(temp));
-        console.log(JSON.stringify(temp2));
-        
         var unitH = 50;
 
         var margin = { top: 20, right: 200, bottom: 0, left: 200 };
@@ -338,7 +321,7 @@ define(['vis-settings'], function (Settings) {
                 //circles
                 var cityId = getLinkedId('city', d.city);
                 var typeId = getLinkedId('type', d.type);
-                
+
                 d3.select('.js-connection-circle-city-' + cityId).style('opacity', 1);
                 d3.select('.js-connection-circle-type-' + typeId).style('opacity', 1);
                 d3.selectAll('.js-connection-city-' + cityId).transition()

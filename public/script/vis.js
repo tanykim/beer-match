@@ -3,16 +3,16 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 	function callInteraction() {
 
 		//vis menu show/hide
-		$('.js-menu-open').click(function() {
-			$('.js-menu-close').show();
-			$('.js-menu-open').hide();
-			$('.js-vis-menu').fadeIn();
-		});
-		$('.js-menu-close').click(function() {
-			$('.js-menu-close').hide();
-			$('.js-menu-open').show();
-			$('.js-vis-menu').fadeOut();
-		});
+		// $('.js-menu-open').click(function() {
+		// 	$('.js-menu-close').show();
+		// 	$('.js-menu-open').hide();
+		// 	$('.js-vis-menu').fadeIn();
+		// });
+		// $('.js-menu-close').click(function() {
+		// 	$('.js-menu-close').hide();
+		// 	$('.js-menu-open').show();
+		// 	$('.js-vis-menu').fadeOut();
+		// });
 
 		//get vis position
     	var titleStr = [
@@ -120,7 +120,7 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 		When.drawDayStats(b.byDay);
 		//by hour bar chart
 		When.drawHourStats(b.byHour);
-		
+
 		//5--venue
 		Where.drawVenueConnection(b.venues);
 		Where.createHeatmap(b.locationList);
@@ -136,6 +136,9 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 	};
 
 	var startVisMatch = function (m) {
+
+		$('.js-match-svg').empty();
+
 		console.log('---match view');
 		Score.putMatch(m.matchScore, m.matchList);
 		Score.drawCount(m.avgCount);

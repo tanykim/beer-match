@@ -1,93 +1,119 @@
 @headerH: 10%;
 @footerH: 10%;
 body {
-	background: url('../images/intro_bg.png') #000;
-	background-size: 20px 10px;
+	background: url('../images/intro_bg_star.png') @dark;
+	background-size: 150px 150px;
 }
 .intro {
 	width: 100%;
+}
+.intro-icons {
 	position: absolute;
-	top: 0;
-	bottom: 0;
-	ul.intro-main {
-		display: table;
-		height: 100% - @headerH - @footerH;
-		&:before{
-            content: '';
-            display: block;
-            width: 100%;
-        }
-        &:after {
-            content: '';
-            display: inline-block;
-            width: 100%;
-        }
-		li {
-			display: table-cell;
-			vertical-align: middle;
-			width: 100%;
-			text-align: center;
-		}
+	right: 0;
+	padding: 10px 10px 0 0;
+	div {
+	    margin-left: 10px;
+	    padding: 0;
+		height: 30px;
+    	width: 30px;
+    	float: left;
+ 	}
+    .facebook {
+    	background: url('../images/social.png') 0 0;
+    	background-size: 120px 30px;
+    }
+    .twitter {
+    	background: url('../images/social.png') -40px 0;
+    	background-size: 110px 30px;
+    }
+    .google {
+    	background: url('../images/social.png') -80px 0;
+    	background-size: 110px 30px;
+    }
+}
+.intro-header {
+	width: 100%;
+	text-align: center;
+	color: @light;
+	padding: 4% 0;
+}
+.intro-headline {
+	letter-spacing: 0.1em;
+	color: @yellow;
+	margin-bottom: 1em;
+	font-weight: 700;
+}
+.intro-anchor {
+	span {
+		margin-right: 0.5em;
+		margin-left: 0.5em;
+		color: #fff;
+		text-decoration: underline;
 	}
 }
-.intro-content-top {
+.intro-main {
+	text-align: center;
+	width: 100%;
+}
+.intro-top {
 	background: url('../images/intro_top_bg.png') repeat-x;
 	background-position: left bottom;
 	background-size: 32px 61px;
 	height: 190px;
 }
-.intro-content-bottom {
+.intro-bottom {
 	background: url('../images/intro_bottom_bg.png') repeat-x;
-	background-size: 6px 19px;
-	height: 103px;
+	background-size: 7px 19px;
+	height: 51px;
 }
-.intro-content-main {
+.intro-untappd {
+	text-align: center;
+	margin-top: 1em;
+	padding-bottom: 8%;
+}
+.intro-about, .intro-credit {
+	padding: 2em;
+	background-color: @light
+}
+.intro-vis {
+	padding: 2em;
+	background-color: @dark;
+	color: #fff;
+}
+
+/* intro content */
+.intro-content {
 	background: #fff;
 	padding: 1em 0 2em;
-}
-.intro-header {
-	min-height: @headerH;
-	text-align: right;
-	overflow: hidden;
-}
-.intro-icons {
-	li {
-		display: inline;
+	font-size: @large;
+	.link {
+		color: @red;
 	}
 }
-.intro-headline {
-	width: 100%;
-	text-align: center;
-	color: @light;
+.intro-status {
+	font-weight: 700;
+	font-size: @normal;
+	color: @orange;
 }
-.intro-footer {
-	min-height: @footerH;
-	text-align: center;
-	display: table;
-	width: 100%;
-	.contents {
-		font-size: @small;
-		background-color: @dark;
-		color: @light;
-		display: table-cell;
-		vertical-align: middle;
-	}
-}
-
-.share-icon {
-	border: 0;
-	width: 20px;
-}
-
 .intro-name {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
 }
 .intro-input {
 	font-size: @large;
+	background-color: @lightBlue;
+	font-family:inherit;
+	font-weight: 700;
+	color: @dark;
+    border: 1px solid @dark;
 }
-.intro-status {
-	margin-bottom: 1em;
+.intro-msg {
+	margin-top: 1em;
+	font-size: @small;
+	a {
+		color: @red;
+	}
 }
-
 @picSize: 80px;
 .intro-user {
 	.pic {
@@ -96,7 +122,7 @@ body {
 		border-radius: @picSize/2;
 		-webkit-border-radius: @picSize/2;
 		-moz-border-radius: @picSize/2;
-		margin: 0 auto;
+		margin: 1em auto 0;
 		background-size: @picSize;
 	}
 	.name {
@@ -105,14 +131,28 @@ body {
 		margin-top: 0.5em;
 	}
 	.location, .timezone {
-		margin-top: 0.2em;
-	}
-	.start{
-		margin-top: 1em;
+		margin-top: 0.5em;
+		font-size: @small;
 	}
 }
-
-/* extra */
+.intro-list {
+    background-color: @lightBlue;
+    border: 1px solid @dark;
+	font-family:inherit;
+	font-size: @normal;
+	margin-top: 1em;
+}
+.intro-start {
+	margin-top: 1em;
+	font-weight: 700;
+}
+.intro-progress {
+	color: @orange;
+}
+.intro-start-single {
+	margin-top: 1em;
+}
+/* extra
 .extra-wrapper {
 	position: absolute;
 	top: 0;
@@ -136,3 +176,4 @@ body {
 		padding: 2em;
 	}
 }
+*/

@@ -1,10 +1,25 @@
 <!DOCTYPE html>
+<!--[if IE 7]><html lang="en" class="ie7"><![endif]-->
+<!--[if IE 8]><html lang="en" class="ie8"><![endif]-->
+<!--[if IE 9]><html lang="en" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><html lang="en"><![endif]-->
+<!--[if !IE]><html lang="en-US"><![endif]-->
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <html>
 <head>
 <title>BEER Match - Powered by UNTAPPD</title>
 <link rel="stylesheet" href="/style/style.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:title" content="Visualization of beer taste and behavior"/>
+<meta property="og:site_name" content="Beer Match"/>
+<meta property="og:url" content="http://beer.tany.kim"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:description" content="Check this cool visualization of beer! See your beer taste and the match with your friends at http%3A%2F%2Fbeer.tany.kim"/>
+<meta property="og:image" content="http://beer.tany.kim/images/logo.png"/>
+<meta property="og:image:secure_url" content="https://beer.tany.kim/images/logo.png"/>
+<meta property="og:image:type" content="image/png"/>
+<meta property="og:image:width" content="160"/>
+<meta property="og:image:height" content="160"/>
 <script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script>
 <script data-main="/script/main" src="/script/require.js"></script>
 </head>
@@ -12,31 +27,40 @@
 
 <!-- intro -->
 <div class="intro js-intro">
-	<div class="intro-header">
-        <ul class="intro-icons">
-            <li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.google.com" target="_blank"><img class="share-icon" src="/images/facebook.png"></a></li>
-            <li><a href="https://twitter.com/intent/tweet?text=Explore your beer taste and see the match rate with others at http%3A%2F%2Fbeermatch.tanykim.co" target="_blank"><img class="share-icon" src="/images/twitter.png"></a></li>
-            <li><a href="mailto:?Subject=Check out this! - Beer Match&Body=Explore your beer taste and see the match rate with others at http%3A%2F%2Fbeermatch.tanykim.co"><img class="share-icon" src="/images/email.png"></a></li>
-        </ul>
-		<div class="intro-headline"> Explore your beer taste and drinking behavior & <br/> see the match with friends! </div>
-	</div>
-	<ul class="intro-main">
-		<li>
-			<div class="intro-content">
-				<div class="intro-content-top"><img src="images/intro_top.png" width="723" height="190"></div>
-				<div class="intro-content-main js-intro-content"></div>
-				<div class="intro-content-bottom"><img src="images/intro_bottom.png" width="222" height="103"></div>
+	<div class="js-intro-0">
+	    <div class="intro-icons">
+	        <div class="facebook js-social" data-value="facebook"></div>
+	        <div class="twitter js-social" data-value="twitter"></div>
+	        <div class="google js-social" data-value="google"></div>
+		</div>
+		<div class="intro-header">
+			<div class="intro-headline">EXPLORE YOUR BEERS AND SEE THE MATCH WITH FRIENDS'</div>
+			<div class="intro-anchor">
+				<span class="js-intro-slide link" data-value="1">Project</span>
+				<span class="js-intro-slide link" data-value="2">Visualizations</span>
+				<span class="js-intro-slide link" data-value="3">Credit</span>
 			</div>
-		</li>
-	</ul>
-	<div class="intro-footer">
-		<div class="contents">
-			BEER x Match is not affiliated with or endorsed by <a href="https://untappd.com/" target="_blank">UNTAPPD</a>. <br/>
-			<span class="link underline js-link-extra" data-value="about">About the Project</span> |
-			<span class="link underline js-link-extra" data-value="contact">Contact Me</span> <br/>
-			© 2014. All Rights Reserved. <a href="http://tany.kim" target="_blank">Tanyoung Kim. </a>
+		</div>
+		<div class="intro-main">
+			<div class="intro-top"><img src="images/intro_top.png" width="723" height="190"></div>
+			<div class="intro-content js-intro-content"></div>
+			<div class="intro-bottom"><img src="images/intro_bottom.png" width="222" height="51"></div>
+		</div>
+		<div class="intro-untappd">
+			<a href="https://untappd.com/" target="_blank"><img src="images/untappd.png" width="105" height="28" border="0"></a>
 		</div>
 	</div>
+	<div class="intro-about js-intro-1">
+		BEERxMATCH is a web-based visualization project utilizing the data from an iPhone/Android app.
+	</div>
+	<div class="intro-vis js-intro-2">
+		Single and match vis
+	</div>
+	<div class="intro-credit js-intro-3">
+		<p>BEER x Match is not affiliated with or endorsed by <a href="https://untappd.com/" target="_blank">UNTAPPD</p>
+		<p>© 2014. All Rights Reserved. <a href="http://tany.kim" target="_blank">Tanyoung Kim.</a></p>
+	</div>
+	<div class="js-intro-dummy"></div>
 </div>
 
 <!-- match -->
@@ -209,18 +233,12 @@
 
 <!-- header -->
 <div class="js-single js-match vis-header" style="display:none;">
-	<ul class="more js-header-open">
-		<li class="link">open</li>
-	</ul>
-	<ul class="more-expanded js-more" style="display:none;">
-		<li class="link js-header-close">close</li>
-		<li class="link underline js-link-extra" data-value="about">About the project</li>
-		<li class="link underline js-link-extra" data-value="contact">Contact me</li>
-		<li class="link underline js-signout js-header-close">Sign out</li>
-		<li class="js-header-switch"></li>
-	</ul>
+	<div class="home js-goHome">--</div>
+	<div class="goSingle js-goSingle link" style="display:none;" data-value="0">Single View</div>
 	<ul class="js-vis-header">
 	</ul>
+	<div class="goSingle js-goSingle link" style="display:none;" data-value="1">Single View</div>
+	<div class="goMatch js-goMatch link" style="display:none;">See a match with another person</div>
 </div>
 
 <!--vis menu -->
@@ -248,23 +266,12 @@
 	</div>
 </div>
 
-<!-- about the project -->
-<div class="extra-wrapper js-extra" style="display:none;">
-	<div class="extra js-extra">
-		<div class="link close js-extra-close">close</div>
-		<div class="about js-extra-elm js-about" style="display:none;">
-			BEERxMATCH is a web-based visualization project utilizing the data from an iPhone/Android app.
-		</div>
-		<div class="contact js-extra-elm js-contact" style="display:none;">contact</div>
-	</div>
-</div>
-
 <!-- intro render templates -->
 <script type="text/template" id="intro-start">
 	<div class="intro-status"><%= warning %></div>
 	<% if (friends) { %>
-	<select class="js-friend-select">
-		<option>Select a user from friends.</option>
+	<select class="intro-list js-friend-select">
+		<option>Select a user name from <%= prevUser + '\'' %>s friends</option>
 	<%  _.each(friends, function (f) { %>
         <option value="<%= f %>"><%= f %></option>
   	<% }); %>
@@ -273,7 +280,9 @@
 	<div class="intro-name"><%= desc %></div>
 	<input type="text" class="intro-input js-intro-input" value="<%= userId %>" <%= userId ? ' disabled' : '' %> >
 	<% if (prevUser) { %>
-	<div class="js-single link underline">Explore <%= prevUser %> only</div>
+	<div class="intro-start-single js-start-single link underline">See <%= prevUser %> only</div>
+  	<% } else { %>
+  	<div class="intro-msg"> Not an UNTAPPD user? <br/>See examples of <a href="#">single user</a> or <a href="#"> match </a> visualization</div>
   	<% } %>
 </script>
 
@@ -285,7 +294,7 @@
 		<div class="location"><%= address %></div>
 		<div class="timezone"><%= timezone %></div>
 		<div class="js-timezone-list" <%= address ? 'style="display:none;"' : '' %> >
-			<select class="js-timezone-select">
+			<select class="intro-list js-timezone-select">
 				<option> Select a timezone </option>
                 <option value="Pacific/Midway">(UTC-11:00) Midway Island, Samoa</option>
                 <option value="America/Adak">(UTC-10:00) Hawaii-Aleutian</option>
@@ -379,7 +388,7 @@
                 <option value="Pacific/Kiritimati">(UTC+14:00) Kiritimati</option>
 			</select>
 		</div>
-		<div class="js-start <%= address ? 'link underline' : 'disabled' %>">Download Data</div>
+		<div class="intro-start js-start <%= address ? 'link underline' : 'disabled' %>">Download Data</div>
 </script>
 
 <script type="text/template" id="intro-option">
@@ -388,8 +397,8 @@
 		<div class="pic" style="background-image: url(<%= avatar %>)"></div>
 		<div class="name"><%= username %></div>
 	</div>
-	<div class="js-single link underline">Explore <%= username %>&#39;s taste </div>
-	<div class="js-match link underline">See the match with another person </div>
+	<div class="intro-start-single js-start-single link underline">See <%= username %> only</div>
+	<div class="intro-start-match js-start-match link underline">See a match with another person</div>
 </script>
 
 <!-- vis header templates -->
@@ -415,10 +424,6 @@
 		<span class="bold"><%= username2 %></span>
 		(<span class="bold"><%= checkinCount2 %></span> Check-ins)
 	</li>
-</script>
-
-<script type="text/template" id="header-switch-match">
-	Explore only <span class="link underline js-switch"><%= userId1 %></span> or <span class="link underline js-switch"><%= userId2 %></span>
 </script>
 
 </body>

@@ -86,7 +86,7 @@ function getTimezone(user) {
 function writeJSON(data) {
 
 	//temporarily save raw data
-	fs.writeFileSync('public/users/raw' + data.userinfo.userId + '.json', JSON.stringify(data));
+	fs.writeFileSync('public/users/raw/' + data.userinfo.userId + '.json', JSON.stringify(data));
 
     function createBeerData(data, callback) {
         var user = new User(data.userinfo, data.timezone, data.checkins);
@@ -141,9 +141,10 @@ function getUserInfo(userId) {
 	//file check first
 	if (fs.existsSync('public/users/' + userId + '.json')) {
     	console.log('---file exists');
+    	//FIXME: delete later
     	// io.emit('dataExist', { userId: userId });
 
-    	var data = JSON.parse(fs.readFileSync('public/users/raw/' + userId + '.json', 'utf8'));
+  		var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
 		io.emit('success', { data: data });
 
 	} else {
@@ -173,11 +174,12 @@ function getFriendsList(userId, count) {
 	console.log('----friends', userId, count);
 
 	//max 25 feeds per call, upto 100 friends
-	var friendCallsNeeded = Math.min(count, 100);
+	var friendCallsNeeded = _.isUndefined(count) ? 100 : Math.min(count, 100);
 	var friendCallCount = 0;
 
 	var friends = [];
 
+	//FIXME: save friends in the data, update the data
 	function callFriendsFeedAPI(offset) {
 	  	untappd.userFriends(function (err,obj) {
 			if (obj && obj.response && obj.response.items && obj.response.count > 0) {
@@ -191,6 +193,7 @@ function getFriendsList(userId, count) {
 					callFriendsFeedAPI(friendCallCount);
 				}
 				else {
+					console.log('---friends loading done');
 					io.emit('friends', { friends: _.flatten(friends).sort() });
 				}
 			}
