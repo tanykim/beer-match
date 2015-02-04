@@ -1,4 +1,4 @@
-define(['vis-settings'], function (Settings) {
+define(['moment', 'vis-settings'], function (moment, Settings) {
 
     var colors = Settings.colors;
     var map;
@@ -216,7 +216,7 @@ define(['vis-settings'], function (Settings) {
             })
             .attr('r', function (d) {
                 return Math.sqrt(maxR * maxR * d.count / maxRVal); })
-            .style('fill', Settings.arr[0])
+            .style('fill', Settings.beerColors[0])
             .style('opacity', 0.5)
             .attr('class', function (d, i) {
                 return 'js-connection-category js-connection-circle-' + sort + ' js-connection-circle-' + sort + '-' + i;
@@ -231,7 +231,7 @@ define(['vis-settings'], function (Settings) {
 
                 _.map(links[sort][d.name], function (link) {
                     d3.select('.js-connection-line-city-' + link).style('opacity', 1);
-                    d3.select('.js-connection-venue-' + link).style('fill', Settings.arr[0]);
+                    d3.select('.js-connection-venue-' + link).style('fill', Settings.beerColors[1]);
                     d3.select('.js-connection-count-' + link).style('fill', '#000');
                 });
             })
@@ -404,9 +404,114 @@ define(['vis-settings'], function (Settings) {
         });
     };
 
+    function highlightTimelineCity(data, period, svg, dim, x, bgW) {
+        _.each(data[1][period], function (d, key) {
+            svg.append('line')
+                .attr('x1', x(moment(key, period === 'month' ? 'YYYY-MM' : 'YYYY-W')))
+                .attr('y1', 0)
+                .attr('x2', x(moment(key, period === 'month' ? 'YYYY-MM' : 'YYYY-W')))
+                .attr('y2', dim.h)
+                .style('stroke', '#000')
+                .style('stroke-width', bgW)
+                .style('opacity', .1)
+                .attr('class', 'js-venue-timeline-bg');
+        });
+    }
+
+    var drawTimeline = function (data, timeRange) {
+
+        var margin = { top: 40, right: 40, bottom: 20, left: 300 };
+        var unitH = 40;
+        var dim = { w: $('.venue-timeline').width() - margin.left - margin.right,
+                    h: unitH * _.size(data) - margin.top - margin.bottom };
+
+        var period = moment(timeRange[1]).diff(timeRange[0], 'month') > 3 ? 'month' : 'week';
+        var periodCount = moment(timeRange[1]).diff(timeRange[0], period);
+
+        var x = d3.time.scale().range([0, dim.w]).domain([moment(timeRange[0]).startOf(period), moment(timeRange[1]).startOf(period)]);
+        var y = d3.scale.ordinal().rangeBands([0, dim.h]).domain(_.range(_.size(data)));
+
+        var xAxis = d3.svg.axis().scale(x).orient('top');
+        var yAxis = d3.svg.axis().scale(y).orient('left').tickSize(-dim.w).tickFormat('');
+
+        var svg = d3.select('#vis-venue-timeline').append('svg')
+            .attr('width', dim.w + margin.left + margin.right)
+            .attr('height', dim.h + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+        svg.append('g')
+            .attr('class', 'x axis')
+            .call(xAxis);
+        svg.append('g')
+            .attr('class', 'y axis')
+            .call(yAxis);
+
+        var maxR = unitH / 2;
+        var bgW = dim.w / periodCount / 2;
+
+        //move Y axis ticks
+        $('#vis-venue-timeline').find('.y').find('line').attr('transform', 'translate(0, ' + maxR + ')');
+        $('#vis-venue-timeline').find('.y').find('text').remove();
+
+        var maxRVal = _.max(_.map(data, function (city) {
+            return _.max(city[1][period]);
+        }));
+
+        _.each(data, function (d, i) {
+            var yPos = i * dim.h / _.size(data);
+            var fill = Settings.beerColors[i % 4 * 2];
+            svg.append('text')
+                .attr('x', 0)
+                .attr('y', yPos + maxR + 2)
+                .attr('data-value', i)
+                .text(d[0])
+                .style('text-anchor', 'end')
+                .style('font-size', '0.8em')
+                .on('mouseover', function() {
+                    $('.js-venue-timeline-bg').remove();
+                    $(this).css('cursor', 'pointer').css('font-weight', 700);
+                    var id = $(this).data().value;
+                    highlightTimelineCity(data[id], period, svg, dim, x, bgW);
+                    d3.selectAll('.js-venue-timeline-circle').style('opacity', 0);
+                    d3.selectAll('.js-venue-timeline-circle-'+ id).style('opacity', .5);
+                    d3.select('.js-venue-timeline-over')
+                        .attr('y', yPos)
+                        .style('fill', fill)
+                        .text( d[1].total + ' checkins:  ' + _.size(d[1][period]) + '/' + periodCount + ' ' + period + 's' );
+                })
+                .on('mouseout', function() {
+                    $(this).css('font-weight', 400);
+                    $('.js-venue-timeline-bg').remove();
+                    d3.selectAll('.js-venue-timeline-circle').style('opacity', .5);
+                    d3.select('.js-venue-timeline-over').text('');
+                });
+
+            _.each(d[1][period], function (val, label) {
+                svg.append('circle')
+                    .attr('cx', x(moment(label, period === 'month' ? 'YYYY-MM' : 'YYYY-W')))
+                    .attr('cy', yPos + maxR)
+                    .attr('r', Math.sqrt(maxR * maxR * val / maxRVal))
+                    .style('fill', fill)
+                    .style('opacity', .5)
+                    .attr('class', 'js-venue-timeline-circle js-venue-timeline-circle-' + i);
+            });
+        });
+
+        svg.append('text')
+            .attr('x', 0)
+            .attr('y', 0)
+            .text('')
+            .style('text-anchor', 'end')
+            .attr('class', 'js-venue-timeline-over');
+
+
+    };
+
     return {
         putVenues: putVenues,
         createHeatmap: createHeatmap,
-        drawVenueConnection: drawVenueConnection
+        drawVenueConnection: drawVenueConnection,
+        drawTimeline: drawTimeline
     }
 });

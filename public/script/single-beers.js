@@ -285,7 +285,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 
     var drawTrends = function (allBeers, timeRange, monthDiff) {
 
-        //up to 20 beers        
+        //up to 20 beers
         var filtered = _.filter(_.sortBy(allBeers, function (d) {
             return d.count;
         }).reverse(), function (d) {
@@ -303,7 +303,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
         var x = d3.time.scale().range([0, dim.w]).domain(timeRange);
         var xAxis = d3.svg.axis().orient('bottom').scale(x);
 
-        var y = d3.scale.linear().range([0, dim.h]).domain([Math.ceil(maxMonthlyCount / 10) * 10, 0]);    
+        var y = d3.scale.linear().range([0, dim.h]).domain([Math.ceil(maxMonthlyCount / 10) * 10, 0]);
         var yAxis = d3.svg.axis().orient('left').scale(y);
 
         var svg = d3.select('#vis-fav-trend').append('svg')
@@ -311,7 +311,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
             .attr('height', dim.h + margin.top + margin.bottom)
             .append('g')
             .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-        
+
         svg.append('g')
             .attr('class', 'x axis')
             .attr('transform', 'translate(0, ' + dim.h + ')')
@@ -328,7 +328,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 
         var line = d3.svg.line()
             .x(function (d) {
-                return x(moment(d[0], 'YYYYMM')._d); 
+                return x(moment(d[0], 'YYYYMM')._d);
             })
             .y(function (d) {
                 return y(d[1]);
@@ -339,7 +339,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
             var beer = _.map(allMonths, function (m) {
                 var val = obj.months[m] ? obj.months[m] : 0;
                 return [m, val];
-            });        
+            });
             svg.append('path')
                 .datum(beer)
                 .attr('d', line)

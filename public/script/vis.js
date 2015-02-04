@@ -69,8 +69,11 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 		//view change
 		$('.js-single-svg').empty();
 
-		When.drawMatrix(b.byDay, b.byHour);
-		Where.drawVenueConnection(b.venues);
+		// When.drawMatrix(b.byDay, b.byHour);
+		// Where.drawVenueConnection(b.venues);
+
+		Where.drawTimeline(b.venueByTime, b.timeRange);
+
 		/*
 		//1--count
 		$('.js-count-sort-' + b.avgUnit).prop('checked', true);
