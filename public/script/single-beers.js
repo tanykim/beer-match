@@ -320,11 +320,9 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
             .attr('class', 'y axis')
             .call(yAxis);
 
-        console.log(filtered, monthDiff, timeRange);
         var allMonths = _.map(_.range(monthDiff), function (i) {
             return moment(timeRange[0]).add(i, 'months').format('YYYYMM');
         });
-        console.log(allMonths);
 
         var line = d3.svg.line()
             .x(function (d) {
@@ -343,11 +341,19 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
             svg.append('path')
                 .datum(beer)
                 .attr('d', line)
-                .attr('stroke', Settings.arr[i % 9])
+                .attr('stroke', Settings.beerColors[i % 9])
                 .attr('stroke-width', 1)
                 .attr('fill', 'none')
                 .attr('class', 'js-trends-' + i);
-        })
+        });
+
+        var temp = _.map(filtered, function (d) {
+            var months = _.object(_.map(d.months, function (m, k) {
+                return [k, (m + 1) * 10 + Math.round(Math.random(0, 1) * 10)]
+            }));
+            return { appId: d.bid, months: months, name: d.name };
+        });
+        console.log(JSON.stringify(temp));
 
     };
 

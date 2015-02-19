@@ -66,25 +66,37 @@
 <!-- match -->
 <div class="vis js-match" style="display:none;">
 	<div class="vis-contents-wrapper">
+		<!-- where do we drink -->
+		<div class="vis-contents js-match-contents-5">
+			<span class="link underline bold js-venues-switch" data-value="absolute">Check-in Count</span>
+			<span class="link underline js-venues-switch" data-value="relative">Relative Ratio</span>
+			<div id="vis-publicRatio" class="js-match-svg publicRatio"></div>
+			<div id="vis-topTypes" class="js-match-svg topTypes"></div>
+			<div id="vis-commonVenues" class="js-match-svg commonVenues"></div>
+		</div>
+		<!-- match score & behavior-->
 		<div class="vis-contents js-match-contents-0">
-			Overall Taste
+			Match Score
 			<div class="js-match-score"></div>
 			<ul>
 				<li> By distinctive beers: <span class="js-match-score-beer"> </span></li>
 				<li> By style: <span class="js-match-score-style"> </span></li>
 				<li> By ABV: <span class="js-match-score-abv"> </span></li>
 			</ul>
-		</div>
-		<div class="vis-contents js-match-contents-1">
-			Drinking Behavior
 			<div id="vis-behavior" class="js-match-svg behavior"></div>
 		</div>
+
+		<!-- who drink more -->
 		<div class="vis-contents js-match-contents-1">
-			How Much
+			Who drink more?
 			<div id="vis-counts" class="js-match-svg counts"></div>
 			<div class="counts-label">BEER / <span class="js-counts"></span></div>
 		</div>
+
+		<!-- beers (dis/)agree -->
 		<div class="vis-contents js-match-contents-2">
+			Distinctive beers
+			<div id="vis-distinctive" class="js-match-svg distictive"></div>
 			Beers Both of You Drink
 			<div class="both js-both-agreed">
 				Agreed
@@ -97,27 +109,28 @@
 				<div class="js-both-3"></div>
 			</div>
 		</div>
+
+		<!-- share styles -->
 		<div class="vis-contents js-match-contents-3">
 			Styles
 			<div id="vis-styles" class="js-styles styles"></div>
 		</div>
+
+		<!-- when do we drink -->
 		<div class="vis-contents js-match-contents-4">
 			Day / Hour
-			<div id="vis-weekend" class="js-weekend weekend"></div>
-			<div id="vis-timeline" class="js-timeline timeline">
-				<span class="link underline bold js-timeline-switch js-timeline-value" data-type="value" data-value="absolute">Check-in Count</span>
-				<span class="link underline js-timeline-switch js-timeline-value" data-type="value" data-value="relative">Relative Ratio</span>
-				-----
-				<span class="link underline bold js-timeline-switch js-timeline-group" data-type="group" data-value="day">byDay</span>
-				<span class="link underline js-timeline-switch js-timeline-group" data-type="group" data-value="hour">byHour</span>
-				-----
-				<span class="link underline bold js-timeline-switch js-timeline-type" data-type="type" data-value="bars">Bars</span>
-				<span class="link underline js-timeline-switch js-timeline-type" data-type="type" data-value="bubble">Bubble</span>
-			</div>
+			<div id="vis-weekend" class="js-match-svg weekend"></div>
+			<span class="link underline bold js-timeline-switch js-timeline-value" data-type="value" data-value="absolute">Check-in Count</span>
+			<span class="link underline js-timeline-switch js-timeline-value" data-type="value" data-value="relative">Relative Ratio</span>
+			-----
+			<span class="link underline bold js-timeline-switch js-timeline-group" data-type="group" data-value="day">byDay</span>
+			<span class="link underline js-timeline-switch js-timeline-group" data-type="group" data-value="hour">byHour</span>
+			-----
+			<span class="link underline bold js-timeline-switch js-timeline-type" data-type="type" data-value="bars">Bars</span>
+			<span class="link underline js-timeline-switch js-timeline-type" data-type="type" data-value="bubble">Bubble</span>
+			<div id="vis-timeline" class="js-match-svg timeline"></div>
 		</div>
-		<div class="vis-contents js-match-contents-5">
-			Venues
-		</div>
+
 	</div>
 </div>
 
@@ -206,7 +219,7 @@
 			<!-- <div class="vis-contents-title">Where do I drink?</div> -->
 			<div id="vis-venue-timeline" class="js-single-svg venue-timeline"></div>
 			<div id="vis-venue-connection" class="js-single-svg venue-connection"></div>
-			<div class="venue-title">
+			<!-- <div class="venue-title">
 				<div class="name js-venue-title-name"></div>
 				<div class="desc js-venue-title-score"></div>
 				<div class="desc js-venue-title-type"></div>
@@ -219,7 +232,7 @@
 			</div>
 			<div class="js-venue-list venue-list">
 				<div id="vis-venue-name" class="js-single-svg js-venue-name venue-name"></div>
-			</div>
+			</div> -->
 		</div>
 
 		<!-- dummy for scrooll -->

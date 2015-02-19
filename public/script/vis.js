@@ -1,18 +1,20 @@
-define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when', 'single-where', 'match-score', 'match-style', 'match-time'], function (moment, Count, Ratings, Beers, When, Where, Score, Styles, Time) {
+define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when', 'single-where',
+	'match-score', 'match-style', 'match-time', 'match-venues'],
+	function (moment, Count, Ratings, Beers, When, Where, Score, Styles, Time, Venues) {
 
 	function callInteraction() {
 
 		//vis menu show/hide
-		// $('.js-menu-open').click(function() {
-		// 	$('.js-menu-close').show();
-		// 	$('.js-menu-open').hide();
-		// 	$('.js-vis-menu').fadeIn();
-		// });
-		// $('.js-menu-close').click(function() {
-		// 	$('.js-menu-close').hide();
-		// 	$('.js-menu-open').show();
-		// 	$('.js-vis-menu').fadeOut();
-		// });
+		$('.js-menu-open').click(function() {
+			$('.js-menu-close').show();
+			$('.js-menu-open').hide();
+			$('.js-vis-menu').fadeIn();
+		});
+		$('.js-menu-close').click(function() {
+			$('.js-menu-close').hide();
+			$('.js-menu-open').show();
+			$('.js-vis-menu').fadeOut();
+		});
 
 		//get vis position
     	var titleStr = [
@@ -69,10 +71,13 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 		//view change
 		$('.js-single-svg').empty();
 
-		// When.drawMatrix(b.byDay, b.byHour);
-		// Where.drawVenueConnection(b.venues);
-
-		Where.drawTimeline(b.venueByTime, b.timeRange);
+		var timeRange = _.map(b.timeRange, function (d) {
+            return moment(d.slice(0, 9), 'YYYY-MM-DD').startOf('month')._d;
+        });
+        var monthDiff = moment(timeRange[1]).diff(timeRange[0], 'months');
+        if (monthDiff > 0) {
+			Beers.drawTrends(b.allBeers, timeRange, monthDiff);
+		}
 
 		/*
 		//1--count
@@ -131,7 +136,7 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 		var w2 = $('.js-venue-type').width();
 		var w3 = $('.js-venue-city').width();
 		Where.putVenues(b.venues, w1, w2, w3);
-
+		Where.drawTimeline(b.venueByTime, b.timeRange);
 		*/
 		//call interaction
 		callInteraction();
@@ -143,12 +148,17 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 		$('.js-match-svg').empty();
 
 		console.log('---match view');
-		Score.putMatch(m.matchScore, m.matchList);
-		Score.drawCount(m.avgCount);
-		Score.drawBehavior(m.behavior);
-		Styles.drawChord(m.styles);
-		Score.drawBoth(m.beersList);
-		Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
+		// Score.putMatch(m.matchScore, m.matchList);
+		// Score.drawCount(m.avgCount);
+		// Score.drawBehavior(m.behavior);
+		// Styles.drawChord(m.styles);
+		// Score.drawBoth(m.beersList, m.distinctive);
+		// Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
+		Venues.init(m.publicCount, m.topVenueTypes);
+		if (!_.isEmpty(m.venues)) {
+			Venues.drawCommonVenues(m.venues);
+		}
+
 	};
 
 	return {

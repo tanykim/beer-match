@@ -3,7 +3,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 	var colors = Settings.colors;
 
 	var putMatch = function (score, list) {
-		
+
 		//taste score
 		$('.js-match-score').html(score + '%');
 		_.each(list, function (d, key) {
@@ -24,20 +24,20 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 			.attr('height', dim.h + margin.top + margin.bottom)
 			.append('g')
 			.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-		
+
 		var lables = {
-			count: ['Heavy Drinker', 'Light Drinker'], 
+			count: ['Heavy Drinker', 'Light Drinker'],
 			explorer: ['Explorer', 'Loyal Patron'],
 			weekend: ['Weekend', '7 Days'],
 			social: ['Drinking Out', 'Recluse'],
 			daytime: ['Daytime', 'After Sunset']
-		};		
+		};
 		var xAxis = d3.svg.axis().scale(x).orient('top').tickSize(-dim.h).tickPadding(10)
 				.tickFormat( function (d) { return lables[d][0]; });
 		var xAxisB = d3.svg.axis().scale(x).orient('bottom').tickSize(0).tickPadding(10)
 				.tickFormat( function (d) { return lables[d][1]; });
 		var yAxis = d3.svg.axis().scale(y).orient('left').tickSize(-dim.w).tickFormat('');
-		
+
 		svg.append('g')
 			.attr('class', 'x axis')
 			.call(xAxis);
@@ -74,7 +74,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 				.attr('cx', function (d) { return x(d[0]) + dim.w / _.size(behavior) / 2; })
 				.attr('cy', function (d) { return y(d[1]); })
 				.attr('r', 5);
-		});	
+		});
 	};
 
 	var drawCount = function (count) {
@@ -113,7 +113,11 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 
 	};
 
-	var drawBoth = function (beersList) {
+	var drawBoth = function (beersList, distinctive) {
+
+		//FIX ME: change it to vis
+		$('#vis-distinctive').html(distinctive[0] + '---' + distinctive[1]);
+
 		var labels = ['Both you love', 'Both you hate', 'Love - Hate', 'Hate - Love'];
 		_.each(_.range(4), function (i) {
 			var list = beersList[i];
@@ -121,7 +125,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 			if (!_.isEmpty(list)) {
 				$('.js-both-' + i).append(labels[i] + '<br/>');
 				_.each(list, function (b) {
-					$('.js-both-' + i).append('<img src="' + b.label + '" width="40" class="label-image">');	
+					$('.js-both-' + i).append('<img src="' + b.label + '" width="40" class="label-image">');
 				});
 			}
 		});
@@ -138,7 +142,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 			.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
 		var r = Math.min(dim.w/2/2, 80);
-			
+
 		var total = _.map(days, function (d) {
 			return _.reduce(d, function (memo, num) {
 				return memo + num;
@@ -155,7 +159,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 		};
 		_.each(_.range(2), function (i) {
 			var xPos = i * dim.w/4 + dim.w/4;
-			var prevVal = 0				
+			var prevVal = 0
 			_.each(days[i], function (d, key) {
 				svg.append('path')
 					.attr('d', arc(prevVal, d, i))

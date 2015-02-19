@@ -44,12 +44,14 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         return _.sortBy(_.map(common, function (id) {
             var u1 = _.findWhere(dataset[0], { id: id });
             var u2 = _.findWhere(dataset[1], { id: id });
+            var commonDates = _.intersection(u1.dates, u2.dates);
             return {
                 name: u1.name,
                 city: u1.city,
                 counts: [u1.count, u2.count],
                 lat: u1.lat,
-                lng: u1.lng
+                lng: u1.lng,
+                commonDates: commonDates,
             };
         }), function (d) {
             return d.counts[0] + d.counts[1];
@@ -273,6 +275,11 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         this.url = dataset[0].userinfo.userId + '+' + dataset[1].userinfo.userId;
         this.userinfo = _.pluck(dataset, 'userinfo');
         this.avgCount = _.pluck(dataset, 'avgCount');
+
+        this.distinctive = _.map(dataset, function (d) {
+            return d.userinfo.beerCount;
+        });
+
         this.beersList = [];
         if (commonBeers) {
             this.beersList = getBeersList(_.pluck(dataset, 'allBeers'), commonBeers);
@@ -289,7 +296,13 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
             });
         });
 
-        var commonVenues = _.intersection(_.pluck(dataset[0].allVenues, 'id'), _.pluck(dataset[1].allVenues, 'id'));
+        this.publicCount = _.map(dataset, function (d) {
+            var venueCount = _.reduce(_.pluck(d.byDay, 'venue'), function (memo, num) {
+                return memo + num;
+            }, 0);
+            return [venueCount, d.userinfo.checkinCount];
+        });
+
         this.topVenueTypes = _.map(dataset, function (d) {
                 return _.sortBy(_.map(d.venues.type, function (t) {
                     return { type: t.name, icon: t.icon, count: t.count, venueIds: t.venueIds };
@@ -297,6 +310,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
                     return v.count;
                 }).reverse();
             });
+        var commonVenues = _.intersection(_.pluck(dataset[0].allVenues, 'id'), _.pluck(dataset[1].allVenues, 'id'));
         this.venues = [];
         if (!_.isEmpty(commonVenues)) {
             this.venues = getVenues(_.pluck(dataset, 'allVenues'), commonVenues);
@@ -304,6 +318,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 
         console.log('common beers list--', this.beersList);
         console.log('by day and hour--', this.byDay, this.byHour);
+        console.log('public venue count--', this.publicCount);
         console.log('top venues--', this.topVenueTypes);
         console.log('common venues--', this.venues);
         // console.log('match by venues--', this.matchByVenue);
