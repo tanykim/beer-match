@@ -58,11 +58,11 @@ require([
         var template = _.template($('#header-single').html());
         $('.js-vis-header').html(template({
             avatar: u.avatar,
-            username: u.username,
+            userId: u.userId,
+            name: u.username,
             address: u.address,
             since: moment(u.since, 'ddd, DD MMM YYYY HH:mm:ssZ').format('MMM D, YYYY'),
-            checkinCount: u.checkinCount,
-            beerCount: u.beerCount
+            checkinCount: u.checkinCount
         }));﻿
 
         Vis.startVis(data);
@@ -85,16 +85,14 @@ require([
 
             $('.js-intro').hide();
             $('.js-match').show();
-            $('.js-goSingle').show();
+            $('.js-goSingles').show();
 
             var template = _.template($('#header-match').html());
+            $('.js-goSingle-0').html(userData[0].userinfo.userId.toUpperCase());
+            $('.js-goSingle-1').html(userData[1].userinfo.userId.toUpperCase());
             $('.js-vis-header').html(template({
                 avatar1: userData[0].userinfo.avatar,
-                username1: userData[0].userinfo.username,
-                checkinCount1: userData[0].userinfo.checkinCount,
-                avatar2: data.userinfo.avatar,
-                username2: data.userinfo.username,
-                checkinCount2: data.userinfo.checkinCount,
+                avatar2: data.userinfo.avatar
             }));﻿
 
             Vis.startVisMatch(m);
@@ -303,7 +301,7 @@ require([
     });
 
     socket.on('progress', function (data) {
-        $('.js-start').removeClass('underline').html(Math.round(data.count/data.total * 100) + '%');
+        $('.js-start').removeClass('underline').html(Math.min(Math.round(data.count/data.total * 100), 100) + '%');
     });
 
     socket.on('success', function (data) {
@@ -345,7 +343,9 @@ require([
     });
 
     //go home
-    $('.js-goHome').click(function() {
+    $('.js-goHome').mouseover(function() {
+        $(this).css('background-position-y', '-20px');
+    }).click(function() {
         console.log('---go home');
         $('.js-single').hide();
         $('.js-match').hide();
@@ -354,23 +354,23 @@ require([
         userData = [null, null];
         isMatch = false;
         renderIntro(introMsgs.init, '');
+    }).mouseout(function() {
+        $(this).css('background-position-y', '0');
     });
 
     //go to match view
     $('.js-goMatch').click(function() {
         console.log('---go match');
-        $('.js-single').hide();
+        $('.js-singles').hide();
         $('.js-intro').show();
         $('.js-goMatch').hide();
-        // $('.js-match').find('.vis-contents-wrapper').css('top', 0);
         renderFriends(userData[0].userinfo.userId, userData[0].userinfo.friendCount);
     });
     //go to single view
     $('.js-goSingle').click(function() {
         console.log('--go single');
-        $('.js-goSingle').hide();
+        $('.js-goSingles').hide();
         isMatch = false;
-        // $('.js-single').find('.vis-contents-wrapper').css('top', 0);
         initVisSingle(userData[$(this).data().value]);
     });
 });

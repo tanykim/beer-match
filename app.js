@@ -50,7 +50,7 @@ function getTimezone(user) {
 		userId: user.user_name.toLowerCase(),
 		address: user.location,
 		avatar: user.user_avatar,
-		username: user.first_name + ' ' + user.last_name,
+		name: user.first_name + ' ' + user.last_name,
 		since: user.date_joined,
 		beerCount: user.stats.total_beers,
 		checkinCount: user.stats.total_checkins,
@@ -144,7 +144,7 @@ function getUserInfo(userId) {
     	//FIXME: delete later
     	io.emit('dataExist', { userId: userId });
 
-  // 		var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
+  		//var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
 		// io.emit('success', { data: data });
 
 	} else {
@@ -184,6 +184,9 @@ function getFriendsList(userId, count) {
 	  	untappd.userFriends(function (err,obj) {
 			if (obj && obj.response && obj.response.items && obj.response.count > 0) {
 				var fList = _.map(obj.response.items, function (d) {
+
+					//FIXME: error clicked from vis header
+					console.log(d);
 					return d.user.user_name.toLowerCase();
 				});
 				friends.push(fList);

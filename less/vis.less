@@ -16,28 +16,39 @@
 	width: 100%;
 }
 .vis-header {
+	color: #ffffff;
 	.home {
 		float: left;
-		width: @visHeaderH;
-		height: @visHeaderH * 1.5;
+		width: @visHeaderH/4;
+		height: @visHeaderH/2;
+		margin: @visHeaderH/2 @visHeaderH/4 0 @visHeaderH/4;
+		background: url('../images/go_home.png') no-repeat;
+		background-size: @visHeaderH/4;
+	}
+	.goSingles {
+		float: right;
+		margin-right: @visHeaderH/4;
 	}
 	.goSingle {
-		float: left;
+		#view-icon-vis;
+		#view-icon;
+		#view-icon-single;
+		margin-top: 14px;
 	}
 	.goMatch {
-		float: left;
+		float: right;
+		#view-icon-vis;
+		#view-icon;
+		#view-icon-match;
+		margin-top: 14px;
+		margin-right: @visHeaderH/4;
 	}
 	position: fixed;
-	background-color: #e5e5e5;
+	background-color: @dark;
 	width: 100%;
-	ul {
+	.wrapper {
 		padding: @visHeaderH/4;
-		display: table;
 		float: left;
-	}
-	li {
-		display: table-cell;
-		vertical-align: middle;
 	}
 	.pic {
 		width: @visHeaderH;
@@ -46,13 +57,31 @@
 		-webkit-border-radius: @visHeaderH/2;
 		-moz-border-radius: @visHeaderH/2;
 		background-size: @visHeaderH;
+		float: left;
 	}
-	.profile, .info {
+	.x {
+		float: left;
+		width: @visHeaderH/4 * 3;
+		font-size: @large;
+		font-weight: 700;
+		text-align: center;
+		padding-top: 0.4em;
+	}
+	.profile {
 		font-size: @small;
-		padding: 0 @visHeaderH/4;
+		display: table;
+		padding: @visHeaderH/8;
 	}
-	.info {
-		border-left: 1px solid #999;
+	li {
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.userid {
+		padding: 0 @visHeaderH/4 0 @visHeaderH/8;
+	}
+	.item {
+		padding: @visHeaderH/8 @visHeaderH/4;
+		border-left: 1px solid @darkGrey;
 	}
 	.more, .more-expanded {
 		float: right;

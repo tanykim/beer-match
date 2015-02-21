@@ -148,12 +148,12 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 		$('.js-match-svg').empty();
 
 		console.log('---match view');
-		// Score.putMatch(m.matchScore, m.matchList);
-		// Score.drawCount(m.avgCount);
-		// Score.drawBehavior(m.behavior);
-		// Styles.drawChord(m.styles);
-		// Score.drawBoth(m.beersList, m.distinctive);
-		// Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
+		Score.putMatch(m.matchScore, m.matchList);
+		Score.drawCount(m.avgCount);
+		Score.drawBehavior(m.behavior);
+		Styles.drawChord(m.styles);
+		Score.drawBoth(m.beersList, m.distinctive);
+		Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
 		Venues.init(m.publicCount, m.topVenueTypes);
 		if (!_.isEmpty(m.venues)) {
 			Venues.drawCommonVenues(m.venues);

@@ -66,14 +66,14 @@
 <!-- match -->
 <div class="vis js-match" style="display:none;">
 	<div class="vis-contents-wrapper">
-		<!-- where do we drink -->
-		<div class="vis-contents js-match-contents-5">
-			<span class="link underline bold js-venues-switch" data-value="absolute">Check-in Count</span>
-			<span class="link underline js-venues-switch" data-value="relative">Relative Ratio</span>
-			<div id="vis-publicRatio" class="js-match-svg publicRatio"></div>
-			<div id="vis-topTypes" class="js-match-svg topTypes"></div>
-			<div id="vis-commonVenues" class="js-match-svg commonVenues"></div>
+
+		<!-- who drink more -->
+		<div class="vis-contents js-match-contents-1">
+			Who drink more?
+			<div id="vis-counts" class="js-match-svg counts"></div>
+			<div class="counts-label">BEER / <span class="js-counts"></span></div>
 		</div>
+
 		<!-- match score & behavior-->
 		<div class="vis-contents js-match-contents-0">
 			Match Score
@@ -84,13 +84,6 @@
 				<li> By ABV: <span class="js-match-score-abv"> </span></li>
 			</ul>
 			<div id="vis-behavior" class="js-match-svg behavior"></div>
-		</div>
-
-		<!-- who drink more -->
-		<div class="vis-contents js-match-contents-1">
-			Who drink more?
-			<div id="vis-counts" class="js-match-svg counts"></div>
-			<div class="counts-label">BEER / <span class="js-counts"></span></div>
 		</div>
 
 		<!-- beers (dis/)agree -->
@@ -129,6 +122,15 @@
 			<span class="link underline bold js-timeline-switch js-timeline-type" data-type="type" data-value="bars">Bars</span>
 			<span class="link underline js-timeline-switch js-timeline-type" data-type="type" data-value="bubble">Bubble</span>
 			<div id="vis-timeline" class="js-match-svg timeline"></div>
+		</div>
+
+		<!-- where do we drink -->
+		<div class="vis-contents js-match-contents-5">
+			<span class="link underline bold js-venues-switch" data-value="absolute">Check-in Count</span>
+			<span class="link underline js-venues-switch" data-value="relative">Relative Ratio</span>
+			<div id="vis-publicRatio" class="js-match-svg publicRatio"></div>
+			<div id="vis-topTypes" class="js-match-svg topTypes"></div>
+			<div id="vis-commonVenues" class="js-match-svg commonVenues"></div>
 		</div>
 
 	</div>
@@ -247,12 +249,15 @@
 
 <!-- header -->
 <div class="js-single js-match vis-header" style="display:none;">
-	<div class="home js-goHome">--</div>
-	<div class="goSingle js-goSingle link" style="display:none;" data-value="0">Single View</div>
-	<ul class="js-vis-header">
-	</ul>
-	<div class="goSingle js-goSingle link" style="display:none;" data-value="1">Single View</div>
-	<div class="goMatch js-goMatch link" style="display:none;">See a match with another person</div>
+	<div class="home js-goHome link"></div>
+	<div class="wrapper js-vis-header"></div>
+	<div class="goSingles js-goSingles" style="display:none;">
+		See the single view of
+		<span class="goSingle js-goSingle js-goSingle-0 link" data-value="0">user0</span>
+		or
+		<span class="goSingle js-goSingle js-goSingle-1 link" data-value="1">user0</span>
+	</div>
+	<div class="goMatch js-goMatch link" style="display:none;">See Match</div>
 </div>
 
 <!--vis menu -->
@@ -294,9 +299,9 @@
 	<div class="intro-name"><%= desc %></div>
 	<input type="text" class="intro-input js-intro-input" value="<%= userId %>" <%= userId ? ' disabled' : '' %> >
 	<% if (prevUser) { %>
-	<div class="intro-start-single js-start-single link underline">See <%= prevUser %> only</div>
+	<div class="intro-start-single"><span class="intro-view-single js-start-single link underline">See <%= prevUser %> only</span></span>
   	<% } else { %>
-  	<div class="intro-msg"> Not an UNTAPPD user? <br/>See examples of <a href="#">single user</a> or <a href="#"> match </a> visualization</div>
+  	<div class="intro-msg"> Not an UNTAPPD user? <br/>See examples of <span class="intro-view-single">single user</span> or <span class="intro-view-match">match</span> visualization</div>
   	<% } %>
 </script>
 
@@ -411,33 +416,28 @@
 		<div class="pic" style="background-image: url(<%= avatar %>)"></div>
 		<div class="name"><%= username %></div>
 	</div>
-	<div class="intro-start-single js-start-single link underline">See <%= username %> only</div>
-	<div class="intro-start-match js-start-match link underline">See a match with another person</div>
+	<div class="intro-start-single"><span class="intro-view-single js-start-single link">See <%= username %> only</span></div>
+	<div><span class="intro-view-match js-start-match link">See match</span></div>
 </script>
 
 <!-- vis header templates -->
 <script type="text/template" id="header-single">
-	<li class="pic" style="background-image: url(<%= avatar %>)"></li>
-	<li class="profile">
-		<span class="bold"><%= username %></span>
-		<span class="location"><%= address %></span>
-	</li>
-	<li class="info">Drinking since <span class="bold"><%= since %></span></li>
-	<li class="info"><span class="bold"><%= checkinCount %></span> Check-ins</li>
-	<li class="info"><span class="bold"><%= beerCount %></span> Distinctive Beers</li>
+	<div class="pic" style="background-image: url(<%= avatar %>)"></div>
+	<ul class="profile">
+		<li class="userid"><%= userId %></li>
+		<li class="item">
+			<span class="bold"><%= name %></span>
+			<span class="location"><%= address %></span>
+		</li>
+		<li class="item">Drinking since <span class="bold"><%= since %></span></li>
+		<li class="item"><span class="bold"><%= checkinCount %></span> Check-ins</li>
+	</ul>
 </script>
 
 <script type="text/template" id="header-match">
-	<li class="pic" style="background-image: url(<%= avatar1 %>)"></li>
-	<li class="profile">
-		<span class="bold"><%= username1 %></span>
-		(<span class="bold"><%= checkinCount1 %></span> Check-ins)
-	</li>
-	<li class="pic" style="background-image: url(<%= avatar2 %>)"></li>
-	<li class="profile">
-		<span class="bold"><%= username2 %></span>
-		(<span class="bold"><%= checkinCount2 %></span> Check-ins)
-	</li>
+	<div class="pic" style="background-image: url(<%= avatar1 %>)"></div>
+	<div class="x"> X </div>
+	<div class="pic" style="background-image: url(<%= avatar2 %>)"></div>
 </script>
 
 </body>

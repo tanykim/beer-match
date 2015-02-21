@@ -86,9 +86,6 @@ body {
 	background: #fff;
 	padding: 1em 0 2em;
 	font-size: @large;
-	.link {
-		color: @red;
-	}
 }
 .intro-status {
 	font-weight: 700;
@@ -110,10 +107,19 @@ body {
 .intro-msg {
 	margin-top: 1em;
 	font-size: @small;
-	a {
-		color: @red;
-	}
 }
+
+.intro-view-single {
+	#view-icon-intro;
+	#view-icon;
+	#view-icon-single;
+}
+.intro-view-match {
+	#view-icon-intro;
+	#view-icon;
+	#view-icon-match;
+}
+
 @picSize: 80px;
 .intro-user {
 	.pic {
@@ -146,12 +152,10 @@ body {
 	margin-top: 1em;
 	font-weight: 700;
 }
-.intro-progress {
-	color: @orange;
-}
 .intro-start-single {
 	margin-top: 1em;
 }
+
 /* extra
 .extra-wrapper {
 	position: absolute;
