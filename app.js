@@ -182,11 +182,9 @@ function getFriendsList(userId, count) {
 	//FIXME: save friends in the data, update the data
 	function callFriendsFeedAPI(offset) {
 	  	untappd.userFriends(function (err,obj) {
+	  		console.log(obj);
 			if (obj && obj.response && obj.response.items && obj.response.count > 0) {
 				var fList = _.map(obj.response.items, function (d) {
-
-					//FIXME: error clicked from vis header
-					console.log(d);
 					return d.user.user_name.toLowerCase();
 				});
 				friends.push(fList);
