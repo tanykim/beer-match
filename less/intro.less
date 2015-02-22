@@ -2,10 +2,12 @@
 @footerH: 10%;
 body {
 	background: url('../images/intro_bg_star.png') @dark;
+	/*background-color: @dark;*/
 	background-size: 150px 150px;
 }
 .intro {
 	width: 100%;
+	/*position: absolute;*/
 }
 .intro-icons {
 	position: absolute;
@@ -31,62 +33,84 @@ body {
     	background-size: 110px 30px;
     }
 }
+
+@logoWidth: 20em;
+@logoGap: 2em;
+@logoHeight: @logoWidth / 3 * 2;
+
 .intro-header {
+	background: url('../images/intro_top-corner.png') 0 0 no-repeat;
+	background-size: @logoWidth;
 	width: 100%;
-	text-align: center;
+	height: @logoHeight;
 	color: @light;
-	padding: 4% 0;
+	/*padding-left: @logoWidth + @logoGap;*/
+	text-align: center;
 }
 .intro-headline {
 	letter-spacing: 0.1em;
 	color: @yellow;
-	margin-bottom: 1em;
+	padding-top: @logoGap;
+	margin-bottom: 0.5em;
 	font-weight: 700;
 }
 .intro-anchor {
 	span {
-		margin-right: 0.5em;
-		margin-left: 0.5em;
+		margin-right: 1em;
 		color: #fff;
 		text-decoration: underline;
 	}
 }
+.intro-home {
+	/*position: absolute;*/
+	height: 2000px; /* dummy setting */
+}
 .intro-main {
+	height: 85% - @logoHeight;
+	display: table;
+	&:before{
+        content: '';
+        display: block;
+        width: 100%;
+    }
+    &:after {
+        content: '';
+        display: inline-block;
+        width: 100%;
+    }
+    li {
+		vertical-align: middle;
+		text-align: center;
+		width: 100%;
+		display: table-cell;
+    }
+}
+.intro-content {
+	margin-top: @logoGap * -3;
+	font-size: @large;
+	color: #fff;
+}
+.intro-about-untappd {
+	/*position: relative;*/
 	text-align: center;
-	width: 100%;
+	margin-bottom: @logoGap / 2;
+	/*background: none;*/
+	/*margin-top: 1em;*/
+	/*padding-bottom: 8%;*/
 }
-.intro-top {
-	background: url('../images/intro_top_bg.png') repeat-x;
-	background-position: left bottom;
-	background-size: 32px 61px;
-	height: 190px;
-}
-.intro-bottom {
-	background: url('../images/intro_bottom_bg.png') repeat-x;
-	background-size: 7px 19px;
-	height: 51px;
-}
-.intro-untappd {
-	text-align: center;
-	margin-top: 1em;
-	padding-bottom: 8%;
-}
-.intro-about, .intro-credit {
+.intro-about-desc, .intro-credit {
+	/*position: relative;*/
 	padding: 2em;
 	background-color: @light
 }
 .intro-vis {
+	position: relative;
 	padding: 2em;
 	background-color: @dark;
 	color: #fff;
 }
 
 /* intro content */
-.intro-content {
-	background: #fff;
-	padding: 1em 0 2em;
-	font-size: @large;
-}
 .intro-status {
 	font-weight: 700;
 	font-size: @normal;
@@ -98,15 +122,16 @@ body {
 }
 .intro-input {
 	font-size: @large;
-	background-color: @lightBlue;
+	background-color: @light;
 	font-family:inherit;
 	font-weight: 700;
 	color: @dark;
     border: 1px solid @dark;
 }
 .intro-msg {
-	margin-top: 1em;
+	margin-top: 2em;
 	font-size: @small;
+	color: @grey;
 }
 
 .intro-view-single {

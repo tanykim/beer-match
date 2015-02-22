@@ -43,6 +43,9 @@ require([
         userIdCheck: 'Checking user name...'
     };
 
+    //change height
+    $('.js-intro-0').css('height', $(window).height() * 0.85 + 'px');
+
     //initiate single vis
     function initVisSingle(data) {
 
@@ -273,8 +276,8 @@ require([
                 initVisMatch(d, true);
             } else {
                 //FIXME: temporarily
-                initVisSingle(d);
-                // renderIntroOptions('Welcome back!', d);
+                // initVisSingle(d);
+                renderIntroOptions('Welcome back!', d);
             }
         });
     });

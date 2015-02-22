@@ -142,10 +142,10 @@ function getUserInfo(userId) {
 	if (fs.existsSync('public/users/' + userId + '.json')) {
     	console.log('---file exists');
     	//FIXME: delete later
-    	io.emit('dataExist', { userId: userId });
+    	// io.emit('dataExist', { userId: userId });
 
-  		//var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
-		// io.emit('success', { data: data });
+  		var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
+		io.emit('success', { data: data });
 
 	} else {
 		untappd.userInfo(function (err,obj) {
