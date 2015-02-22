@@ -1,8 +1,8 @@
 @headerH: 10%;
 @footerH: 10%;
 body {
-	/*background: url('../images/intro_bg_star.png') @dark;*/
-	background-color: @dark;
+	background: url('../images/intro_bg_star.png') @dark;
+	/*background-color: @dark;*/
 	background-size: 150px 150px;
 }
 .intro {
@@ -37,24 +37,28 @@ body {
 @logoGap: 2em;
 @logoHeight: @logoWidth / 3 * 2;
 .intro-header {
-	background: url('../images/intro_top-corner.png') 0 0 no-repeat;
-	background-size: @logoWidth;
+	/*background: url('../images/intro_top-corner.png') 0 0 no-repeat;*/
+	/*background-size: @logoWidth;*/
 	width: 100%;
-	height: @logoHeight;
-	color: @light;
+	/*height: @logoHeight;*/
+	/*color: @light;*/
 	text-align: center;
+	background: @dark;
+	padding: 1em;
+	background: @yellow;
 }
 .intro-headline {
 	letter-spacing: 0.1em;
-	color: @yellow;
-	padding-top: @logoGap;
+	color: @red;
+	/*padding-top: @logoGap;*/
 	margin-bottom: 0.5em;
 	font-weight: 700;
 }
 .intro-anchor {
 	span {
 		margin-right: 1em;
-		color: #fff;
+		color: @darkGrey;
+		/*color: #fff;*/
 		text-decoration: underline;
 	}
 }
@@ -68,7 +72,16 @@ body {
 	*/
 }
 .intro-main {
-	height: 85% - @logoHeight;
+	position: absolute;
+	top: 0;
+		background: url('../images/intro_top-corner.png') 0 0 no-repeat;
+	background-size: @logoWidth;
+	/*width: 100%;*/
+	/*height: @logoHeight;*/
+	color: @light;
+	text-align: center;
+
+	height: 100% - 3em;
 	display: table;
 	&:before{
         content: '';
@@ -88,7 +101,7 @@ body {
     }
 }
 .intro-content {
-	margin-top: @logoGap * -3;
+	/*margin-top: @logoGap * -3;*/
 	font-size: @large;
 	color: #fff;
 }
