@@ -1,87 +1,58 @@
 @headerH: 10%;
 @footerH: 10%;
+
 body {
 	background: url('../images/intro_bg_star.png') @dark;
-	/*background-color: @dark;*/
 	background-size: 150px 150px;
 }
-.intro {
-	width: 100%;
-}
+
 .intro-icons {
 	position: absolute;
 	right: 0;
-	padding: 10px 10px 0 0;
+	padding: 1em 1em 0 0;
 	div {
-	    margin-left: 10px;
+	    margin-left: 1em;
 	    padding: 0;
-		height: 30px;
-    	width: 30px;
+		height: 5em;
+    	width: 5em;
     	float: left;
  	}
     .facebook {
-    	background: url('../images/social.png') 0 0;
-    	background-size: 120px 30px;
+    	background: url('../images/social_2.png') 0 0;
+    	/*background-size: 120px 30px;*/
     }
     .twitter {
-    	background: url('../images/social.png') -40px 0;
-    	background-size: 110px 30px;
+    	background: url('../images/social_2.png') -5em 0;
+    	/*background-size: 110px 30px;*/
     }
     .google {
-    	background: url('../images/social.png') -80px 0;
-    	background-size: 110px 30px;
+    	background: url('../images/social_2.png') -10em 0;
+    	/*background-size: 110px 30px;*/
     }
 }
 
-@logoWidth: 20em;
-@logoGap: 2em;
-@logoHeight: @logoWidth / 3 * 2;
 .intro-header {
-	/*background: url('../images/intro_top-corner.png') 0 0 no-repeat;*/
-	/*background-size: @logoWidth;*/
+	position: absolute;
+	top: 0;
 	width: 100%;
-	/*height: @logoHeight;*/
-	/*color: @light;*/
 	text-align: center;
-	background: @dark;
-	padding: 1em;
-	background: @yellow;
-}
-.intro-headline {
-	letter-spacing: 0.1em;
-	color: @red;
-	/*padding-top: @logoGap;*/
-	margin-bottom: 0.5em;
-	font-weight: 700;
-}
-.intro-anchor {
+	padding-top: 1em;
+	color: @grey;
 	span {
 		margin-right: 1em;
-		color: @darkGrey;
-		/*color: #fff;*/
 		text-decoration: underline;
 	}
 }
-.intro-home {
-	height: 2000px; /* dummy setting */
-	/*
-	background: -webkit-linear-gradient(@darkTrans, @dark, @darkTrans);
-	background: -o-linear-gradient(@darkTrans, @dark, @darkTrans);
-	background: -moz-linear-gradient(@darkTrans, @dark, @darkTrans);
-	background: linear-gradient(@darkTrans, @dark, @darkTrans);
-	*/
-}
+
 .intro-main {
 	position: absolute;
 	top: 0;
-		background: url('../images/intro_top-corner.png') 0 0 no-repeat;
-	background-size: @logoWidth;
-	/*width: 100%;*/
-	/*height: @logoHeight;*/
-	color: @light;
+	height: 95%;
+	background: url('../images/logo.png') no-repeat;
+	background-size: 25%;
+	background-position-y: @font-size * -1;
+	background-position-x: @font-size * -1;
 	text-align: center;
-
-	height: 100% - 3em;
 	display: table;
 	&:before{
         content: '';
@@ -96,31 +67,38 @@ body {
     li {
 		vertical-align: middle;
 		text-align: center;
-		width: 100%;
 		display: table-cell;
+		width: 100%;
     }
+    color: #fff;
+    /*font-size: @large;*/
 }
 .intro-content {
-	/*margin-top: @logoGap * -3;*/
-	font-size: @large;
-	color: #fff;
+	padding: 1em;
+	background: #fff;
+	border-radius: 1em;
+	display: inline-block;
 }
-.intro-about-untappd {
-	text-align: center;
-	margin-bottom: @logoGap / 2;
+.intro-misc {
+	position: absolute;
+	top: 95%;
+	width: 100%;
 }
-.intro-about-desc, .intro-credit {
+.intro-about, .intro-credit {
 	padding: 2em;
 	background-color: @light
 }
 .intro-vis {
-	position: relative;
 	padding: 2em;
 	background-color: @dark;
 	color: #fff;
 }
 
-/* intro content */
+
+
+
+
+/* intro main */
 .intro-status {
 	font-weight: 700;
 	font-size: @normal;

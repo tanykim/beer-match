@@ -44,7 +44,7 @@ require([
     };
 
     //change height
-    $('.js-intro-0').css('height', $(window).height() * 0.85 + 'px');
+    // $('.js-intro-0').css('height', $(window).height() * 0.85 + 'px');
 
     //initiate single vis
     function initVisSingle(data) {

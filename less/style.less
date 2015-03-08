@@ -1,13 +1,60 @@
 @charset "UTF-8";
-/*Montserrat*/
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700);
 
-/* font size: 24, 20, 16, 24, 12 px*/
-@huge: 1.5em;
-@large: 1.25em;
+/* adopted from https://github.com/jonikorpi/Golden-Grid-System/blob/master/GGS.less */
+@line: 24;
+@column: 100% / 18;
+@font-size: 16;
+@em:@font-size*1em;
+
+html {
+	height: 100%;
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+}
+body {
+	min-height: 100%;
+	font-size: 100%;
+	font-family: 'Lato', Helvetica, arial, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-size: @font-size / 16 * 1em;
+	line-height: @line / @em;
+}
+
+/* font size: 36, 24, 16, 14, 12 px*/
+@huge: 2.25em;
+@large: 1.5em;
 @normal: 1em;
 @small: 0.875em;
 @tiny: 0.75em;
+
+#small {
+	/* 14px / 18px */
+	font-size: (@font-size * 0.875) / @em;
+	line-height: (@line * 0.75) / (@font-size * 0.875) * 1em;
+}
+
+#normal {
+	/* 16px / 24px */
+	font-size: @font-size / @em;
+	line-height: @line / @em; /* 24 */
+}
+
+#large, h2, h1 {
+	/* 24 / 36px */
+	font-size: 24 / @em;
+	line-height: (@line*1.5) / 24 * 1em;
+}
+
+#huge {
+	/* 36px / 48px */
+	font-size: 36 / @em;
+	line-height: (@line*2) / 36 * 1em;
+}
 
 /* colors */
 @dark: #25282A;
@@ -62,11 +109,6 @@
 	user-select: none;
 	cursor: default;
 }
-body {
-	margin: 0;
-	padding: 0;
-	font-family: 'Lato', Helvetica, arial, sans-serif;
-}
 
 ul {
 	list-style-type: none;
@@ -74,6 +116,12 @@ ul {
 	padding: 0;
 	display: inline;
 }
-
+input[type="radio"] {
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+		 -o-box-sizing: border-box;
+		-ms-box-sizing: border-box;
+			box-sizing: border-box;
+}
 @import 'intro';
 @import 'vis';
