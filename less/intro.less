@@ -1,15 +1,32 @@
 @headerH: 10%;
 @footerH: 10%;
 body {
-	background: url('../images/intro_bg_star.png') @dark;
+	background: url('../images/intro_bg_star.png') @lightGrey;
 	background-size: 150px 150px;
 }
+
 .intro {
 	width: 100%;
 }
-.intro-icons {
+
+.intro-header {
+	width: 100%;
+	background: @lightGrey;
+	position: fixed;
+	top: 0;
+	height: 4em;
+}
+.intro-logo {
 	position: absolute;
-	right: 0;
+	top: 0;
+	float: left;
+	width: 100%;
+	text-align: center;
+	font-size: 2em;
+	color: #fff;
+}
+.intro-icons {
+	float: right;
 	padding: 10px 10px 0 0;
 	div {
 	    margin-left: 10px;
@@ -31,19 +48,8 @@ body {
     	background-size: 110px 30px;
     }
 }
-.intro-header {
-	width: 100%;
-	text-align: center;
-	color: @light;
-	padding: 4% 0;
-}
-.intro-headline {
-	letter-spacing: 0.1em;
-	color: @yellow;
-	margin-bottom: 1em;
-	font-weight: 700;
-}
 .intro-anchor {
+	float: left;
 	span {
 		margin-right: 0.5em;
 		margin-left: 0.5em;
@@ -54,31 +60,27 @@ body {
 .intro-main {
 	text-align: center;
 	width: 100%;
+	height: 84%;
+	padding: 8% 0;
+	background: #fff;
 }
-.intro-top {
-	background: url('../images/intro_top_bg.png') repeat-x;
-	background-position: left bottom;
-	background-size: 32px 61px;
-	height: 190px;
-}
-.intro-bottom {
-	background: url('../images/intro_bottom_bg.png') repeat-x;
-	background-size: 7px 19px;
-	height: 51px;
+.intro-headline {
+	letter-spacing: 0.1em;
+	margin-bottom: 1em;
+	font-weight: 700;
 }
 .intro-untappd {
 	text-align: center;
 	margin-top: 1em;
-	padding-bottom: 8%;
 }
 .intro-about, .intro-credit {
 	padding: 2em;
-	background-color: @light
+	background-color: @dark;
+	color: @lightGrey;
 }
 .intro-vis {
 	padding: 2em;
-	background-color: @dark;
-	color: #fff;
+	background-color: @lightGrey;
 }
 
 /* intro content */
