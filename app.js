@@ -142,10 +142,10 @@ function getUserInfo(userId) {
 	if (fs.existsSync('public/users/' + userId + '.json')) {
     	console.log('---file exists');
     	//FIXME: delete later
-    	io.emit('dataExist', { userId: userId });
+    	// io.emit('dataExist', { userId: userId });
 
-  		//var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
-		// io.emit('success', { data: data });
+  		var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
+		io.emit('success', { data: data });
 
 	} else {
 		untappd.userInfo(function (err,obj) {
@@ -182,11 +182,9 @@ function getFriendsList(userId, count) {
 	//FIXME: save friends in the data, update the data
 	function callFriendsFeedAPI(offset) {
 	  	untappd.userFriends(function (err,obj) {
+	  		console.log(obj);
 			if (obj && obj.response && obj.response.items && obj.response.count > 0) {
 				var fList = _.map(obj.response.items, function (d) {
-
-					//FIXME: error clicked from vis header
-					console.log(d);
 					return d.user.user_name.toLowerCase();
 				});
 				friends.push(fList);
