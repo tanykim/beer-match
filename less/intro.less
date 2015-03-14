@@ -2,58 +2,16 @@
 @footerH: 10%;
 
 body {
-	background: url('../images/intro_bg_star.png') @dark;
+	background: url('../images/intro_bg_star.png') #fff;
 	background-size: 150px 150px;
 }
-
-.intro-icons {
-	position: absolute;
-	right: 0;
-	padding: 1em 1em 0 0;
-	div {
-	    margin-left: 1em;
-	    padding: 0;
-		height: 5em;
-    	width: 5em;
-    	float: left;
- 	}
-    .facebook {
-    	background: url('../images/social_2.png') 0 0;
-    	/*background-size: 120px 30px;*/
-    }
-    .twitter {
-    	background: url('../images/social_2.png') -5em 0;
-    	/*background-size: 110px 30px;*/
-    }
-    .google {
-    	background: url('../images/social_2.png') -10em 0;
-    	/*background-size: 110px 30px;*/
-    }
-}
-
-.intro-header {
-	position: absolute;
-	top: 0;
-	width: 100%;
-	text-align: center;
-	padding-top: 1em;
-	color: @grey;
-	span {
-		margin-right: 1em;
-		text-decoration: underline;
-	}
-}
-
-.intro-main {
-	position: absolute;
-	top: 0;
-	height: 95%;
-	background: url('../images/logo.png') no-repeat;
-	background-size: 25%;
-	background-position-y: @font-size * -1;
-	background-position-x: @font-size * -1;
+.intro {
+	/*position: absolute;*/
+	background: #fff;
+	/*top: 0;*/
 	text-align: center;
 	display: table;
+	width: 100%;
 	&:before{
         content: '';
         display: block;
@@ -67,36 +25,68 @@ body {
     li {
 		vertical-align: middle;
 		text-align: center;
-		display: table-cell;
+		/*display: table-row-group;*/
 		width: 100%;
     }
-    color: #fff;
-    /*font-size: @large;*/
+}
+.intro-main {
+	height: 90%;
+	display: table-cell;
+}
+.intro-headline {
+	color: @grey;
+	letter-spacing: 0.2em;
+	margin-bottom: 1em;
 }
 .intro-content {
 	padding: 1em;
-	background: #fff;
-	border-radius: 1em;
-	display: inline-block;
 }
+.intro-untapped {
+}
+
+.intro-header {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	height: 5em;
+	background: @lightGrey;
+	display: table;
+	li {
+		display: table-cell;
+		vertical-align: middle;
+	}
+}
+.intro-links, .intro-icons {
+	span {
+		margin: 0 0.5em;
+		text-decoration: underline;
+	}
+	width:20%;
+}
+.intro-logo {
+	text-align: center;
+}
+.intro-icons {
+	text-align: right;
+}
+
+
 .intro-misc {
 	position: absolute;
-	top: 95%;
+	top: 90%;
 	width: 100%;
 }
 .intro-about, .intro-credit {
 	padding: 2em;
-	background-color: @light
+	background-color: @dark;
+	color: #fff;
+	display: table-row-group;
 }
 .intro-vis {
 	padding: 2em;
-	background-color: @dark;
-	color: #fff;
+	background-color: @light;
+	display: table-row-group;
 }
-
-
-
-
 
 /* intro main */
 .intro-status {
@@ -111,6 +101,7 @@ body {
 .intro-input {
 	font-size: @large;
 	background-color: @light;
+	padding: 0.6em;
 	font-family:inherit;
 	font-weight: 700;
 	color: @dark;
@@ -122,10 +113,12 @@ body {
 	color: @grey;
 }
 .intro-view-single {
+	#view-icon-intro;
 	#view-icon;
 	#view-icon-single;
 }
 .intro-view-match {
+	#view-icon-intro;
 	#view-icon;
 	#view-icon-match;
 }
