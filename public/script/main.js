@@ -38,7 +38,7 @@ require([
     var isMatch = false;
 
     var introMsgs = {
-        init: 'Enter your UNTAPPD user name',
+        init: 'Explore your beers and see a match with friend. <br/> Enter your UNTAPPD user name',
         diffName: 'Try a different user name',
         userIdCheck: 'Checking user name...'
     };
@@ -330,7 +330,8 @@ require([
     });
     //intro slide
     //add footer height
-    var hDiff = $(window).height() - $('.js-single-contents-2').outerHeight();
+
+    var hDiff = $(window).height() - $('.js-intro-last').outerHeight();
     if (hDiff > 0) {
         $('.js-intro-dummy').css('height', hDiff + 'px');
     }
@@ -339,7 +340,7 @@ require([
                     return $('.js-intro-' + i).outerHeight();
                 }), function (memo, num) {
                     return memo + num;
-                }, 0);
+                }, 0) - $('.js-intro-header').outerHeight();
     };
     $('.js-intro-slide').click(function() {
         $('html body').animate({ scrollTop: getHeightSum(+$(this).data().value) });
