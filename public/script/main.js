@@ -28,23 +28,16 @@ require([
     'd3',
     'moment',
     'socketio',
+    'intro',
     'match',
     'vis'
-], function ($, _, d3, moment, io, Match, Vis) {
+], function ($, _, d3, moment, io, Intro, Match, Vis) {
 
-    //communication with server
+    // later: communication with server
+    // FIXME: URL
     var socket = io.connect('http://localhost:8080');
     var userData = [];
     var isMatch = false;
-
-    var introMsgs = {
-        init: 'Explore your beers and see a match with friend. <br/> Enter your UNTAPPD user name',
-        diffName: 'Try a different user name',
-        userIdCheck: 'Checking user name...'
-    };
-
-    //change height
-    // $('.js-intro-0').css('height', $(window).height() * 0.85 + 'px');
 
     //initiate single vis
     function initVisSingle(data) {
@@ -54,9 +47,11 @@ require([
         var u = data.userinfo;
         window.history.pushState('object or string', 'Title', u.userId);
 
-        $('.js-intro').hide();
-        $('.js-single').show();
-        $('.js-goMatch').show();
+        $('.js-intro').addClass('hide');
+        $('.js-match').addClass('hide');
+        $('.js-single').removeClass('hide');
+        $('.js-nav').removeClass('hide');
+        $('.js-goMatch').removeClass('hide');
 
         var template = _.template($('#header-single').html());
         $('.js-vis-header').html(template({
@@ -64,10 +59,15 @@ require([
             userId: u.userId,
             name: u.username,
             address: u.address,
-            since: moment(u.since, 'ddd, DD MMM YYYY HH:mm:ssZ').format('MMM D, YYYY'),
+            since: moment(u.since, 'ddd, DD MMM YYYY HH:mm:ssZ')
+                    .format('MMM D, YYYY'),
             checkinCount: u.checkinCount
         }));﻿
 
+        $('.js-title-overlaid').html(Intro.single[0]);
+        _.each(_.range(6), function (i) {
+            $('.js-vis-menu-title-' + i).html(Intro.single[i]);
+        });
         Vis.startVis(data);
     }
 
@@ -76,6 +76,7 @@ require([
 
         userData[1] = data;
 
+        //FIXME: create match data at the server
         function createBeerMatchData(dataSet, callback) {
             var match = new Match(dataSet);
             callback(match);
@@ -86,9 +87,12 @@ require([
 
             window.history.pushState('object or string', 'Title', m.url);
 
-            $('.js-intro').hide();
-            $('.js-match').show();
-            $('.js-goSingles').show();
+            $('.js-intro').addClass('hide');
+            $('.js-single').addClass('hide');
+            $('.js-match').removeClass('hide');
+            $('.js-nav').removeClass('hide');
+            $('.js-goSingles').removeClass('hide');
+            $('.js-goMatch').addClass('hide');
 
             var template = _.template($('#header-match').html());
             $('.js-goSingle-0').html(userData[0].userinfo.userId.toUpperCase());
@@ -98,6 +102,10 @@ require([
                 avatar2: data.userinfo.avatar
             }));﻿
 
+            $('.js-title-overlaid').html(Intro.match[0]);
+            _.each(_.range(6), function (i) {
+                $('.js-vis-menu-title-' + i).html(Intro.match[i]);
+            });
             Vis.startVisMatch(m);
         });
     }
@@ -119,9 +127,9 @@ require([
                 //at least five haracters
                 var userId = $(this).val();
                 if (userId.length < 3) {
-                    renderIntro(introMsgs.diffName, 'Should be at least 3 characters');
+                    renderIntro(Intro.msg.diffName, Intro.msg.tooShort);
                 } else {
-                    renderIntro(introMsgs.init, introMsgs.userIdCheck, userId);
+                    renderIntro(Intro.msg.init, Intro.msg.userIdCheck, userId);
                     socket.emit('userId', { userId: userId });
                 }
             }
@@ -134,8 +142,10 @@ require([
         // window.history.pushState('object or string', 'Title', '/');
 
         var template = _.template($('#intro-start').html());
-        var prevUser = userData[0] ? userData[0].userinfo.userId.toUpperCase() : '';
-        $('.js-intro-content').html(template({
+        var prevUser = userData[0] ?
+                userData[0].userinfo.userId.toUpperCase() :
+                '';
+        $('.js-intro-main').html(template({
             desc: desc,
             warning: warning,
             userId: userId,
@@ -156,34 +166,35 @@ require([
         }
     }
 
-    // after search of user
+    //download
+    function startDownload(d, tz) {
+        $('.js-start').click(function() {
+            console.log('2---. downloading feeds')
+            socket.emit('timezone', {
+                userinfo: d.userinfo,
+                name: tz ? tz : d.timezone.name
+            });
+        });
+    }
+
+    // after fouding a user
     function renderUserInfo(data) {
 
         var userinfo = data.userinfo;
-        var timezone = 'No address/timezone info available';
-        if (userinfo.address) {
-            timezone = data.timezone.name +
+        var timezone = userinfo.address ? data.timezone.name +
                 ' (UTC' + (data.timezone.offset >= 0 ? '+' : '') +
                 data.timezone.offset/3600 + 'h)<br/>' +
-                'If the timezone is not correct, please <span class="link underline js-timezone-switch">change.</span>';
-        }
+                'If the timezone is not correct, please ' +
+                '<span class="link underline js-timezone-switch">change. ' +
+                '</span>' :
+                'No address/timezone info available';
         var template = _.template($('#intro-userinfo').html());
-        $('.js-intro-content').html(template({
+        $('.js-intro-main').html(template({
             avatar: userinfo.avatar,
             username: userinfo.username,
             address: userinfo.address,
             timezone: timezone
         }));﻿
-
-        function startDownload(d, tz) {
-            $('.js-start').click(function() {
-                console.log('2---. downloading feeds')
-                socket.emit('timezone', {
-                    userinfo: d.userinfo,
-                    name: tz ? tz : d.timezone.name
-                });
-            });
-        }
 
         var newTimezone;
         if (userinfo.address) {
@@ -192,7 +203,7 @@ require([
 
         //timezone select
         $('.js-timezone-switch').click(function() {
-            $('.js-timezone-list').show();
+            $('.js-timezone-list').removeClass('hide');
         });
         $('.js-timezone-select').change(function() {
             newTimezone = $(this).val();
@@ -208,7 +219,7 @@ require([
         socket.emit('friends', { userId: userId, count: friendCount });
         socket.on('friends', function (d) {
             var friends = d.friends;
-            var msg = friends ? 'Or enter an Untapped user name.' : 'No friends found. Enter an UNTAPPD user name.';
+            var msg = friends ? Intro.msg.friends : Intro.msg.noFriends;
             renderIntro(msg, '', '', friends);
             $('.js-friend-select').change(function() {
                 var friend = $(this).val();
@@ -222,7 +233,7 @@ require([
 
         var userId = data.userinfo.userId;
         var template = _.template($('#intro-option').html());
-        $('.js-intro-content').html(template({
+        $('.js-intro-main').html(template({
             msg: msg,
             username: userId.toUpperCase(),
             avatar: data.userinfo.avatar
@@ -252,17 +263,17 @@ require([
         socket.emit('pair', { users: userId.split('+') });
     } else if (userId) {
         console.log('1---single user');
-        renderIntro(introMsgs.init, introMsgs.userIdCheck, userId);
+        renderIntro(Intro.msg.init, Intro.msg.userIdCheck, userId);
         socket.emit('userId', { userId: userId });
     } else {
         console.log('1---no url');
-        renderIntro(introMsgs.init, '', '');
+        renderIntro(Intro.msg.init, '', '');
     }
 
     //receive data from the server
     socket.on('error', function (data) {
         console.log('---error', data);
-        renderIntro(introMsgs.diffName, data.error_detail);
+        renderIntro(Intro.msg.diffName, data.error_detail);
     });
 
     //FIXME: delete later
@@ -277,7 +288,7 @@ require([
             } else {
                 //FIXME: temporarily
                 // initVisSingle(d);
-                renderIntroOptions('Welcome back!', d);
+                renderIntroOptions(Intro.msg.back, d);
             }
         });
     });
@@ -292,6 +303,7 @@ require([
             $.ajax({
                 url: '/users/' + users[1] + '.json'
             }).done(function (d2) {
+                isMatch = true;
                 initVisMatch(d2);
             });
         });
@@ -304,7 +316,8 @@ require([
     });
 
     socket.on('progress', function (data) {
-        $('.js-start').removeClass('underline').html(Math.min(Math.round(data.count/data.total * 100), 100) + '%');
+        $('.js-start').removeClass('underline')
+            .html(Math.min(Math.round(data.count/data.total * 100), 100) + '%');
     });
 
     socket.on('success', function (data) {
@@ -320,60 +333,114 @@ require([
         $(this).css('cursor', 'pointer');
     }).click(function() {
         var val = $(this).data().value;
-        if (val === 'facebook') {
-            window.open("https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fbeer.tany.kim");
-        } else if (val === 'twitter') {
-            window.open("https://twitter.com/intent/tweet?text=Check this cool visualization of beer! See your beer taste and the match with your friends at http%3A%2F%2Fbeer.tany.kim");
-        } else {
-            window.open("https://plus.google.com/share?url=http%3A%2F%2Fbeer.tany.com");
-        }
+        window.open(Intro.share[val]);
     });
-    //intro slide
-    //add footer height
 
+    //add intro footer height
     var hDiff = $(window).height() - $('.js-intro-last').outerHeight();
     if (hDiff > 0) {
         $('.js-intro-dummy').css('height', hDiff + 'px');
     }
-    function getHeightSum (num) {
+    function getHeightSum (num, view, offset) {
         return _.reduce(_.map(_.range(0, num), function(i) {
-                    return $('.js-intro-' + i).outerHeight();
+                    return $('.js-' + view +
+                        '-contents-' + i).outerHeight();
                 }), function (memo, num) {
                     return memo + num;
-                }, 0) - $('.js-intro-header').outerHeight();
+                }, 0) - offset;
     };
     $('.js-intro-slide').click(function() {
-        $('html body').animate({ scrollTop: getHeightSum(+$(this).data().value) });
+        $('html body').animate({
+            scrollTop: getHeightSum(+$(this).data().value,
+                    'intro',
+                    $('.js-intro-header').outerHeight()
+                )
+        });
     });
 
     //go home
     $('.js-goHome').mouseover(function() {
-        $(this).css('background-position-y', '-20px');
+        $(this).addClass('home-over');
     }).click(function() {
         console.log('---go home');
-        $('.js-single').hide();
-        $('.js-match').hide();
-        $('.js-intro').show();
+        $('.js-single').addClass('hide');
+        $('.js-match').addClass('hide');
+        $('.js-nav').addClass('hide');
+        $('.js-nav-expand').addClass('hide');
+        $('.js-menu-open').removeClass('menu-toggle-open');
+        $('.js-intro').removeClass('hide');
         window.history.pushState('object or string', 'Title', '/');
         userData = [null, null];
         isMatch = false;
-        renderIntro(introMsgs.init, '');
+        renderIntro(Intro.msg.init, '');
     }).mouseout(function() {
-        $(this).css('background-position-y', '0');
+        $(this).removeClass('home-over');
     });
+
+    //vis menu show/hide
+    $('.js-menu-open').click(function() {
+
+        if ($(this).hasClass('menu-toggle-open')) {
+            $(this).removeClass('menu-toggle-open');
+        } else {
+            $(this).addClass('menu-toggle-open');
+        }
+
+        if ($('.js-vis-menu').hasClass('hide')) {
+            $('.js-vis-menu').removeClass('hide');
+        } else {
+            $('.js-vis-menu').addClass('hide');
+        }
+    });
+
+    //get vis position
+    var prevTitle = 0;
+    function changeVisTitle(i) {
+        if (i !== prevTitle) {
+            $('.js-title-overlaid')
+                .html(isMatch ? Intro.match[i] : Intro.single[i]);
+            $('.js-slide').removeClass('selected');
+            $('.js-vis-menu-' + i).addClass('selected');
+            prevTitle = i;
+        }
+    };
+    //vis slide
+    $('.js-slide').click(function() {
+        $('html body').animate({
+            scrollTop: getHeightSum(+$(this).data().value,
+                isMatch ? 'match' : 'single',
+                0)
+            });
+    });
+    //scroll
+    function positionVisTitle() {
+        for (var i = 1; i < 7; i++) {
+            var diff = $(window).scrollTop() -
+                getHeightSum(i, isMatch ? 'match' : 'single', 0);
+            if (diff < -30 ) {
+                changeVisTitle(i-1);
+                break;
+            }
+        }
+    }
+    var scrolled = _.debounce(positionVisTitle, 100);
+    $(window).scroll(scrolled);
 
     //go to match view
     $('.js-goMatch').click(function() {
         console.log('---go match');
-        $('.js-singles').hide();
-        $('.js-intro').show();
-        $('.js-goMatch').hide();
+        $('.js-single').addClass('hide');
+        $('.js-nav').addClass('hide');
+        $('.js-nav-expand').addClass('hide');
+        $('.js-menu-open').removeClass('menu-toggle-open');
+        $('.js-goMatch').addClass('hide');
+        $('.js-intro').removeClass('hide');
         renderFriends(userData[0].userinfo.userId, userData[0].userinfo.friendCount);
     });
     //go to single view
     $('.js-goSingle').click(function() {
         console.log('--go single');
-        $('.js-goSingles').hide();
+        $('.js-goSingles').addClass('hide');
         isMatch = false;
         initVisSingle(userData[$(this).data().value]);
     });

@@ -25,6 +25,7 @@
 /*icons*/
 #view-icon-intro {
 	background: url('../images/view_dark.png') no-repeat @light;
+	display: inline-block;
 	color: @dark;
 }
 #view-icon-vis {
@@ -32,7 +33,6 @@
 	color: @dark;
 }
 #view-icon {
-	display: inline-block;
 	background-size: 2.250em;
 	background-position-x: 0.875em;
 	border-radius: 1.125em;
@@ -50,6 +50,9 @@
 }
 
 /*common */
+.hide {
+	display: none;
+}
 .bold {
 	font-weight: 700;
 }
@@ -80,7 +83,7 @@ ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-	display: inline;
+	/*display: inline;*/
 }
 
 @import 'intro';

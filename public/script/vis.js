@@ -2,69 +2,9 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 	'match-score', 'match-style', 'match-time', 'match-venues'],
 	function (moment, Count, Ratings, Beers, When, Where, Score, Styles, Time, Venues) {
 
-	function callInteraction() {
+	// function callInteraction() {
 
-		//vis menu show/hide
-		$('.js-menu-open').click(function() {
-			$('.js-menu-close').show();
-			$('.js-menu-open').hide();
-			$('.js-vis-menu').fadeIn();
-		});
-		$('.js-menu-close').click(function() {
-			$('.js-menu-close').hide();
-			$('.js-menu-open').show();
-			$('.js-vis-menu').fadeOut();
-		});
-
-		//get vis position
-    	var titleStr = [
-    		'How much do I drink?',
-    		'What matters?',
-    		'Beers I love & hate',
-    		'When do I drink?',
-    		'Where do I drink?'
-    	];
-    	var prevTitle = 0;
-		function changeVisTitle(i) {
-			if (i !== prevTitle) {
-				$('.js-title-overlaid').fadeOut('fast', function() {
-			 		$(this).text(titleStr[i]);
-				}).fadeIn('fast');
-		        $('.js-slide').removeClass('selected');
-				$('.js-vis-menu-' + i).addClass('selected');
-				prevTitle = i;
-			}
-		};
-		function getHeightSum (num) {
-	        return _.reduce(_.map(_.range(0, num), function(i) {
-	                    return $('.js-single-contents-' + i).outerHeight();
-	                }), function (memo, num) {
-	        			return memo + num;
-	        		}, 0);
-    	};
-		//vis slide
-		$('.js-slide').click(function() {
-			$('html body').animate({ scrollTop: getHeightSum(+$(this).data().value) });
-		});
-	    //scroll
-	    function positionVisTitle() {
-	        for (var i = 1; i < 6; i++) {
-	        	var diff = $(window).scrollTop() - getHeightSum(i);
-	        	if (diff < -30 ) {
-	        		changeVisTitle(i-1);
-	        		break;
-	        	}
-	        }
-	    }
-	    var scrolled = _.debounce(positionVisTitle, 100);
-	    $(window).scroll(scrolled);
-
-	    //add footer height
-	    var hDiff = $(window).height() - $('.js-single-contents-4').outerHeight();
-	    if (hDiff > 0) {
-	    	$('.js-single-contents-dummy').css('height', (hDiff - 100) + 'px');
-	    }
-	}
+	// }
 
 	var startVis = function(b) {
 
@@ -139,7 +79,7 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 		Where.drawTimeline(b.venueByTime, b.timeRange);
 		*/
 		//call interaction
-		callInteraction();
+		// callInteraction();
 
 	};
 

@@ -20,25 +20,23 @@
 <meta property="og:image:type" content="image/png"/>
 <meta property="og:image:width" content="160"/>
 <meta property="og:image:height" content="160"/>
-<script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script>
-<script data-main="/script/main" src="/script/require.js"></script>
 </head>
 <body>
 
 <!-- intro -->
 <div class="intro js-intro">
-	<div class="intro-main js-intro-0 js-intro-content">
+	<div class="intro-main js-intro-contents-0 js-intro-main">
 	</div>
-	<div class="intro-untappd js-intro-1">
+	<div class="intro-untappd js-intro-contents-1">
 		<a href="https://untappd.com/" target="_blank"><img src="images/untappd.png" width="105" height="28" border="0"></a>
 	</div>
-	<div class="intro-about js-intro-2">
+	<div class="intro-about js-intro-contents-2">
 		BEERxMATCH is a web-based visualization project utilizing the data from an iPhone/Android app.
 	</div>
-	<div class="intro-vis js-intro-3">
+	<div class="intro-vis js-intro-contents-3">
 		Single and match vis
 	</div>
-	<div class="intro-credit js-intro-4 js-intro-last">
+	<div class="intro-credit js-intro-contents-4 js-intro-last">
 		<p>BEER x Match is not affiliated with or endorsed by <a href="https://untappd.com/" target="_blank">UNTAPPD</p>
 		<p>© 2014. All Rights Reserved. <a href="http://tany.kim" target="_blank">Tanyoung Kim.</a></p>
 	</div>
@@ -62,17 +60,10 @@
 </div>
 
 <!-- match -->
-<div class="vis js-match" style="display:none;">
+<div class="vis js-match hide">
 	<div class="vis-contents-wrapper">
 
-		<!-- who drink more -->
-		<div class="vis-contents js-match-contents-1">
-			Who drink more?
-			<div id="vis-counts" class="js-match-svg counts"></div>
-			<div class="counts-label">BEER / <span class="js-counts"></span></div>
-		</div>
-
-		<!-- match score & behavior-->
+		<!-- 0 match score & behavior-->
 		<div class="vis-contents js-match-contents-0">
 			Match Score
 			<div class="js-match-score"></div>
@@ -84,7 +75,14 @@
 			<div id="vis-behavior" class="js-match-svg behavior"></div>
 		</div>
 
-		<!-- beers (dis/)agree -->
+		<!-- 1 who drink more -->
+		<div class="vis-contents js-match-contents-1">
+			Who drink more?
+			<div id="vis-counts" class="js-match-svg counts"></div>
+			<div class="counts-label">BEER / <span class="js-counts"></span></div>
+		</div>
+
+		<!-- 2 beers (dis/)agree -->
 		<div class="vis-contents js-match-contents-2">
 			Distinctive beers
 			<div id="vis-distinctive" class="js-match-svg distictive"></div>
@@ -101,13 +99,13 @@
 			</div>
 		</div>
 
-		<!-- share styles -->
+		<!-- 3 share styles -->
 		<div class="vis-contents js-match-contents-3">
 			Styles
 			<div id="vis-styles" class="js-styles styles"></div>
 		</div>
 
-		<!-- when do we drink -->
+		<!-- 4 when do we drink -->
 		<div class="vis-contents js-match-contents-4">
 			Day / Hour
 			<div id="vis-weekend" class="js-match-svg weekend"></div>
@@ -122,7 +120,7 @@
 			<div id="vis-timeline" class="js-match-svg timeline"></div>
 		</div>
 
-		<!-- where do we drink -->
+		<!-- 5 where do we drink -->
 		<div class="vis-contents js-match-contents-5">
 			<span class="link underline bold js-venues-switch" data-value="absolute">Check-in Count</span>
 			<span class="link underline js-venues-switch" data-value="relative">Relative Ratio</span>
@@ -135,14 +133,13 @@
 </div>
 
 <!-- single -->
-<div class="vis js-single" style="display:none;">
+<div class="vis js-single hide">
 
 	<!-- vis contents -->
 	<div class="vis-contents-wrapper">
 
-		<!-- basic stats -->
+		<!-- 0 basic stats -->
 		<div class="vis-contents js-single-contents-0">
-			<!-- <div class="vis-contents-title">How much do I drink?</div> -->
 			<div>
 				<input type="radio" name="period" value="day" class="js-count-sort-day"> Day
 				<input type="radio" name="period" value="week" class="js-count-sort-week"> Week
@@ -160,9 +157,8 @@
 			<div id="vis-calendar" class="js-single-svg calendar"></div>
 		</div>
 
-		<!-- ratings -->
+		<!-- 1 ratings -->
 		<div class="vis-contents js-single-contents-1">
-			<!-- <div class="vis-contents-title">What matters?</div> -->
 			<div class="score-average"> average rating: <span class="js-score-avg"></span></div>
 			<div id="vis-score" class="js-single-svg score"></div>
 			<div id="vis-network" class="js-single-svg network"></div>
@@ -175,9 +171,8 @@
 			<div id="vis-ratings" class="js-single-svg ratings"></div>
 		</div>
 
-		<!-- beers like and hate -->
+		<!-- 2 beers like and hate -->
 		<div class="vis-contents js-single-contents-2">
-			<!-- <div class="vis-contents-title">Beers I love &amp; hate</div> -->
 			<div class="favorites-trend">
 				Your taste change overtime
 				<div id="vis-fav-trend" class="js-single-svg fav-trend"></div>
@@ -202,9 +197,8 @@
 			</div>
 		</div>
 
-		<!-- when -->
+		<!-- 3 when -->
 		<div class="vis-contents js-single-contents-3">
-			<!-- <div class="vis-contents-title">When do I drink?</div> -->
 			<span class="link underline bold js-dayHour-switch" data-value="matrix">Both Day and Hour</span>
 			<span class="link underline js-dayHour-switch" data-value="day">Only Day</span>
 			<span class="link underline js-dayHour-switch" data-value="hour">Only Hour</span>
@@ -214,12 +208,10 @@
 			<div id="vis-hour" class="js-single-svg hour"></div>
 		</div>
 
-		<!-- where -->
+		<!-- 4 where -->
 		<div class="vis-contents js-single-contents-4">
-			<!-- <div class="vis-contents-title">Where do I drink?</div> -->
-			<div id="vis-venue-timeline" class="js-single-svg venue-timeline"></div>
 			<div id="vis-venue-connection" class="js-single-svg venue-connection"></div>
-			<!-- <div class="venue-title">
+			<div class="venue-title">
 				<div class="name js-venue-title-name"></div>
 				<div class="desc js-venue-title-score"></div>
 				<div class="desc js-venue-title-type"></div>
@@ -227,16 +219,13 @@
 			</div>
 			<div class="venue-detail">
 				<div id="vis-venue-map" class="venue-map"></div>
-				<div id="vis-venue-type" class="js-single-svg venue-type js-venue-type"></div>
-				<div id="vis-venue-city" class="js-single-svg venue-city js-venue-city"></div>
 			</div>
-			<div class="js-venue-list venue-list">
-				<div id="vis-venue-name" class="js-single-svg js-venue-name venue-name"></div>
-			</div> -->
 		</div>
 
-		<!-- dummy for scrooll -->
-		<div class="js-single-contents-dummy"></div>
+		<!-- 5 when & where -->
+		<div class="vis-contents js-single-contents-5">
+			<div id="vis-venue-timeline" class="js-single-svg venue-timeline"></div>
+		</div>
 
 		<!-- footer -->
 		<div class="vis-contents-footer js-single-contents-footer">FOOTER</div>
@@ -246,41 +235,41 @@
 </div> <!-- vis -->
 
 <!-- header -->
-<div class="js-single js-match vis-header" style="display:none;">
+<div class="js-single js-match vis-header hide">
 	<div class="home js-goHome link"></div>
 	<div class="wrapper js-vis-header"></div>
-	<div class="goSingles js-goSingles" style="display:none;">
+	<div class="goSingles js-goSingles hide">
 		See the single view of
 		<span class="goSingle js-goSingle js-goSingle-0 link" data-value="0">user0</span>
 		or
 		<span class="goSingle js-goSingle js-goSingle-1 link" data-value="1">user0</span>
 	</div>
-	<div class="goMatch js-goMatch link" style="display:none;">See Match</div>
+	<div class="goMatch js-goMatch link hide">See Match</div>
 </div>
 
 <!--vis menu -->
-<div class="js-single vis-header-wrapper" style="display:none;">
-	<div class="vis-menu js-vis-menu" style="display:none;">
-		<ul>
-			<li class="item js-slide selected js-vis-menu-0" data-value="0">How much do I drink?</li>
-			<li class="item js-slide js-vis-menu-1" data-value="1">What matters?</li>
-			<li class="item js-slide js-vis-menu-2" data-value="2">Beers I love &amp; hate</li>
-			<li class="item js-slide js-vis-menu-3" data-value="3">When do I drink?</li>
-			<li class="item js-slide js-vis-menu-4" data-value="4">Where do I drink?</li>
-		</ul>
-	</div>
-	<div class="vis-title-overlaid js-title-overlaid">How much do I drink?</div>
-	<div class="vis-menu-dots">
+<div class="vis-title-overlaid js-nav js-title-overlaid hide">title</div>
+<ul class="menu-expand js-nav-expand js-vis-menu hide">
+	<li class="item js-slide selected js-vis-menu-0 js-vis-menu-title-0" data-value="0">title0</li>
+	<li class="item js-slide js-vis-menu-1 js-vis-menu-title-1" data-value="1">title1</li>
+	<li class="item js-slide js-vis-menu-2 js-vis-menu-title-2" data-value="2">title2</li>
+	<li class="item js-slide js-vis-menu-3 js-vis-menu-title-3" data-value="3">title3</li>
+	<li class="item js-slide js-vis-menu-4 js-vis-menu-title-4" data-value="4">title4</li>
+	<li class="item js-slide js-vis-menu-5 js-vis-menu-title-5" data-value="5">title5</li>
+</ul>
+
+<div class="js-nav vis-menu-wrapper hide">
+	<!-- <div class="vis-menu"> -->
 		<div class="menu-toggle js-menu-open">open</div>
-		<div class="menu-toggle js-menu-close" style="display:none;">close</div>
-		<ul>
+		<ul class="menu-dots">
 			<li class="item selected js-slide js-vis-menu-0" data-value="0"></li>
 			<li class="item js-slide js-vis-menu-1" data-value="1"></li>
 			<li class="item js-slide js-vis-menu-2" data-value="2"></li>
 			<li class="item js-slide js-vis-menu-3" data-value="3"></li>
 			<li class="item js-slide js-vis-menu-4" data-value="4"></li>
+			<li class="item js-slide js-vis-menu-5" data-value="5"></li>
 		</ul>
-	</div>
+	<!-- </div> -->
 </div>
 
 <!-- intro render templates -->
@@ -310,7 +299,7 @@
 		<div class="name"><%= username %></div>
 		<div class="location"><%= address %></div>
 		<div class="timezone"><%= timezone %></div>
-		<div class="js-timezone-list" <%= address ? 'style="display:none;"' : '' %> >
+		<div class="js-timezone-list <%= address ? ' hide' : '' %>">
 			<select class="intro-list js-timezone-select">
 				<option> Select a timezone </option>
                 <option value="Pacific/Midway">(UTC-11:00) Midway Island, Samoa</option>
@@ -437,5 +426,7 @@
 	<div class="x"> X </div>
 	<div class="pic" style="background-image: url(<%= avatar2 %>)"></div>
 </script>
-
 </body>
+</html>
+<script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script>
+<script data-main="/script/main" src="/script/require.js"></script>
