@@ -25,25 +25,42 @@
 
 <!-- intro -->
 <div class="intro js-intro">
-	<div class="intro-main js-intro-contents-0 js-intro-main">
+	<div class="intro-main-wrapper js-intro-contents-0">
+		<div class="intro-main js-intro-main">
+			LOADING...
+		</div>
 	</div>
 	<div class="intro-untappd js-intro-contents-1">
 		<a href="https://untappd.com/" target="_blank"><img src="images/untappd.png" width="105" height="28" border="0"></a>
 	</div>
 	<div class="intro-about js-intro-contents-2">
-		BEERxMATCH is a web-based visualization project utilizing the data from an iPhone/Android app.
+		<p>
+			BEERxMATCH is a web application that visualizes <strong>personal beer check-in data</strong> from an iPhone/Android app <a href="https://untappd.com/" target="_blank">Untappd.</a>
+		</p>
+		<p>
+			With Untappd, you can check in beers you drink: search your beer and rate it up to 5 stars. Of course, when you check in, timestamp is also saved. While checking in, you can add tag a location where you drink.Untappd also provides meta data of each beer - style, brewery, location of brewery, and ABV.
+		</p>
 	</div>
 	<div class="intro-vis js-intro-contents-3">
-		Single and match vis
+		<p>
+			Beer Match utilizes these fantastic data and <strong>visualizes your beer taste and drinking behaviors and patterns</strong>. You'll see how much and often you drink, what styles or breweries you like, your favorite beers, and when and where you drink. With these visualizations.
+		<p/>
+		<p>
+			In addition to the visualization of a single Untappd user, Beer Match <strong>compares two users</strong>. Analyzing two users' beer taste, it shows the match score (100% is the soul mate of beer) and compares their drinking behavior and many more from many aspects.
+		</p>
 	</div>
 	<div class="intro-credit js-intro-contents-4 js-intro-last">
-		<p>BEER x Match is not affiliated with or endorsed by <a href="https://untappd.com/" target="_blank">UNTAPPD</p>
+		<p>BEER x Match is not affiliated with or endorsed by <a href="https://untappd.com/" target="_blank">Untappd.</a></p>
+		<p>If you think this project is cool, please <a href="https://untappd.com/supporter" target="_blank">become a Untappd supporter.</a></p>
+		<p>You can see the source code of this project at <a href="https://github.com/tanykim/beer-match" target="_.blank">my GitHub page.</a></p>
+		<p>The color pallete used in Beer Match is inspired by <a href="http://txaber.net/beer-colors/" target="_blank">this.</a></p>
 		<p>© 2014. All Rights Reserved. <a href="http://tany.kim" target="_blank">Tanyoung Kim.</a></p>
 	</div>
 	<div class="js-intro-dummy"></div>
 
 	<!--overlay-->
 	<div class="intro-header js-intro-header">
+		<div class="intro-logo"></div>
 		<div class="intro-links">
 			<span class="js-intro-slide link" data-value="2">Project</span>
 			<span class="js-intro-slide link" data-value="3">Visualizations</span>
@@ -259,17 +276,15 @@
 </ul>
 
 <div class="js-nav vis-menu-wrapper hide">
-	<!-- <div class="vis-menu"> -->
-		<div class="menu-toggle js-menu-open">open</div>
-		<ul class="menu-dots">
-			<li class="item selected js-slide js-vis-menu-0" data-value="0"></li>
-			<li class="item js-slide js-vis-menu-1" data-value="1"></li>
-			<li class="item js-slide js-vis-menu-2" data-value="2"></li>
-			<li class="item js-slide js-vis-menu-3" data-value="3"></li>
-			<li class="item js-slide js-vis-menu-4" data-value="4"></li>
-			<li class="item js-slide js-vis-menu-5" data-value="5"></li>
-		</ul>
-	<!-- </div> -->
+	<div class="menu-toggle js-menu-open">open</div>
+	<ul class="menu-dots">
+		<li class="item selected js-slide js-vis-menu-0" data-value="0"></li>
+		<li class="item js-slide js-vis-menu-1" data-value="1"></li>
+		<li class="item js-slide js-vis-menu-2" data-value="2"></li>
+		<li class="item js-slide js-vis-menu-3" data-value="3"></li>
+		<li class="item js-slide js-vis-menu-4" data-value="4"></li>
+		<li class="item js-slide js-vis-menu-5" data-value="5"></li>
+	</ul>
 </div>
 
 <!-- intro render templates -->
@@ -413,8 +428,10 @@
 	<ul class="profile">
 		<li class="userid"><%= userId %></li>
 		<li class="item">
-			<span class="bold"><%= name %></span>
-			<span class="location"><%= address %></span>
+			<span class="name"><%= name %></span>
+			<% if (address) { %>
+				<span class="location"><%= address %></span>
+			<% } %>
 		</li>
 		<li class="item">Drinking since <span class="bold"><%= since %></span></li>
 		<li class="item"><span class="bold"><%= checkinCount %></span> Check-ins</li>
@@ -428,5 +445,6 @@
 </script>
 </body>
 </html>
+
 <script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script>
 <script data-main="/script/main" src="/script/require.js"></script>

@@ -80,20 +80,23 @@
 		padding: 0 @visHeaderH/4 0 @visHeaderH/8;
 	}
 	.item {
-		padding: @visHeaderH/8 @visHeaderH/4;
+		padding-right: @visHeaderH/4;
+		padding-left: @visHeaderH/4;
 		border-left: 1px solid @darkGrey;
 	}
-	.more, .more-expanded {
-		float: right;
-		height: @visHeaderH;
+	.name {
+		.bold();
+		display: inline-block;
+		padding-top: @visHeaderH/8;
+		padding-bottom: @visHeaderH/8;
 	}
-	.more-expanded {
-		float: right;
-		background: #333;
-		color: #fff;
-		li {
-			padding: 0 @visHeaderH/6;
-		}
+	.location {
+		display: inline-block;
+		padding-top: @visHeaderH/8;
+		padding-bottom: @visHeaderH/8;
+		padding-left: 25px;
+		background: url('../images/location.png') 8px 3px no-repeat;
+		background-size: 13px 20px;
 	}
 }
 
@@ -122,12 +125,13 @@
 	position: fixed;
 	top: 50%;
 	left: 100%;
-	margin-left: -270px;
-	margin-top: -100px;
+	margin-left: -280px;
+	margin-top: -80px;
 	padding: 16px 26px;
 	line-height: 40px;
 	li {
 		display: list-item;
+		width: 160px;
 	}
 	.item {
 		.link();
@@ -143,7 +147,7 @@
 	width: 10px;
 	height: 20px;
 	padding-right: 10px;
-	margin-top: 38px;
+	margin-top: 46px;
 	background: url('../images/open.png') no-repeat;
 	background-size: 10px;
 	.link();
