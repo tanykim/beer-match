@@ -8,6 +8,7 @@
 <html>
 <head>
 <title>BEER Match - Powered by UNTAPPD</title>
+<link rel="stylesheet" href="/style/bootstrap.css"/>
 <link rel="stylesheet" href="/style/style.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta property="og:title" content="Visualization of beer taste and behavior"/>
@@ -34,42 +35,50 @@
 		<a href="https://untappd.com/" target="_blank"><img src="images/untappd.png" width="105" height="28" border="0"></a>
 	</div>
 	<div class="intro-about js-intro-contents-2">
-		<p>
-			BEERxMATCH is a web application that visualizes <strong>personal beer check-in data</strong> from an iPhone/Android app <a href="https://untappd.com/" target="_blank">Untappd.</a>
-		</p>
-		<p>
-			With Untappd, you can check in beers you drink: search your beer and rate it up to 5 stars. Of course, when you check in, timestamp is also saved. While checking in, you can add tag a location where you drink.Untappd also provides meta data of each beer - style, brewery, location of brewery, and ABV.
-		</p>
+		<div class="container">
+			<p>
+				BEERxMATCH is a web application that visualizes <strong>personal beer check-in data</strong> from an iPhone/Android app <a href="https://untappd.com/" target="_blank">Untappd.</a>
+			</p>
+			<p>
+				With Untappd, you can check in beers you drink: search your beer and rate it up to 5 stars. Of course, when you check in, timestamp is also saved. While checking in, you can add tag a location where you drink.Untappd also provides meta data of each beer - style, brewery, location of brewery, and ABV.
+			</p>
+		</div>
 	</div>
 	<div class="intro-vis js-intro-contents-3">
-		<p>
-			Beer Match utilizes these fantastic data and <strong>visualizes your beer taste and drinking behaviors and patterns</strong>. You'll see how much and often you drink, what styles or breweries you like, your favorite beers, and when and where you drink. With these visualizations.
-		<p/>
-		<p>
-			In addition to the visualization of a single Untappd user, Beer Match <strong>compares two users</strong>. Analyzing two users' beer taste, it shows the match score (100% is the soul mate of beer) and compares their drinking behavior and many more from many aspects.
-		</p>
+		<div class="container">
+			<p>
+				Beer Match utilizes these fantastic data and <strong>visualizes your beer taste and drinking behaviors and patterns</strong>. You'll see how much and often you drink, what styles or breweries you like, your favorite beers, and when and where you drink. With these visualizations.
+			<p/>
+			<p>
+				In addition to the visualization of a single Untappd user, Beer Match <strong>compares two users</strong>. Analyzing two users' beer taste, it shows the match score (100% is the soul mate of beer) and compares their drinking behavior and many more from many aspects.
+			</p>
+		</div>
 	</div>
 	<div class="intro-credit js-intro-contents-4 js-intro-last">
-		<p>BEER x Match is not affiliated with or endorsed by <a href="https://untappd.com/" target="_blank">Untappd.</a></p>
-		<p>If you think this project is cool, please <a href="https://untappd.com/supporter" target="_blank">become a Untappd supporter.</a></p>
-		<p>You can see the source code of this project at <a href="https://github.com/tanykim/beer-match" target="_.blank">my GitHub page.</a></p>
-		<p>The color pallete used in Beer Match is inspired by <a href="http://txaber.net/beer-colors/" target="_blank">this.</a></p>
-		<p>© 2014. All Rights Reserved. <a href="http://tany.kim" target="_blank">Tanyoung Kim.</a></p>
+		<div class="container">
+			<p>Beer Match is not affiliated with or endorsed by <a href="https://untappd.com/" target="_blank">Untappd.</a></p>
+			<p>If you think this project is cool, please <a href="https://untappd.com/supporter" target="_blank">become a Untappd supporter.</a></p>
+			<p>You can see the source code of this project at <a href="https://github.com/tanykim/beer-match" target="_.blank">my GitHub page.</a></p>
+			<p>The color pallete used in Beer Match is inspired by <a href="http://txaber.net/beer-colors/" target="_blank">this.</a></p>
+			<p>© 2015. All Rights Reserved. <a href="http://tany.kim" target="_blank">Tanyoung Kim.</a></p>
+		</div>
 	</div>
 	<div class="js-intro-dummy"></div>
 
 	<!--overlay-->
 	<div class="intro-header js-intro-header">
-		<div class="intro-logo"></div>
-		<div class="intro-links">
-			<span class="js-intro-slide link" data-value="2">Project</span>
-			<span class="js-intro-slide link" data-value="3">Visualizations</span>
-			<span class="js-intro-slide link" data-value="4">Credit</span>
-		</div>
-		<div class="intro-icons">
-	        <span class="facebook js-social" data-value="facebook">facebook</span>
-	        <span class="twitter js-social" data-value="twitter">twitter</span>
-	        <span class="google js-social" data-value="google">google</span>
+		<div class="container">
+			<div class="logo"></div>
+			<div class="links">
+				<span class="js-intro-slide link" data-value="2">PROJECT</span>
+				<span class="js-intro-slide link" data-value="3">VISUALIZATIONS</span>
+				<span class="js-intro-slide link" data-value="4">CREDIT</span>
+			</div>
+			<div class="icons">
+		        <span class="facebook js-social" data-value="facebook">facebook</span>
+		        <span class="twitter js-social" data-value="twitter">twitter</span>
+		        <span class="google js-social" data-value="google">google</span>
+			</div>
 		</div>
 	</div>
 
@@ -146,6 +155,11 @@
 			<div id="vis-commonVenues" class="js-match-svg commonVenues"></div>
 		</div>
 
+		<!-- footer -->
+		<div class="vis-contents-footer js-single-contents-footer">
+			<p>Powered by <a href="https://untappd.com/" target="_blank">Untappd,</a><br/>Beer Match is not affiliated with or endorsed by Untappd.</p>
+			<p>© 2015. All Rights Reserved. <a href="http://tany.kim" target="_blank">Tanyoung Kim.</a></p>
+		</div>
 	</div>
 </div>
 
@@ -156,13 +170,18 @@
 	<div class="vis-contents-wrapper">
 
 		<!-- 0 basic stats -->
-		<div class="vis-contents js-single-contents-0">
-			<div>
-				<input type="radio" name="period" value="day" class="js-count-sort-day"> Day
-				<input type="radio" name="period" value="week" class="js-count-sort-week"> Week
-				<input type="radio" name="period" value="month" class="js-count-sort-month"> Month
-			</div>
-			<div class="count">
+		<div class="vis-contents single-count js-single-contents-0">
+			<ul class="period">
+				<li data-value="day" class="link js-count-period js-count-period-day"> Day </li>
+				<li data-value="week" class="link js-count-period js-count-period-week"> Week </li>
+				<li data-value="month" class="link js-count-period js-count-period-month"> Month </li>
+			</ul>
+
+			<div>total <span class="js-count-total"></span></div>
+
+			<div id="vis-frequency" class="frequency js-single-svg"></div>
+
+			<!-- <div class="count">
 				<div class="avg">
 					<div>Since <span class="js-since"></span></div>
 					<div>Total <span class="js-avg-checkin avg-checkin"></span> check-ins</div>
@@ -170,8 +189,9 @@
 					<div class="avg-unit">beers / <span class="js-avg-unit"></span></div>
 				</div>
 			</div>
-			<div id="vis-frequency" class="js-single-svg frequency"></div>
-			<div id="vis-calendar" class="js-single-svg calendar"></div>
+			-->
+
+			<div id="vis-calendar" class="calendar js-single-svg"></div>
 		</div>
 
 		<!-- 1 ratings -->
@@ -245,7 +265,10 @@
 		</div>
 
 		<!-- footer -->
-		<div class="vis-contents-footer js-single-contents-footer">FOOTER</div>
+		<div class="vis-contents-footer js-single-contents-footer">
+			<p>Powered by <a href="https://untappd.com/" target="_blank">Untappd,</a><br/>Beer Match is not affiliated with or endorsed by Untappd.</p>
+			<p>© 2015. All Rights Reserved. <a href="http://tany.kim" target="_blank">Tanyoung Kim.</a></p>
+		</div>
 
 	</div> <!-- vis contents -->
 
@@ -266,56 +289,55 @@
 
 <!--vis menu -->
 <div class="vis-title-overlaid js-nav js-title-overlaid hide">title</div>
-<ul class="menu-expand js-nav-expand js-vis-menu hide">
-	<li class="item js-slide selected js-vis-menu-0 js-vis-menu-title-0" data-value="0">title0</li>
-	<li class="item js-slide js-vis-menu-1 js-vis-menu-title-1" data-value="1">title1</li>
-	<li class="item js-slide js-vis-menu-2 js-vis-menu-title-2" data-value="2">title2</li>
-	<li class="item js-slide js-vis-menu-3 js-vis-menu-title-3" data-value="3">title3</li>
-	<li class="item js-slide js-vis-menu-4 js-vis-menu-title-4" data-value="4">title4</li>
-	<li class="item js-slide js-vis-menu-5 js-vis-menu-title-5" data-value="5">title5</li>
+<ul class="vis-nav-expand js-nav-expand hide">
+	<li class="item js-slide selected js-nav-0 js-nav-title-0" data-value="0">title0</li>
+	<li class="item js-slide js-nav-1 js-nav-title-1" data-value="1">title1</li>
+	<li class="item js-slide js-nav-2 js-nav-title-2" data-value="2">title2</li>
+	<li class="item js-slide js-nav-3 js-nav-title-3" data-value="3">title3</li>
+	<li class="item js-slide js-nav-4 js-nav-title-4" data-value="4">title4</li>
+	<li class="item js-slide js-nav-5 js-nav-title-5" data-value="5">title5</li>
 </ul>
-
-<div class="js-nav vis-menu-wrapper hide">
-	<div class="menu-toggle js-menu-open">open</div>
-	<ul class="menu-dots">
-		<li class="item selected js-slide js-vis-menu-0" data-value="0"></li>
-		<li class="item js-slide js-vis-menu-1" data-value="1"></li>
-		<li class="item js-slide js-vis-menu-2" data-value="2"></li>
-		<li class="item js-slide js-vis-menu-3" data-value="3"></li>
-		<li class="item js-slide js-vis-menu-4" data-value="4"></li>
-		<li class="item js-slide js-vis-menu-5" data-value="5"></li>
+<div class="vis-nav-wrapper js-nav hide">
+	<div class="nav-toggle js-nav-open">open</div>
+	<ul class="nav-dots">
+		<li class="item selected js-slide js-nav-0" data-value="0"></li>
+		<li class="item js-slide js-nav-1" data-value="1"></li>
+		<li class="item js-slide js-nav-2" data-value="2"></li>
+		<li class="item js-slide js-nav-3" data-value="3"></li>
+		<li class="item js-slide js-nav-4" data-value="4"></li>
+		<li class="item js-slide js-nav-5" data-value="5"></li>
 	</ul>
 </div>
 
 <!-- intro render templates -->
 <script type="text/template" id="intro-start">
-	<div class="intro-status"><%= warning %></div>
+	<div class="status"><%= warning %></div>
 	<% if (friends) { %>
-	<select class="intro-list js-friend-select">
+	<select class="list js-friend-select">
 		<option>Select a user name from <%= prevUser + '\'' %>s friends</option>
 	<%  _.each(friends, function (f) { %>
         <option value="<%= f %>"><%= f %></option>
   	<% }); %>
   	</select>
   	<% } %>
-	<div class="intro-name"><%= desc %></div>
-	<input type="text" class="intro-input js-intro-input" value="<%= userId %>" <%= userId ? ' disabled' : '' %> >
+	<div class="name"><%= desc %></div>
+	<input type="text" class="input js-intro-input" value="<%= userId %>" <%= userId ? ' disabled' : '' %> >
 	<% if (prevUser) { %>
-	<div class="intro-start-single"><span class="intro-view-single js-start-single link underline">See <%= prevUser %> only</span></span>
+	<div class="start-single"><span class="view-single js-start-single link underline">See <%= prevUser %> only</span></span>
   	<% } else { %>
-  	<div class="intro-msg"> Not an UNTAPPD user? <br/>See examples of <span class="intro-view-single">single user</span> or <span class="intro-view-match">match</span> visualization</div>
+  	<div class="msg"> Not an UNTAPPD user? <br/>See examples of <span class="view-single">single user</span> or <span class="view-match">match</span> visualization</div>
   	<% } %>
 </script>
 
 <script type="text/template" id="intro-userinfo">
-	<div class="intro-status">We Found You!</div>
-	<div class="intro-user">
+	<div class="status">We Found You!</div>
+	<div class="user">
 		<div class="pic" style="background-image: url(<%= avatar %>)"></div>
 		<div class="name"><%= username %></div>
 		<div class="location"><%= address %></div>
 		<div class="timezone"><%= timezone %></div>
 		<div class="js-timezone-list <%= address ? ' hide' : '' %>">
-			<select class="intro-list js-timezone-select">
+			<select class="list js-timezone-select">
 				<option> Select a timezone </option>
                 <option value="Pacific/Midway">(UTC-11:00) Midway Island, Samoa</option>
                 <option value="America/Adak">(UTC-10:00) Hawaii-Aleutian</option>
@@ -409,17 +431,17 @@
                 <option value="Pacific/Kiritimati">(UTC+14:00) Kiritimati</option>
 			</select>
 		</div>
-		<div class="intro-start js-start <%= address ? 'link underline' : 'disabled' %>">Download Data</div>
+		<div class="start js-start <%= address ? 'link underline' : 'disabled' %>">Download Data</div>
 </script>
 
 <script type="text/template" id="intro-option">
-	<div class="intro-status"><%= msg %></div>
-	<div class="intro-user">
+	<div class="status"><%= msg %></div>
+	<div class="user">
 		<div class="pic" style="background-image: url(<%= avatar %>)"></div>
 		<div class="name"><%= username %></div>
 	</div>
-	<div class="intro-start-single"><span class="intro-view-single js-start-single link">See <%= username %> only</span></div>
-	<div><span class="intro-view-match js-start-match link">See match</span></div>
+	<div class="start-single"><span class="view-single js-start-single link">See <%= username %> only</span></div>
+	<div><span class="view-match js-start-match link">See match</span></div>
 </script>
 
 <!-- vis header templates -->
@@ -433,8 +455,8 @@
 				<span class="location"><%= address %></span>
 			<% } %>
 		</li>
-		<li class="item">Drinking since <span class="bold"><%= since %></span></li>
-		<li class="item"><span class="bold"><%= checkinCount %></span> Check-ins</li>
+		<li class="item">Drinking since <span class="emph"><%= since %></span></li>
+		<li class="item"><span class="emph"><%= checkinCount %></span> Check-ins</li>
 	</ul>
 </script>
 

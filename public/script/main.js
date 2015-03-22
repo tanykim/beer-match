@@ -16,9 +16,7 @@ require.config({
         d3: '../bower_components/d3/d3',
         moment: '../bower_components/moment/moment',
         momentTZ: '../bower_components/moment-timezone/moment-timezone',
-        socketio: '../socket.io/socket.io',
-        match: 'match',
-        vis: 'vis'
+        socketio: '../socket.io/socket.io'
     }
 });
 
@@ -28,10 +26,12 @@ require([
     'd3',
     'moment',
     'socketio',
-    'intro',
+    'settings',
     'match',
     'vis'
-], function ($, _, d3, moment, io, Intro, Match, Vis) {
+], function ($, _, d3, moment, io, Settings, Match, Vis) {
+
+    'use strict';
 
     // later: communication with server
     // FIXME: URL
@@ -64,9 +64,9 @@ require([
             checkinCount: u.checkinCount
         }));﻿
 
-        $('.js-title-overlaid').html(Intro.single[0]);
+        $('.js-title-overlaid').html(Settings.single[0]);
         _.each(_.range(6), function (i) {
-            $('.js-vis-menu-title-' + i).html(Intro.single[i]);
+            $('.js-nav-title-' + i).html(Settings.single[i]);
         });
         Vis.startVis(data);
     }
@@ -102,42 +102,41 @@ require([
                 avatar2: data.userinfo.avatar
             }));﻿
 
-            $('.js-title-overlaid').html(Intro.match[0]);
+            $('.js-title-overlaid').html(Settings.match[0]);
             _.each(_.range(6), function (i) {
-                $('.js-vis-menu-title-' + i).html(Intro.match[i]);
+                $('.js-nav-title-' + i).html(Settings.match[i]);
             });
             Vis.startVisMatch(m);
         });
     }
 
-    //show intro
-    function checkTextInput() {
-        $('.js-intro-input').keypress(function(event){
-            //allow only alpha-numeric characters
-            var ew = event.which;
-            if (48 <= ew && ew <= 57)
-                return true;
-            if (65 <= ew && ew <= 90)
-                return true;
-            if (97 <= ew && ew <= 122)
-                return true;
-            return false;
-        }).keydown(function(event) {
-            if (event.keyCode == 13) {
-                //at least five haracters
-                var userId = $(this).val();
-                if (userId.length < 3) {
-                    renderIntro(Intro.msg.diffName, Intro.msg.tooShort);
-                } else {
-                    renderIntro(Intro.msg.init, Intro.msg.userIdCheck, userId);
-                    socket.emit('userId', { userId: userId });
-                }
+    //intro id input check
+    $('.js-intro-main').keypress(function(event){
+        //allow only alpha-numeric characters
+        var ew = event.which;
+        if (48 <= ew && ew <= 57)
+            return true;
+        if (65 <= ew && ew <= 90)
+            return true;
+        if (97 <= ew && ew <= 122)
+            return true;
+        return false;
+    }).keydown(function(event) {
+        if (event.keyCode == 13) {
+            //at least five haracters
+            var userId = $('.js-intro-input').val();
+            if (userId.length < 3) {
+                renderSettings(Settings.msg.diffName, Settings.msg.tooShort);
+            } else {
+                console.log('---entered');
+                renderSettings(Settings.msg.init, Settings.msg.userIdCheck, userId);
+                socket.emit('userId', { userId: userId });
             }
-        });
-    }
+        }
+    });
 
     // default text input
-    function renderIntro(desc, warning, userId, friends) {
+    function renderSettings(desc, warning, userId, friends) {
 
         // window.history.pushState('object or string', 'Title', '/');
 
@@ -152,8 +151,6 @@ require([
             friends: friends,
             prevUser: prevUser
         }));﻿
-
-        checkTextInput();
 
         if (!userId) {
             $('.js-intro-input').focus();
@@ -219,8 +216,8 @@ require([
         socket.emit('friends', { userId: userId, count: friendCount });
         socket.on('friends', function (d) {
             var friends = d.friends;
-            var msg = friends ? Intro.msg.friends : Intro.msg.noFriends;
-            renderIntro(msg, '', '', friends);
+            var msg = friends ? Settings.msg.friends : Settings.msg.noFriends;
+            renderSettings(msg, '', '', friends);
             $('.js-friend-select').change(function() {
                 var friend = $(this).val();
                 socket.emit('userId', { userId: friend});
@@ -229,7 +226,7 @@ require([
     }
 
     // after loading the first user
-    function renderIntroOptions(msg, data) {
+    function renderSettingsOptions(msg, data) {
 
         var userId = data.userinfo.userId;
         var template = _.template($('#intro-option').html());
@@ -254,6 +251,7 @@ require([
     var urlParts = window.location.href.split('/');
     var userId = urlParts[urlParts.length-1];
 
+    //FIXME : delete later, test mode
     if (userId.indexOf('---') > -1) {
         console.log('---dataset generating mode');
         socket.emit('dataset', { userId: userId.split('---')[1] });
@@ -263,17 +261,17 @@ require([
         socket.emit('pair', { users: userId.split('+') });
     } else if (userId) {
         console.log('1---single user');
-        renderIntro(Intro.msg.init, Intro.msg.userIdCheck, userId);
+        renderSettings(Settings.msg.init, Settings.msg.userIdCheck, userId);
         socket.emit('userId', { userId: userId });
     } else {
         console.log('1---no url');
-        renderIntro(Intro.msg.init, '', '');
+        renderSettings(Settings.msg.init, '', '');
     }
 
     //receive data from the server
     socket.on('error', function (data) {
         console.log('---error', data);
-        renderIntro(Intro.msg.diffName, data.error_detail);
+        renderSettings(Settings.msg.diffName, data.error_detail);
     });
 
     //FIXME: delete later
@@ -288,7 +286,7 @@ require([
             } else {
                 //FIXME: temporarily
                 // initVisSingle(d);
-                renderIntroOptions(Intro.msg.back, d);
+                renderSettingsOptions(Settings.msg.back, d);
             }
         });
     });
@@ -324,7 +322,7 @@ require([
         if (isMatch) {
             initVisMatch(data.data, true);
         } else {
-            renderIntroOptions('Download completed!', data.data);
+            renderSettingsOptions('Download completed!', data.data);
         }
     });
 
@@ -333,7 +331,7 @@ require([
         $(this).css('cursor', 'pointer');
     }).click(function() {
         var val = $(this).data().value;
-        window.open(Intro.share[val]);
+        window.open(Settings.share[val]);
     });
 
     //add intro footer height
@@ -367,29 +365,29 @@ require([
         $('.js-match').addClass('hide');
         $('.js-nav').addClass('hide');
         $('.js-nav-expand').addClass('hide');
-        $('.js-menu-open').removeClass('menu-toggle-open');
+        $('.js-nav-open').removeClass('nav-toggle-open');
         $('.js-intro').removeClass('hide');
         window.history.pushState('object or string', 'Title', '/');
         userData = [null, null];
         isMatch = false;
-        renderIntro(Intro.msg.init, '');
+        renderSettings(Settings.msg.init, '');
     }).mouseout(function() {
         $(this).removeClass('home-over');
     });
 
     //vis menu show/hide
-    $('.js-menu-open').click(function() {
+    $('.js-nav-open').click(function() {
 
-        if ($(this).hasClass('menu-toggle-open')) {
-            $(this).removeClass('menu-toggle-open');
+        if ($(this).hasClass('nav-toggle-open')) {
+            $(this).removeClass('nav-toggle-open');
         } else {
-            $(this).addClass('menu-toggle-open');
+            $(this).addClass('nav-toggle-open');
         }
 
-        if ($('.js-vis-menu').hasClass('hide')) {
-            $('.js-vis-menu').removeClass('hide');
+        if ($('.js-nav-expand').hasClass('hide')) {
+            $('.js-nav-expand').removeClass('hide');
         } else {
-            $('.js-vis-menu').addClass('hide');
+            $('.js-nav-expand').addClass('hide');
         }
     });
 
@@ -398,9 +396,9 @@ require([
     function changeVisTitle(i) {
         if (i !== prevTitle) {
             $('.js-title-overlaid')
-                .html(isMatch ? Intro.match[i] : Intro.single[i]);
+                .html(isMatch ? Settings.match[i] : Settings.single[i]);
             $('.js-slide').removeClass('selected');
-            $('.js-vis-menu-' + i).addClass('selected');
+            $('.js-nav-' + i).addClass('selected');
             prevTitle = i;
         }
     };
@@ -432,7 +430,7 @@ require([
         $('.js-single').addClass('hide');
         $('.js-nav').addClass('hide');
         $('.js-nav-expand').addClass('hide');
-        $('.js-menu-open').removeClass('menu-toggle-open');
+        $('.js-nav-open').removeClass('nav-toggle-open');
         $('.js-goMatch').addClass('hide');
         $('.js-intro').removeClass('hide');
         renderFriends(userData[0].userinfo.userId, userData[0].userinfo.friendCount);

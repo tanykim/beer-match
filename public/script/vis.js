@@ -2,33 +2,26 @@ define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when
 	'match-score', 'match-style', 'match-time', 'match-venues'],
 	function (moment, Count, Ratings, Beers, When, Where, Score, Styles, Time, Venues) {
 
-	// function callInteraction() {
-
-	// }
-
 	var startVis = function(b) {
 
 		//view change
 		$('.js-single-svg').empty();
 
-		var timeRange = _.map(b.timeRange, function (d) {
-            return moment(d.slice(0, 9), 'YYYY-MM-DD').startOf('month')._d;
-        });
-        var monthDiff = moment(timeRange[1]).diff(timeRange[0], 'months');
-        if (monthDiff > 0) {
-			Beers.drawTrends(b.allBeers, timeRange, monthDiff);
-		}
 
-		/*
 		//1--count
 		$('.js-count-sort-' + b.avgUnit).prop('checked', true);
-		Count.putCount(b.userinfo.checkinCount, b.avgCount, b.avgUnit);
-		var vF = Count.drawFrequency(b.countByPeriod, b.avgCount, b.avgUnit);
-		var calBlock = Count.drawCalendar(b.timeRange, b.countByPeriod, b.avgUnit);
-		$('input[name=period]').click(function() {
-			Count.transformCount(b.countByPeriod, b.avgCount, calBlock, vF);
+		Count.setUnit = Count.setUnit(b.avgUnit);
+		var countFrequnecy = Count.drawFrequency(b.countByPeriod, b.avgCount, b.avgUnit);
+		var countCalendar = Count.drawCalendar(b.timeRange, b.countByPeriod, b.avgUnit);
+		$('.js-count-period').click(function() {
+			console.log(Settings);
+
+			$('.js-count-period').removeClass('selected');
+			$(this).addClass('selected');
+			Count.transformCount($(this).data().value, b.countByPeriod, b.avgCount, countCalendar, countFrequnecy);
 		});
 
+		/*
 		//2--ratings chart
 		// Ratings.drawScoresStats(b.scoreAvg, b.scoreCount);
 		Ratings.drawNetwork(b.network);

@@ -1,5 +1,5 @@
 body {
-	background: url('../images/intro_bg_star.png') @dark;
+	background: url('../images/bg.png') @dark;
 	background-size: 150px 150px;
 }
 
@@ -9,17 +9,88 @@ body {
 .intro {
 	width: 100%;
 }
+
 .intro-main-wrapper {
 	padding-top: @headerH + @padding * 2 ;
 	padding-bottom: @padding * 2;
 	text-align: center;
-}
-.intro-main {
-	padding: @padding;
-	font-size: @large;
-	display: inline-block;
-	background-color: #fff;
-	border-radius: 1em;
+	.intro-main {
+		padding: @padding;
+		font-size: @large;
+		display: inline-block;
+		background-color: #fff;
+		border-radius: 1em;
+		.status {
+			font-weight: 700;
+			font-size: @normal;
+			color: @orange;
+		}
+		.name {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+			line-height: 1.5em;
+		}
+		.input {
+			font-size: @large;
+			background-color: @light;
+			padding: 0.6em;
+			font-family:inherit;
+			font-weight: 700;
+			color: @dark;
+		    border: 1px solid @dark;
+		}
+		.msg {
+			margin-top: 3em;
+			font-size: @small;
+			color: @grey;
+		}
+		.view-single {
+			#view-icon-intro;
+			#view-icon;
+			#view-icon-single;
+		}
+		.view-match {
+			#view-icon-intro;
+			#view-icon;
+			#view-icon-match;
+		}
+
+		@picSize: 80px;
+		.user {
+			.pic {
+				width: @picSize;
+				height: @picSize;
+				border-radius: @picSize/2;
+				-webkit-border-radius: @picSize/2;
+				-moz-border-radius: @picSize/2;
+				margin: 1em auto 0;
+				background-size: @picSize;
+			}
+			.name {
+				font-size: @large;
+				font-weight: 700;
+				margin-top: 0.5em;
+			}
+			.location, .timezone {
+				margin-top: 0.5em;
+				font-size: @small;
+			}
+		}
+		.list {
+		    background-color: @lightBlue;
+		    border: 1px solid @dark;
+			font-family:inherit;
+			font-size: @normal;
+			margin-top: 1em;
+		}
+		.start {
+			margin-top: 1em;
+			font-weight: 700;
+		}
+		.start-single {
+			margin-top: 1em;
+		}
+	}
 }
 .intro-untappd {
 	padding-bottom: 1em;
@@ -27,7 +98,8 @@ body {
 }
 .intro-about, .intro-credit, .intro-vis {
 	font-size: @large;
-	padding: @padding 10%;
+	padding-top: @padding;
+	padding-bottom: @padding;
 	strong {
 		.bold();
 		color: @red;
@@ -43,7 +115,6 @@ body {
 .intro-vis {
 	background-color: #fff;
 }
-
 .intro-header {
 	position: fixed;
 	top: 0;
@@ -52,120 +123,59 @@ body {
 	color: #fff;
 	background-color: @dark;
 	text-align: center;
-}
-.intro-logo {
-	width: @headerH * 2;
-	margin: 0 auto;
-	background: url('../images/logo_big.png') center @headerH * -1 no-repeat;
-	height: @headerH;
-	background-size: @headerH * 2 @headerH * 2;
-}
-.intro-links {
-	position: absolute;
-	left: 0;
-	top: 0;
-	margin-left: @padding;
-	margin-top: @headerH / 2 - 1.3em;
-	span {
-		margin-right: 1em;
-	}
-}
-@icon: 2.5em;
-.intro-icons {
-	position: absolute;
-	left: 100%;
-	top: 0;
-	margin-left: -1 * (@icon * 3 + 1.5em + @padding);
-	margin-top: (@headerH * 3/4 - @icon) / 2;
-	span {
-		text-indent: 1000px;
-		margin-left: 0.5em;
-		width: @icon;
-		height: @icon;
-		display: inline-block;
-	}
-	.facebook {
-		background: url('../images/social.png') 0 0 no-repeat;
-		background-size: @icon * 3 @icon;
-	}
-	.twitter {
-		background: url('../images/social.png') -1 * @icon 0 no-repeat;
-		background-size: @icon * 3 @icon;
-	}
-	.google {
-		background: url('../images/social.png') -2 * @icon 0 no-repeat;
-		background-size: @icon * 3 @icon;
-	}
-}
-
-/* intro main */
-.intro-status {
-	font-weight: 700;
-	font-size: @normal;
-	color: @orange;
-}
-.intro-name {
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
-	line-height: 1.5em;
-}
-.intro-input {
-	font-size: @large;
-	background-color: @light;
-	padding: 0.6em;
-	font-family:inherit;
-	font-weight: 700;
-	color: @dark;
-    border: 1px solid @dark;
-}
-.intro-msg {
-	margin-top: 3em;
 	font-size: @small;
-	color: @grey;
-}
-.intro-view-single {
-	#view-icon-intro;
-	#view-icon;
-	#view-icon-single;
-}
-.intro-view-match {
-	#view-icon-intro;
-	#view-icon;
-	#view-icon-match;
-}
-
-@picSize: 80px;
-.intro-user {
-	.pic {
-		width: @picSize;
-		height: @picSize;
-		border-radius: @picSize/2;
-		-webkit-border-radius: @picSize/2;
-		-moz-border-radius: @picSize/2;
-		margin: 1em auto 0;
-		background-size: @picSize;
+	.container {
+		position: relative;
 	}
-	.name {
-		font-size: @large;
-		font-weight: 700;
-		margin-top: 0.5em;
+	.logo {
+		font-size: large;
+		width: @headerH * 2;
+		margin: 0 auto;
+		background: url('../images/logo_big.png') center @headerH * -1 no-repeat;
+		height: @headerH;
+		background-size: @headerH * 2 @headerH * 2;
 	}
-	.location, .timezone {
-		margin-top: 0.5em;
-		font-size: @small;
+	.links {
+		font-size: @normal;
+		position: absolute;
+		/*left: 0;*/
+		top: @normal;
+		/*margin-left: @padding;*/
+		/*margin-top: @headerH / 2 - @large/4;*/
+		span {
+			margin-right: 1em;
+			font-size: @normal;
+			letter-spacing: 0.1em;
+			line-height: @large;
+		}
 	}
-}
-.intro-list {
-    background-color: @lightBlue;
-    border: 1px solid @dark;
-	font-family:inherit;
-	font-size: @normal;
-	margin-top: 1em;
-}
-.intro-start {
-	margin-top: 1em;
-	font-weight: 700;
-}
-.intro-start-single {
-	margin-top: 1em;
+	@icon: 2.5em;
+	.icons {
+		position: absolute;
+		right: 0;
+		/*left: 100%;*/
+		top: 0;
+		padding-right: 15px;
+		/*margin-left: -1 * (@icon * 3 + 1.5em + @padding);*/
+		margin-top: (@headerH * 3/4 - @icon) / 2;
+		span {
+			text-indent: 1000px;
+			margin-left: 0.5em;
+			width: @icon;
+			height: @icon;
+			display: inline-block;
+		}
+		.facebook {
+			background: url('../images/social.png') 0 0 no-repeat;
+			background-size: @icon * 3 @icon;
+		}
+		.twitter {
+			background: url('../images/social.png') -1 * @icon 0 no-repeat;
+			background-size: @icon * 3 @icon;
+		}
+		.google {
+			background: url('../images/social.png') -2 * @icon 0 no-repeat;
+			background-size: @icon * 3 @icon;
+		}
+	}
 }

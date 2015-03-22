@@ -1,13 +1,8 @@
-define(['vis-settings', 'moment'], function (Settings, moment) {
+define(['settings', 'moment'], function (Settings, moment) {
 
 	var colors = Settings.colors;
+	var selected;
 
-	var putCount = function (checkin, count, unit) {
-		$('.js-avg-checkin').html(checkin);
-		$('.js-avg-count').html(count[unit]);
-		$('.js-avg-unit').html(unit);	
-	};
-	
 	function drawFreqBlocks(data, vis, maxCount, avgCount) {
 
 		var svg = vis.svg;
@@ -16,60 +11,55 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 		var dim = vis.dim;
 		var margin = vis.margin;
 
-		var lastKey;
-		_.each(data, function (val, key) {
+		_.each(data.counts, function (val, i) {
 			svg.append('rect')
-				.attr('x', x(key))
+				.attr('x', x(i))
 				.attr('y', y(val))
-				.attr('width', dim.w/(_.size(data) -1))
+				.attr('width', dim.w/data.counts.length)
 				.attr('height', dim.h - y(val))
 				.attr('fill', colors.brewery)
-				.attr('fill-opacity', key / maxCount)
 				.attr('class', 'freq-block js-freq-block');
-			lastKey = key;
 			svg.append('text')
-				.attr('x', x(key) + dim.w/(_.size(data) -1) / 2)
+				.attr('x', x(i) + dim.w/data.counts.length / 2)
 				.attr('y', y(val))
 				.text(val)
 				.attr('class', 'freq-label-block js-freq-block')
 		});
 
 		//average line
-		var xLinear = d3.scale.linear().range([0, dim.w])
-			.domain([0, +lastKey]);
 		svg.append('line')
-			.attr('x1', xLinear(avgCount))
-			.attr('x2', xLinear(avgCount))
+			.attr('x1', x(avgCount / data.gap))
+			.attr('x2', x(avgCount / data.gap))
 			.attr('y1', -margin.top/2)
 			.attr('y2', dim.h + margin.bottom/2)
 			.attr('class', 'freq-line-avg js-freq-block');
 		svg.append('text')
-			.attr('x', xLinear(avgCount))
+			.attr('x', x(avgCount / data.gap))
 			.attr('y', -margin.top/2)
 			.text('average')
-			.attr('class', 'freq-text-avg js-freq-block')
+			.attr('class', 'freq-text-avg js-freq-block');
 	}
 
 	function getFreqTicks(val) {
 		return val < 4 ? val : 4;
 	}
 
-	var transformCount = function (data, avgCount, block, vis) {
-		
-		var unit = $('input[name=period]:checked').val();
+	var transformCount = function (unit, data, avgCount, block, vis) {
+
+		selected = unit;
+
 		var frequency = data.frequency[unit];
 		var maxCount = data.maxCount[unit];
-				
-		//html
-		$('.js-avg-count').html(avgCount[unit]);
-		$('.js-avg-unit').html(unit);	
+		var unitCount = data.unitCounts[unit];
+
+		$('.js-count-total').html(unitCount + ' ' + unit + 's');
 
 		//frequency
 		//domain
-		vis.x.domain(_.keys(frequency));
-		vis.y.domain([_.max(frequency), 0]);
+		vis.x.domain([0, frequency.counts.length]);
+		vis.y.domain([_.max(frequency.counts), 0]);
 		vis.xAxis.scale(vis.x);
-		vis.yAxis.scale(vis.y).ticks(getFreqTicks(_.max(frequency)));
+		vis.yAxis.scale(vis.y).ticks(getFreqTicks(_.max(frequency.counts)));
 		d3.select('.js-freq-axis-x').call(vis.xAxis);
 		d3.select('.js-freq-axis-y').call(vis.yAxis);
 		$('.js-freq-lable-x').html('beers /' + unit);
@@ -81,7 +71,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 		//calendar
 		d3.selectAll('.js-cal-block').attr('opacity', function() {
 			var val = d3.select(this).attr('data-value').split(':');
-			var count; 
+			var count;
 			if (unit === 'day') {
 				count = val[0];
 			} else if (unit === 'week') {
@@ -108,26 +98,32 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 
 		var frequency = data.frequency[unit];
 		var maxCount = data.maxCount[unit];
+		var unitCount = data.unitCounts[unit];
+
+		$('.js-count-total').html(unitCount + ' ' + unit + 's');
 
 		var margin = { top: 20, right: 20, bottom: 40, left: 40 };
-		var dim = { w: $('.frequency').width() - margin.left - margin.right,
+		var dim = { w: Settings.getWidth('frequency') - margin.left - margin.right,
 					h:  140 };
 
-		var x = d3.scale.ordinal().rangePoints([0, dim.w], 0)
-			.domain(_.keys(frequency));
+		var x = d3.scale.linear().range([0, dim.w]).domain([0, frequency.counts.length]);
 
-		var xAxis = d3.svg.axis().scale(x).orient('bottom').tickSize(-dim.h).ticks(24).ticks(_.size(frequency));
+		var xAxis = d3.svg.axis().scale(x).orient('bottom').tickSize(-dim.h)
+				.ticks(frequency.counts.length)
+				.tickFormat(function (d) {
+					return d * frequency.gap;
+				});
 		var y = d3.scale.linear().range([0, dim.h])
-				.domain([_.max(frequency), 0]);
+				.domain([_.max(frequency.counts), 0]);
 		var yAxis = d3.svg.axis().scale(y).orient('left').tickSize(-dim.w)
-				.ticks(getFreqTicks(_.max(frequency)));
+				.ticks(getFreqTicks(_.max(frequency.counts)));
 
 		var svg = d3.select('#vis-frequency').append('svg')
 			.attr('width', dim.w + margin.left + margin.right)
 			.attr('height', dim.h + margin.top + margin.bottom)
 			.append('g')
 			.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-		
+
 		svg.append('g')
 			.attr('class', 'x axis js-freq-axis-x')
 			.attr('transform', 'translate(0, ' + dim.h + ')')
@@ -164,11 +160,14 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 	};
 
 	function showTooltip(svg, x, y, date, count) {
-		var unit = $('input[name=period]:checked').val();
-		var dateStr; 
-		if (unit === 'day') {
+		// var unit = $('input[name=period]:checked').val();
+
+		// var unit = selected;
+
+		var dateStr;
+		if (selected === 'day') {
 			dateStr = date.format('D MMM');
-		} else if (unit === 'week') {
+		} else if (selected === 'week') {
 			var sd = date.clone().startOf('week');
 			var ed = sd.clone().add(6, 'days').format('D MMM');
 			dateStr = sd.format('D MMM') + ' - ' + ed;
@@ -177,33 +176,33 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 		}
 
 		svg.append('rect')
-			.attr('x', x[unit])
-			.attr('y', y[unit] - 50)
+			.attr('x', x[selected])
+			.attr('y', y[selected] - 50)
 			.attr('width', 100)
 			.attr('height', 50)
 			.attr('fill', '#fff')
 			.attr('class', 'js-cal-tooltip');
 		svg.append('text')
-			.attr('y', y[unit])
+			.attr('y', y[selected])
 			.attr('class', 'cal-tooltip js-cal-tooltip js-cal-tooltip-text');
 		d3.select('.js-cal-tooltip-text').append('tspan')
-				.attr('x', x[unit])
+				.attr('x', x[selected])
 				.attr('dy', -20)
-				.text(count[unit]);
+				.text(count[selected]);
 		d3.select('.js-cal-tooltip-text').append('tspan')
-				.attr('x', x[unit])
+				.attr('x', x[selected])
 				.attr('dy', -20)
 				.text(dateStr)
 	}
 
 	var drawCalendar = function (rangeStr, data, unit) {
-		
+
 		var sT = moment(rangeStr[0]);
 		var eT = moment(rangeStr[1]);
 
 		//number of days - start with the first day of the month
 		var startDate = sT.clone().startOf('month');
-		var endDate = eT.clone().endOf('month'); 
+		var endDate = eT.clone().endOf('month');
 		var daysCount = eT.diff(startDate, 'days');
 		var count = endDate.diff(startDate, 'days') + 1;
 
@@ -325,10 +324,17 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 		return block;
 	};
 
+	var setUnit = function (unit) {
+		selected = unit;
+		$('.js-count-period').removeClass('selected');
+		$('.js-count-period-' + unit).addClass('selected');
+	};
+
 	return {
-		putCount: putCount,
-		transformCount: transformCount,
+		// putCount: putCount,
+		setUnit: setUnit,
 		drawFrequency: drawFrequency,
-		drawCalendar: drawCalendar
+		drawCalendar: drawCalendar,
+		transformCount: transformCount
 	}
 });
