@@ -1,13 +1,7 @@
 require.config({
-        shim: {
-        'd3': {
-            exports: 'd3'
-        },
-        'socketio': {
-            exports: 'io'
-        },
-        'underscore': {
-            exports: '_'
+    shim: {
+        'elements': {
+            exports: 'E'
         }
     },
     paths: {
@@ -16,20 +10,20 @@ require.config({
         d3: '../bower_components/d3/d3',
         moment: '../bower_components/moment/moment',
         momentTZ: '../bower_components/moment-timezone/moment-timezone',
-        socketio: '../socket.io/socket.io'
+        socketio: '../socket.io/socket.io',
+        elements: 'vis-elements'
     }
 });
-
 require([
     'jquery',
     'underscore',
     'd3',
     'moment',
     'socketio',
-    'settings',
     'match',
-    'vis'
-], function ($, _, d3, moment, io, Settings, Match, Vis) {
+    'vis',
+    'elements'
+], function ($, _, d3, moment, io, Match, Vis, E) {
 
     'use strict';
 
@@ -64,9 +58,9 @@ require([
             checkinCount: u.checkinCount
         }));﻿
 
-        $('.js-title-overlaid').html(Settings.single[0]);
+        $('.js-title-overlaid').html(E.msgs.titles.single[0]);
         _.each(_.range(6), function (i) {
-            $('.js-nav-title-' + i).html(Settings.single[i]);
+            $('.js-nav-title-' + i).html(E.msgs.titles.single[i]);
         });
         Vis.startVis(data);
     }
@@ -102,9 +96,9 @@ require([
                 avatar2: data.userinfo.avatar
             }));﻿
 
-            $('.js-title-overlaid').html(Settings.match[0]);
+            $('.js-title-overlaid').html(E.msgs.titles.match[0]);
             _.each(_.range(6), function (i) {
-                $('.js-nav-title-' + i).html(Settings.match[i]);
+                $('.js-nav-title-' + i).html(E.msgs.titles.match[i]);
             });
             Vis.startVisMatch(m);
         });
@@ -126,10 +120,10 @@ require([
             //at least five haracters
             var userId = $('.js-intro-input').val();
             if (userId.length < 3) {
-                renderSettings(Settings.msg.diffName, Settings.msg.tooShort);
+                renderSettings(E.msgs.intro.diffName, E.msgs.intro.tooShort);
             } else {
                 console.log('---entered');
-                renderSettings(Settings.msg.init, Settings.msg.userIdCheck, userId);
+                renderSettings(E.msgs.intro.init, E.msgs.intro.userIdCheck, userId);
                 socket.emit('userId', { userId: userId });
             }
         }
@@ -216,7 +210,7 @@ require([
         socket.emit('friends', { userId: userId, count: friendCount });
         socket.on('friends', function (d) {
             var friends = d.friends;
-            var msg = friends ? Settings.msg.friends : Settings.msg.noFriends;
+            var msg = friends ? E.msgs.intro.friends : E.msgs.intro.noFriends;
             renderSettings(msg, '', '', friends);
             $('.js-friend-select').change(function() {
                 var friend = $(this).val();
@@ -261,17 +255,17 @@ require([
         socket.emit('pair', { users: userId.split('+') });
     } else if (userId) {
         console.log('1---single user');
-        renderSettings(Settings.msg.init, Settings.msg.userIdCheck, userId);
+        renderSettings(E.msgs.intro.init, E.msgs.intro.userIdCheck, userId);
         socket.emit('userId', { userId: userId });
     } else {
         console.log('1---no url');
-        renderSettings(Settings.msg.init, '', '');
+        renderSettings(E.msgs.intro.init, '', '');
     }
 
     //receive data from the server
     socket.on('error', function (data) {
         console.log('---error', data);
-        renderSettings(Settings.msg.diffName, data.error_detail);
+        renderSettings(E.msgs.intro.diffName, data.error_detail);
     });
 
     //FIXME: delete later
@@ -285,8 +279,8 @@ require([
                 initVisMatch(d, true);
             } else {
                 //FIXME: temporarily
-                // initVisSingle(d);
-                renderSettingsOptions(Settings.msg.back, d);
+                initVisSingle(d);
+                // renderSettingsOptions(E.msgs.intro.back, d);
             }
         });
     });
@@ -331,7 +325,7 @@ require([
         $(this).css('cursor', 'pointer');
     }).click(function() {
         var val = $(this).data().value;
-        window.open(Settings.share[val]);
+        window.open(S.share[val]);
     });
 
     //add intro footer height
@@ -370,7 +364,7 @@ require([
         window.history.pushState('object or string', 'Title', '/');
         userData = [null, null];
         isMatch = false;
-        renderSettings(Settings.msg.init, '');
+        renderSettings(E.msgs.intro.init, '');
     }).mouseout(function() {
         $(this).removeClass('home-over');
     });
@@ -396,7 +390,7 @@ require([
     function changeVisTitle(i) {
         if (i !== prevTitle) {
             $('.js-title-overlaid')
-                .html(isMatch ? Settings.match[i] : Settings.single[i]);
+                .html(isMatch ? E.msgs.titles.match[i] : E.msgs.titles.single[i]);
             $('.js-slide').removeClass('selected');
             $('.js-nav-' + i).addClass('selected');
             prevTitle = i;

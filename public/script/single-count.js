@@ -1,15 +1,12 @@
-define(['settings', 'moment'], function (Settings, moment) {
+define(['moment'], function (moment) {
 
-	var colors = Settings.colors;
+	var color = E.beerColors[3];
 	var selected;
 
-	function drawFreqBlocks(data, vis, maxCount, avgCount) {
+	var svg, dim, margin, xAxis, yAxis, x, y, //frequency
+		block; //calendar
 
-		var svg = vis.svg;
-		var x = vis.x;
-		var y = vis.y;
-		var dim = vis.dim;
-		var margin = vis.margin;
+	function drawFreqBlocks(data, maxCount, avgCount) {
 
 		_.each(data.counts, function (val, i) {
 			svg.append('rect')
@@ -17,7 +14,7 @@ define(['settings', 'moment'], function (Settings, moment) {
 				.attr('y', y(val))
 				.attr('width', dim.w/data.counts.length)
 				.attr('height', dim.h - y(val))
-				.attr('fill', colors.brewery)
+				.attr('fill', color)
 				.attr('class', 'freq-block js-freq-block');
 			svg.append('text')
 				.attr('x', x(i) + dim.w/data.counts.length / 2)
@@ -44,7 +41,7 @@ define(['settings', 'moment'], function (Settings, moment) {
 		return val < 4 ? val : 4;
 	}
 
-	var transformCount = function (unit, data, avgCount, block, vis) {
+	var transformCount = function (unit, data, avgCount) {
 
 		selected = unit;
 
@@ -52,21 +49,19 @@ define(['settings', 'moment'], function (Settings, moment) {
 		var maxCount = data.maxCount[unit];
 		var unitCount = data.unitCounts[unit];
 
-		$('.js-count-total').html(unitCount + ' ' + unit + 's');
-
 		//frequency
 		//domain
-		vis.x.domain([0, frequency.counts.length]);
-		vis.y.domain([_.max(frequency.counts), 0]);
-		vis.xAxis.scale(vis.x);
-		vis.yAxis.scale(vis.y).ticks(getFreqTicks(_.max(frequency.counts)));
-		d3.select('.js-freq-axis-x').call(vis.xAxis);
-		d3.select('.js-freq-axis-y').call(vis.yAxis);
+		x.domain([0, frequency.counts.length]);
+		y.domain([_.max(frequency.counts), 0]);
+		xAxis.scale(x);
+		yAxis.scale(y).ticks(getFreqTicks(_.max(frequency.counts)));
+		d3.select('.js-freq-axis-x').call(xAxis);
+		d3.select('.js-freq-axis-y').call(yAxis);
 		$('.js-freq-lable-x').html('beers /' + unit);
 		$('.js-freq-lable-y').html('number of ' + unit + 's');
 		//blocks
 		$('.js-freq-block').remove();
-		drawFreqBlocks(frequency, vis, maxCount, avgCount[unit]);
+		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
 
 		//calendar
 		d3.selectAll('.js-cal-block').attr('opacity', function() {
@@ -94,35 +89,29 @@ define(['settings', 'moment'], function (Settings, moment) {
 		}
 	};
 
-	var drawFrequency = function (data, avgCount, unit) {
+	var drawFrequency = function (vis, data, avgCount, unit) {
 
 		var frequency = data.frequency[unit];
 		var maxCount = data.maxCount[unit];
-		var unitCount = data.unitCounts[unit];
 
-		$('.js-count-total').html(unitCount + ' ' + unit + 's');
+		dim = vis.dim;
+		margin = vis.margin;
+		svg = vis.svg;
 
-		var margin = { top: 20, right: 20, bottom: 40, left: 40 };
-		var dim = { w: Settings.getWidth('frequency') - margin.left - margin.right,
-					h:  140 };
-
-		var x = d3.scale.linear().range([0, dim.w]).domain([0, frequency.counts.length]);
-
-		var xAxis = d3.svg.axis().scale(x).orient('bottom').tickSize(-dim.h)
+		x = d3.scale.linear().range([0, dim.w]).domain([0, frequency.counts.length]);
+		xAxis = d3.svg.axis().scale(x).orient('bottom')
 				.ticks(frequency.counts.length)
+				.tickSize(0)
+				.tickPadding(9)
 				.tickFormat(function (d) {
 					return d * frequency.gap;
 				});
-		var y = d3.scale.linear().range([0, dim.h])
+		y = d3.scale.linear().range([0, dim.h])
 				.domain([_.max(frequency.counts), 0]);
-		var yAxis = d3.svg.axis().scale(y).orient('left').tickSize(-dim.w)
-				.ticks(getFreqTicks(_.max(frequency.counts)));
-
-		var svg = d3.select('#vis-frequency').append('svg')
-			.attr('width', dim.w + margin.left + margin.right)
-			.attr('height', dim.h + margin.top + margin.bottom)
-			.append('g')
-			.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+		yAxis = d3.svg.axis().scale(y).orient('left')
+				.ticks(getFreqTicks(_.max(frequency.counts)))
+				.tickSize(-dim.w, 0)
+				.tickPadding(9);
 
 		svg.append('g')
 			.attr('class', 'x axis js-freq-axis-x')
@@ -133,30 +122,18 @@ define(['settings', 'moment'], function (Settings, moment) {
 			.call(yAxis);
 
 		svg.append('text')
-			.attr('x', dim.w)
-			.attr('y', dim.h + margin.bottom/2)
+			.attr('x', dim.w / 2)
+			.attr('y', dim.h + 40)
 			.text('beers /' + unit)
-			.attr('class', 'freq-label js-freq-lable-x');
+			.attr('class', 'label-middle js-freq-lable-x');
 		svg.append('text')
-			.attr('x', 0)
-			.attr('y', -margin.top/2)
+			.attr('x', - dim.h / 2)
+			.attr('y', -40)
 			.text('number of ' + unit + 's')
-			.attr('class', 'freq-label js-freq-lable-y')
+			.attr('class', 'label-middle js-freq-lable-y')
 			.attr('transform', 'rotate(-90)');
 
-		var vis = {
-			svg: svg,
-			dim: dim,
-			margin: margin,
-			x: x,
-			y: y,
-			xAxis: xAxis,
-			yAxis: yAxis
-		}
-
-		drawFreqBlocks(frequency, vis, maxCount, avgCount[unit]);
-
-		return vis;
+		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
 	};
 
 	function showTooltip(svg, x, y, date, count) {
@@ -195,7 +172,15 @@ define(['settings', 'moment'], function (Settings, moment) {
 				.text(dateStr)
 	}
 
-	var drawCalendar = function (rangeStr, data, unit) {
+	var drawCalendar = function (vis, rangeStr, data, unit) {
+
+		//description
+		var sober = data.sober[unit];
+		var unitCount = data.unitCounts[unit];
+
+		$('.js-count-sober').html(sober + ' ' + unit + 's');
+		$('.js-count-total').html(unitCount + ' ' + unit + 's');
+
 
 		var sT = moment(rangeStr[0]);
 		var eT = moment(rangeStr[1]);
@@ -206,20 +191,18 @@ define(['settings', 'moment'], function (Settings, moment) {
 		var daysCount = eT.diff(startDate, 'days');
 		var count = endDate.diff(startDate, 'days') + 1;
 
-		// w & h of each day block
-		var block = 12;
-		var dim = {};
-		var margin = { top: 50, bottom: 10, left: 40, right: 30, gap: 60 };
-		dim.w = $('.calendar').width() - margin.left - margin.right;
+		//w & h of each day block
+		block = 12;
+		console.log(dim);
+		var margin = vis.margin;
+		var dim = { w: vis.w - margin.left - margin.right };
+		margin.gap = 60;
 		var rowC = Math.ceil(Math.ceil(count / 7) * 12 / dim.w);
 		dim.h = rowC * (margin.gap + block * 7);
 		//number of columns
 		var colC = Math.ceil(dim.w / block);
-		var svg = d3.select('#vis-calendar').append('svg')
-			.attr('width', dim.w + margin.left + margin.right)
-			.attr('height', dim.h + margin.top + margin.bottom)
-			.append('g')
-			.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+		var svg = vis.draw({dim: dim, margin: margin}, 'calendar');
 
 		//y axis day label
 		_.each(_.range(rowC), function (i) {
@@ -261,7 +244,7 @@ define(['settings', 'moment'], function (Settings, moment) {
 				style.fill = '#e5e5e5';
 				value = '--:--:--';
 			} else {
-				style.fill = colors.brewery;
+				style.fill = color;
 				style.opacity = data.list[dataStr][unit]/data.maxCount[unit];
 				value = data.list[dataStr].day + ':' + data.list[dataStr].week + ':' + data.list[dataStr].month;
 			}
@@ -320,8 +303,6 @@ define(['settings', 'moment'], function (Settings, moment) {
 					.attr('class', 'cal-divide');
 			}
 		});
-
-		return block;
 	};
 
 	var setUnit = function (unit) {
@@ -331,7 +312,6 @@ define(['settings', 'moment'], function (Settings, moment) {
 	};
 
 	return {
-		// putCount: putCount,
 		setUnit: setUnit,
 		drawFrequency: drawFrequency,
 		drawCalendar: drawCalendar,

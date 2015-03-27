@@ -171,27 +171,49 @@
 
 		<!-- 0 basic stats -->
 		<div class="vis-contents single-count js-single-contents-0">
-			<ul class="period">
-				<li data-value="day" class="link js-count-period js-count-period-day"> Day </li>
-				<li data-value="week" class="link js-count-period js-count-period-week"> Week </li>
-				<li data-value="month" class="link js-count-period js-count-period-month"> Month </li>
-			</ul>
-
-			<div>total <span class="js-count-total"></span></div>
-
-			<div id="vis-frequency" class="frequency js-single-svg"></div>
-
-			<!-- <div class="count">
-				<div class="avg">
-					<div>Since <span class="js-since"></span></div>
-					<div>Total <span class="js-avg-checkin avg-checkin"></span> check-ins</div>
-					<div class="js-avg-count avg-count"></div>
-					<div class="avg-unit">beers / <span class="js-avg-unit"></span></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12 vis-radio">
+						<span data-value="day" class="link js-count-period js-count-period-day"> Day </span>
+						<span data-value="week" class="link js-count-period js-count-period-week"> Week </span>
+						<span data-value="month" class="link js-count-period js-count-period-month"> Month </span>
+					</div>
 				</div>
-			</div>
-			-->
+				<div class="row">
+					<div class="col-xs-2"></div>
+					<div id="vis-frequency" class="col-xs-8 frequency js-single-svg"></div>
+					<div class="col-xs-2"></div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 sober">You were sober for <span class="bold js-count-sober"> XX unit </span> out of total <span class="bold js-count-total"> XX unit</span>.</div>
+					<div id="vis-calendar" class="col-xs-12 calendar js-single-svg"></div>
+				</div>
 
-			<div id="vis-calendar" class="calendar js-single-svg"></div>
+
+					<!--
+					<ul class="period">
+						<li data-value="day" class="link js-count-period js-count-period-day"> Day </li>
+						<li data-value="week" class="link js-count-period js-count-period-week"> Week </li>
+						<li data-value="month" class="link js-count-period js-count-period-month"> Month </li>
+					</ul>
+					-->
+					<!-- <div>total <span class="js-count-total"></span></div> -->
+
+
+				<!-- <div class="frequency js-single-svg"></div> -->
+
+				<!-- <div class="count">
+					<div class="avg">
+						<div>Since <span class="js-since"></span></div>
+						<div>Total <span class="js-avg-checkin avg-checkin"></span> check-ins</div>
+						<div class="js-avg-count avg-count"></div>
+						<div class="avg-unit">beers / <span class="js-avg-unit"></span></div>
+					</div>
+				</div>
+				-->
+
+				<!-- <div id="vis-calendar" class="calendar js-single-svg"></div> -->
+			</div>
 		</div>
 
 		<!-- 1 ratings -->
@@ -289,6 +311,8 @@
 
 <!--vis menu -->
 <div class="vis-title-overlaid js-nav js-title-overlaid hide">title</div>
+
+<!--
 <ul class="vis-nav-expand js-nav-expand hide">
 	<li class="item js-slide selected js-nav-0 js-nav-title-0" data-value="0">title0</li>
 	<li class="item js-slide js-nav-1 js-nav-title-1" data-value="1">title1</li>
@@ -308,6 +332,7 @@
 		<li class="item js-slide js-nav-5" data-value="5"></li>
 	</ul>
 </div>
+-->
 
 <!-- intro render templates -->
 <script type="text/template" id="intro-start">
@@ -447,7 +472,7 @@
 <!-- vis header templates -->
 <script type="text/template" id="header-single">
 	<div class="pic" style="background-image: url(<%= avatar %>)"></div>
-	<ul class="profile">
+	<ul class="profile hidden-xs">
 		<li class="userid"><%= userId %></li>
 		<li class="item">
 			<span class="name"><%= name %></span>
@@ -465,8 +490,9 @@
 	<div class="x"> X </div>
 	<div class="pic" style="background-image: url(<%= avatar2 %>)"></div>
 </script>
-</body>
-</html>
 
 <script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script>
 <script data-main="/script/main" src="/script/require.js"></script>
+
+</body>
+</html>

@@ -1,16 +1,59 @@
-define(function() {
+define(['jquery', 'd3'], function ($, d3) {
 
-	var beerColors = ['#e8dd21', '#ffc61e', '#f99b0c', '#d38235', '#d86018', '#7c2529', '#643335', '#3f2021', '#25282a'];
+	var widths = {
+		frequency: 8,
+		calendar: 12
+	};
 
-	var colors = { style: '#ffc61e', abv: '#d86018',
-				brewery: '#7c2529', country: '#3f2021'};
+	var heights = {
+		frequency: 300,
+		calendar: null
+	};
 
-	var users = ['#cc0000', '#00cc00'];
+	var margins = {
+		frequency: { top: 100, right: 40, bottom: 50, left: 60},
+		calendar: { top: 50, bottom: 40, left: 40, right: 30}
+	}
+
+   	var getWidth = function(div) {
+   		console.log($('.vis').find('.container').width());
+   		return $('.vis').find('.container').width() / 12 * widths[div]; // 15 is margin
+   	};
+
+   	function drawSVG(vis, div) {
+   		console.log(vis, div);
+		var svg = d3.select('#vis-' + div).append('svg')
+			.attr('width', vis.dim.w + vis.margin.left + vis.margin.right)
+			.attr('height', vis.dim.h + vis.margin.top + vis.margin.bottom)
+			.append('g')
+			.attr('transform', 'translate(' + vis.margin.left + ', ' + vis.margin.top + ')');
+		return svg;
+   	};
+
+   	var setVisNoSVG = function (div) {
+   		var w = getWidth(div); // 15 is margin
+   		return {
+   			w: w,
+   			margin: margins[div],
+   			draw: drawSVG
+   		};
+   	};
+
+   	var setVis = function(div, callback) {
+		var vis = {
+			dim: {
+				w: getWidth(div) - margins[div].left - margins[div].right,
+				h: heights[div] - margins[div].top - margins[div].bottom
+			},
+			margin: margins[div]
+		}
+		vis.svg = drawSVG(vis, div);
+		callback(vis);
+   	};
 
 	return {
-		colors: colors,
-		users: users,
-		beerColors: beerColors
+		setVisNoSVG: setVisNoSVG,
+		setVis: setVis
 	};
 
 });

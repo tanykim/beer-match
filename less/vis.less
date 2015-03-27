@@ -108,13 +108,14 @@
 .vis-title-overlaid {
 	position: fixed;
 	width: 100%;
-	background-color: @whiteTrans;
+	background: url('../images/stripe2.png');
+	background-size: 28px 28px;
 	text-align: center;
 	top: @visHeaderH + @visHeaderH / 2;
 	font-weight: 700;
 	font-size: @huge;
 	line-height: @visHeaderH + @visHeaderH / 2;
-	color: @red;
+	color: #fff;
 }
 .vis-nav-expand {
 	float: right;
@@ -182,6 +183,7 @@
 
 /* contents */
 @visPadding: 5%;
+
 .vis-contents-wrapper {
 	width: 100%;
 	position: absolute;
@@ -189,8 +191,8 @@
 	margin-top: @visHeaderH + @visHeaderH/2;
 	.vis-contents {
 		background-color: #fff;
-		padding: @visHeaderH + @visHeaderH/2 @visHeaderH * 2 @visHeaderH @visHeaderH ;
-		box-sizing: border-box;
+		padding-top: @visHeaderH * 2;
+		padding-bottom: @visHeaderH / 2;
 		overflow: hidden;
 		border-bottom: 1px dashed #999;
 	}
@@ -205,50 +207,36 @@
 	}
 }
 
+.vis-radio {
+	text-align: center;
+	font-size: @large;
+	margin-bottom: @visHeaderH/2;
+	line-height: 2em;
+	span {
+		display: inline-block;
+		padding-left: 2.5em;
+		padding-right: 1.25em;
+		background: url('../images/radio.png') @lightGrey no-repeat;
+		background-size: 1em 3em;
+		background-position-x: 1em;
+		background-position-y: 0.5em;
+		border-radius: 0.5em;
+	}
+	.selected {
+		background-position-y: -1.5em !important;
+	}
+
+}
+
 /* count */
 .single-count {
-	.period {
-		float: left;
-		font-size: @large;
-		line-height: 2em;
-		display: inline-block;
-		padding-top: 100px; /* single-count.js */
-		li {
-			padding-left: 2.5em;
-			padding-right: 1em;
-			background: url('../images/radio.png') @lightGrey no-repeat;
-			background-size: 1em 3em;
-			background-position-x: 1em;
-			background-position-y: 0.5em;
-			border-radius: 1em;
-			margin-bottom: 0.5em;
-		}
-		.selected {
-			background-position-y: -1.5em !important;
-		}
+	.frequency, .calendar {
+		background-color: @lightGrey;
 	}
-	.frequency {
-		float: left;
-		width: 80%;
-		overflow: hidden;
+	.sober {
+		text-align: center;
+		margin-top: 15px;
 	}
-}
-.count {
-	width: 20%;
-	float: left;
-	.avg-checkin {
-		font-weight: 700;
-	}
-	.avg-count {
-		font-size: @huge;
-		font-weight: 700;
-	}
-}
-.calendar {
-	width: 80%;
-	float: right;
-	overflow: hidden;
-	background: #efefef;
 }
 
 /* categories */
@@ -384,8 +372,7 @@ path, line{
 	stroke: #999;
 }
 .freq-label {
-	text-anchor: end;
-	font-size: @tiny;
+	text-anchor: middle;
 }
 .freq-line-avg {
 	stroke: #000;

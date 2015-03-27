@@ -1,24 +1,26 @@
-define(['moment', 'single-count', 'single-ratings', 'single-beers', 'single-when', 'single-where',
+define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beers', 'single-when', 'single-where',
 	'match-score', 'match-style', 'match-time', 'match-venues'],
-	function (moment, Count, Ratings, Beers, When, Where, Score, Styles, Time, Venues) {
+
+	function (moment, S, Count, Ratings, Beers, When, Where, Score, Styles, Time, Venues) {
+
+	'use strict';
 
 	var startVis = function(b) {
 
+		console.log(S);
 		//view change
 		$('.js-single-svg').empty();
 
-
 		//1--count
-		$('.js-count-sort-' + b.avgUnit).prop('checked', true);
 		Count.setUnit = Count.setUnit(b.avgUnit);
-		var countFrequnecy = Count.drawFrequency(b.countByPeriod, b.avgCount, b.avgUnit);
-		var countCalendar = Count.drawCalendar(b.timeRange, b.countByPeriod, b.avgUnit);
+		S.setVis('frequency', function (vis) {
+			Count.drawFrequency(vis, b.countByPeriod, b.avgCount, b.avgUnit);
+		});
+		Count.drawCalendar(S.setVisNoSVG('calendar'), b.timeRange, b.countByPeriod, b.avgUnit);
 		$('.js-count-period').click(function() {
-			console.log(Settings);
-
 			$('.js-count-period').removeClass('selected');
 			$(this).addClass('selected');
-			Count.transformCount($(this).data().value, b.countByPeriod, b.avgCount, countCalendar, countFrequnecy);
+			Count.transformCount($(this).data().value, b.countByPeriod, b.avgCount);
 		});
 
 		/*

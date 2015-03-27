@@ -1,0 +1,153 @@
+path, line{
+  shape-rendering: crispEdges; /* geometricPrecision */
+}
+
+@line-light: rgba(0, 0, 0, 0.3);
+.axis .tick line {
+	stroke: @line-light;
+}
+
+/*.axis .domain {
+	fill: none;
+	stroke: none;
+}
+*/
+
+.label-middle {
+	text-anchor: middle;
+}
+
+
+.axis text {
+	font-size: @tiny;
+}
+.freq-label {
+	text-anchor: middle;
+}
+.freq-line-avg {
+	stroke: #000;
+	stroke-width: 2;
+}
+.freq-text-avg {
+	text-anchor: middle;
+}
+.freq-block {
+	stroke: #000;
+	stroke-width: 1px;
+	stroke-opacity: 1;
+}
+.freq-label-block {
+	text-anchor: middle;
+	font-size: @tiny;
+}
+
+.cal-y-label {
+	text-anchor: end;
+	font-size: @tiny;
+}
+.cal-x-year {
+	font-size: @tiny;
+	color: #000;
+	font-weight: 700;
+}
+.cal-x-month {
+	font-size: @tiny;
+	color: #666;
+}
+.cal-divide {
+	stroke: #000;
+	stroke-width: 1;
+	fill: none;
+}
+.cal-day {
+	stroke: none;
+	/*fill: #999999;*/
+}
+.cal-week {
+	stroke: none;
+	fill: #666;
+	display: none;
+}
+.cal-year {
+	stroke: #000;
+	stroke-opacity: 0.5;
+	stroke-width: 2;
+	fill: #cc0000;
+	opacity: 0.3;
+}
+.cal-day--before {
+	stroke: none;
+	fill: #e5e5e5;
+}
+.cal-tooltip {
+	fill: #000;
+	font-size: @tiny;
+}
+
+.ratings-arc-over {
+	font-size: @small;
+	text-anchor: middle;
+}
+
+.fav-divide {
+	stroke: #999;
+	stroke-width: 1;
+}
+.fav-radial-0 {
+	stroke: #999;
+	stroke-width: 1;
+	fill: none;
+}
+.fav-radial-1 {
+	stroke: #e5e5e5;
+	stroke-width: 1;
+	fill: none;
+}
+.fav-radial-y {
+	stroke: #999;
+	stroke-dasharray: 5, 3;
+	stroke-width: 1;
+}
+.fav-radial-y-tick {
+	text-anchor: middle;
+}
+.fav-score-text {
+	font-size: @small;
+}
+.fav-beer-img {
+	stroke: #999;
+	stroke-width: 1;
+}
+.fav-beer-line {
+	stroke: #000;
+	stroke-width: 2;
+}
+.fav-beer-text {
+	font-size: @large;
+	.unselectable();
+}
+.fav-beer-text--small, .fav-beer-text-count {
+	font-size: @small;
+	fill: #999;
+	.unselectable();
+}
+.fav-beer-dot-text {
+	font-size: @small;
+	text-anchor: middle;
+}
+
+.ratings-avg {
+	stroke: #000;
+	stroke-width: 2;
+
+}
+.period-path {
+	stroke: #000;
+	stroke-width: 2px;
+	fill: rgba(0, 0, 0, .5);
+}
+.period-dots {
+	stroke: #000;
+	stroke-width: 2px;
+	fill: #fff;
+}
