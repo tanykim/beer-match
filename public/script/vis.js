@@ -5,9 +5,12 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 
 	'use strict';
 
+	function changeRaioSelection(elm) {
+		elm.parent().find('span').removeClass('selected');
+		elm.addClass('selected');
+	}
 	var startVis = function(b) {
 
-		console.log(S);
 		//view change
 		$('.js-single-svg').empty();
 
@@ -18,33 +21,41 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 		});
 		Count.drawCalendar(S.setVisNoSVG('calendar'), b.timeRange, b.countByPeriod, b.avgUnit);
 		$('.js-count-period').click(function() {
-			$('.js-count-period').removeClass('selected');
-			$(this).addClass('selected');
+			changeRaioSelection($(this));
 			Count.transformCount($(this).data().value, b.countByPeriod, b.avgCount);
 		});
 
-		/*
+
 		//2--ratings chart
-		// Ratings.drawScoresStats(b.scoreAvg, b.scoreCount);
-		Ratings.drawNetwork(b.network);
-		var ratingsKey = 'style';
-		var vC = Ratings.drawCategories(b.userinfo.checkinCount, b.ratingsList);
-		var vR = Ratings.drawRatings(b.ratingsList);
-		Ratings.drawRatingsBar(vR, b.ratingsList[ratingsKey], ratingsKey, b.scoreAvg);
-		//select ratings key
-		$('.js-ratings-title').mouseover(function() {
-			$(this).css('cursor', 'pointer');
-		}).click(function() {
-			ratingsKey = $(this).data().value;
-			var id = $(this).data().id;
-			$('.js-ratings-bg').attr('transform', 'translate (' +((id * vC.dim.w/4) + vC.dim.w/8 - vC.r - vC.margin.r) + ', 0)');
-			Ratings.drawRatingsBar(vR, b.ratingsList[ratingsKey], ratingsKey, b.scoreAvg);
+		S.setVis('score', function (vis) {
+			Ratings.drawScoresStats(vis, b.scoreAvg, b.scoreCount);
 		});
-		//sort bar chart
-		$('input[name=sortBy]').click(function() {
-			Ratings.transformRatingsBar(b.ratingsList[ratingsKey], vR.baseH);
+		S.setVisNoSVG('categories', function (vis) {
+			console.log(vis);
+			_.each(['style', 'abv', 'brewery', 'country'], function (c) {
+				Ratings.drawCategories(vis, c, b.userinfo.checkinCount, b.ratingsList[c]);
+			});
 		});
 
+		var category = 'style';
+		var ratingsSortBy = 'count';
+		Ratings.drawRatings(b.ratingsList[category], category, ratingsSortBy, b.scoreAvg, S.setVisNoSVG('ratings'));
+
+		//select ratings key
+		$('.js-ratings-title').click(function() {
+			category = $(this).data().value;
+			changeRaioSelection($(this));
+			Ratings.drawRatings(b.ratingsList[category], category, ratingsSortBy);
+		});
+
+		//sort bar chart
+		$('.js-ratings-sortBy').click(function() {
+			changeRaioSelection($(this));
+			ratingsSortBy = $(this).data().value;
+			Ratings.transformRatingsBar(b.ratingsList[category], ratingsSortBy);
+		});
+
+		/*
 		//3--beers loved and hated
 		var timeRange = _.map(b.timeRange, function (d) {
             return moment(d.slice(0, 9), 'YYYY-MM-DD').startOf('month')._d;

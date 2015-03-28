@@ -409,7 +409,7 @@ require([
         for (var i = 1; i < 7; i++) {
             var diff = $(window).scrollTop() -
                 getHeightSum(i, isMatch ? 'match' : 'single', 0);
-            if (diff < -30 ) {
+            if (diff < -60) {
                 changeVisTitle(i-1);
                 break;
             }

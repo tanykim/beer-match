@@ -14,13 +14,14 @@ define(['moment'], function (moment) {
 				.attr('y', y(val))
 				.attr('width', dim.w/data.counts.length)
 				.attr('height', dim.h - y(val))
-				.attr('fill', color)
+				.style('fill', color)
 				.attr('class', 'freq-block js-freq-block');
 			svg.append('text')
 				.attr('x', x(i) + dim.w/data.counts.length / 2)
 				.attr('y', y(val))
+				.attr('dy', -4)
 				.text(val)
-				.attr('class', 'freq-label-block js-freq-block')
+				.attr('class', 'pos-middle size-normal js-freq-block')
 		});
 
 		//average line
@@ -29,16 +30,27 @@ define(['moment'], function (moment) {
 			.attr('x2', x(avgCount / data.gap))
 			.attr('y1', -margin.top/2)
 			.attr('y2', dim.h + margin.bottom/2)
-			.attr('class', 'freq-line-avg js-freq-block');
+			.attr('class', 'stroke-2 stroke-black js-freq-block');
+		svg.append('circle')
+			.attr('cx', x(avgCount / data.gap))
+			.attr('cy', -margin.top/2)
+			.attr('r', margin.top/2.2)
+			.attr('class', 'freq-text-avg js-freq-block');
 		svg.append('text')
 			.attr('x', x(avgCount / data.gap))
 			.attr('y', -margin.top/2)
+			.attr('dy', -margin.top/8)
 			.text('average')
-			.attr('class', 'freq-text-avg js-freq-block');
-	}
+			.style('fill', '#fff')
+			.attr('class', 'size-normal pos-middle js-freq-block');
+		svg.append('text')
+			.attr('x', x(avgCount / data.gap))
+			.attr('y', -margin.top/2)
+			.attr('dy', margin.top/6)
+			.text(avgCount)
+			.style('fill', '#fff')
+			.attr('class', 'size-huge pos-middle js-freq-block');
 
-	function getFreqTicks(val) {
-		return val < 4 ? val : 4;
 	}
 
 	var transformCount = function (unit, data, avgCount) {
@@ -51,13 +63,14 @@ define(['moment'], function (moment) {
 
 		//frequency
 		//domain
+		var yTicks = E.getAxisTicks(_.max(frequency.counts), dim.h);
 		x.domain([0, frequency.counts.length]);
-		y.domain([_.max(frequency.counts), 0]);
+		y.domain([yTicks.endPoint, 0]);
 		xAxis.scale(x);
-		yAxis.scale(y).ticks(getFreqTicks(_.max(frequency.counts)));
+		yAxis.scale(y).ticks(yTicks.count);
 		d3.select('.js-freq-axis-x').call(xAxis);
 		d3.select('.js-freq-axis-y').call(yAxis);
-		$('.js-freq-lable-x').html('beers /' + unit);
+		$('.js-freq-lable-x').html('beers / ' + unit);
 		$('.js-freq-lable-y').html('number of ' + unit + 's');
 		//blocks
 		$('.js-freq-block').remove();
@@ -101,17 +114,19 @@ define(['moment'], function (moment) {
 		x = d3.scale.linear().range([0, dim.w]).domain([0, frequency.counts.length]);
 		xAxis = d3.svg.axis().scale(x).orient('bottom')
 				.ticks(frequency.counts.length)
-				.tickSize(0)
-				.tickPadding(9)
+				.tickSize(E.noTicks.size)
+				.tickPadding(E.noTicks.padding)
 				.tickFormat(function (d) {
 					return d * frequency.gap;
 				});
+
+		var yTicks = E.getAxisTicks(_.max(frequency.counts), dim.h);
 		y = d3.scale.linear().range([0, dim.h])
-				.domain([_.max(frequency.counts), 0]);
+				.domain([yTicks.endPoint, 0]);
 		yAxis = d3.svg.axis().scale(y).orient('left')
-				.ticks(getFreqTicks(_.max(frequency.counts)))
+				.ticks(yTicks.count)
 				.tickSize(-dim.w, 0)
-				.tickPadding(9);
+				.tickPadding(E.noTicks.padding);
 
 		svg.append('g')
 			.attr('class', 'x axis js-freq-axis-x')
@@ -125,12 +140,12 @@ define(['moment'], function (moment) {
 			.attr('x', dim.w / 2)
 			.attr('y', dim.h + 40)
 			.text('beers /' + unit)
-			.attr('class', 'label-middle js-freq-lable-x');
+			.attr('class', 'pos-middle js-freq-lable-x');
 		svg.append('text')
 			.attr('x', - dim.h / 2)
 			.attr('y', -40)
 			.text('number of ' + unit + 's')
-			.attr('class', 'label-middle js-freq-lable-y')
+			.attr('class', 'pos-middle js-freq-lable-y')
 			.attr('transform', 'rotate(-90)');
 
 		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
@@ -157,7 +172,7 @@ define(['moment'], function (moment) {
 			.attr('y', y[selected] - 50)
 			.attr('width', 100)
 			.attr('height', 50)
-			.attr('fill', '#fff')
+			.style('fill', '#fff')
 			.attr('class', 'js-cal-tooltip');
 		svg.append('text')
 			.attr('y', y[selected])
@@ -181,7 +196,6 @@ define(['moment'], function (moment) {
 		$('.js-count-sober').html(sober + ' ' + unit + 's');
 		$('.js-count-total').html(unitCount + ' ' + unit + 's');
 
-
 		var sT = moment(rangeStr[0]);
 		var eT = moment(rangeStr[1]);
 
@@ -193,7 +207,6 @@ define(['moment'], function (moment) {
 
 		//w & h of each day block
 		block = 12;
-		console.log(dim);
 		var margin = vis.margin;
 		var dim = { w: vis.w - margin.left - margin.right };
 		margin.gap = 60;

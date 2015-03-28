@@ -1,57 +1,60 @@
 path, line{
   shape-rendering: crispEdges; /* geometricPrecision */
 }
-
 @line-light: rgba(0, 0, 0, 0.3);
+
 .axis .tick line {
 	stroke: @line-light;
 }
-
-/*.axis .domain {
-	fill: none;
-	stroke: none;
-}
-*/
-
-.label-middle {
-	text-anchor: middle;
-}
-
-
 .axis text {
 	font-size: @tiny;
 }
-.freq-label {
+.axis .domain {
+	fill: none;
+	stroke: none;
+}
+
+/* lables or text */
+.pos-middle {
 	text-anchor: middle;
 }
-.freq-line-avg {
-	stroke: #000;
-	stroke-width: 2;
+.pos-end {
+	text-anchor: end;
 }
-.freq-text-avg {
-	text-anchor: middle;
-}
-.freq-block {
-	stroke: #000;
-	stroke-width: 1px;
-	stroke-opacity: 1;
-}
-.freq-label-block {
-	text-anchor: middle;
+.size-tiny {
 	font-size: @tiny;
 }
+.size-normal {
+	font-size: @normal;
+}
+.size-huge {
+	font-size: @huge;
+}
+/*line*/
+.stroke-black {
+	stroke: #000;
+}
+.stroke-2 {
+	stroke-width: 2;
+}
+
+.freq-block {
+	stroke: none;
+}
+
+
 
 .cal-y-label {
 	text-anchor: end;
-	font-size: @tiny;
+	/*font-size: @tiny;*/
 }
 .cal-x-year {
-	font-size: @tiny;
-	color: #000;
+	/*font-size: @tiny;*/
+	/*color: #000;*/
 	font-weight: 700;
 }
 .cal-x-month {
-	font-size: @tiny;
+	/*font-size: @tiny;*/
 	color: #666;
 }
 .cal-divide {
@@ -82,6 +85,12 @@ path, line{
 .cal-tooltip {
 	fill: #000;
 	font-size: @tiny;
+}
+
+.categories {
+	path, line {
+		shape-rendering: geometricPrecision;
+	}
 }
 
 .ratings-arc-over {

@@ -41,4 +41,23 @@ var E = {
 	colors: { style: '#ffc61e', abv: '#d86018',
 			brewery: '#7c2529', country: '#3f2021'},
 	users: ['#cc0000', '#00cc00'],
+
+	//vis
+	noTicks: { size: 0, padding: 9 },
+
+	getAxisTicks: function (maxVal, height) {
+		//gap: 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000...
+        var gap = Math.pow(10, maxVal.toString().length - 1);
+        if (maxVal / gap < 2) {
+            gap = gap / 5;
+        } else if (maxVal / gap < 5) {
+            gap = gap / 2;
+        }
+        var slicesCount = Math.ceil(maxVal / gap);
+
+        return {
+        	endPoint: slicesCount * gap,
+        	count: height / slicesCount < 30 ? 5 : slicesCount
+        }
+	}
 }
