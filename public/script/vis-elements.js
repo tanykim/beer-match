@@ -48,7 +48,7 @@ var E = {
 	//vis
 	noTicks: { size: 0, padding: 9 },
 
-	getAxisTicks: function (maxVal, height) {
+	getAxisTicks: function (maxVal, len) {
 		//gap: 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000...
         var gap = Math.pow(10, maxVal.toString().length - 1);
         if (maxVal / gap < 2) {
@@ -60,7 +60,7 @@ var E = {
 
         return {
         	endPoint: slicesCount * gap,
-        	count: height / slicesCount < 30 ? 5 : slicesCount
+        	count: len / slicesCount < 20 ? 5 : slicesCount
         }
 	}
 }

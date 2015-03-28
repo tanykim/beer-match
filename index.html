@@ -258,14 +258,20 @@
 		</div>
 
 		<!-- 3 when -->
-		<div class="vis-contents js-single-contents-3">
-			<span class="link underline bold js-dayHour-switch" data-value="matrix">Both Day and Hour</span>
-			<span class="link underline js-dayHour-switch" data-value="day">Only Day</span>
-			<span class="link underline js-dayHour-switch" data-value="hour">Only Hour</span>
-			<div id="vis-dayHour" class="js-single-svg dayHour">
+		<div class="vis-contents single-when js-single-contents-3">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12 vis-radio">
+						<span class="link selected js-when-switch" data-value="matrix">Both Day and Hour</span>
+						<span class="link js-when-switch" data-value="day">Only Day</span>
+						<span class="link js-when-switch" data-value="hour">Only Hour</span>
+					</div>
+				</div>
+				<div class="row">
+					<div id="vis-when" class="js-single-svg"></div>
+				</div>
 			</div>
-			<div id="vis-day" class="js-single-svg day"></div>
-			<div id="vis-hour" class="js-single-svg hour"></div>
+			<!-- <div id="vis-hour" class="js-single-svg hour"></div> -->
 		</div>
 
 		<!-- 4 where -->
@@ -283,6 +289,8 @@
 		</div>
 
 		<!-- 5 when & where -->
+			<div id="vis-day" class="js-single-svg day"></div>
+
 		<div class="vis-contents js-single-contents-5">
 			<div id="vis-venue-timeline" class="js-single-svg venue-timeline"></div>
 		</div>

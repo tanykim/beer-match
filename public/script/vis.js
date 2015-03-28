@@ -5,12 +5,17 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 
 	'use strict';
 
-	function changeRaioSelection(elm, tag) {
-		if (!tag) {
-			tag = 'span';
+	function changeRadioSelection(elm, tag) {
+		if (elm.hasClass('selected')) {
+			return false;
+		} else {
+			if (!tag) {
+				tag = 'span';
+			}
+			elm.parent().find(tag).removeClass('selected');
+			elm.addClass('selected');
+			return true;
 		}
-		elm.parent().find(tag).removeClass('selected');
-		elm.addClass('selected');
 	}
 	var startVis = function(b) {
 
@@ -18,14 +23,16 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 		$('.js-single-svg').empty();
 
 		//0--count
-		Count.setUnit = Count.setUnit(b.avgUnit);
+		Count.setUnit(b.avgUnit);
 		S.setVis('frequency', function (vis) {
 			Count.drawFrequency(vis, b.countByPeriod, b.avgCount, b.avgUnit);
 		});
 		Count.drawCalendar(S.setVisNoSVG('calendar'), b.timeRange, b.countByPeriod, b.avgUnit);
 		$('.js-count-period').click(function() {
-			changeRaioSelection($(this));
-			Count.transformCount($(this).data().value, b.countByPeriod, b.avgCount);
+			var changed = changeRadioSelection($(this));
+			if (changed) {
+				Count.transformCount($(this).data().value, b.countByPeriod, b.avgCount);
+			}
 		});
 
 		//1--ratings
@@ -45,19 +52,22 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 		//select ratings key
 		$('.js-ratings-title').click(function() {
 			category = $(this).data().value;
-			changeRaioSelection($(this));
-			Ratings.drawRatings(b.ratingsList[category], category, ratingsSortBy);
+			var changed = changeRadioSelection($(this));
+			if (changed) {
+				Ratings.drawRatings(b.ratingsList[category], category, ratingsSortBy);
+			}
 		});
 
 		//sort bar chart
 		$('.js-ratings-sortBy').click(function() {
-			changeRaioSelection($(this));
-			ratingsSortBy = $(this).data().value;
-			Ratings.transformRatingsBar(b.ratingsList[category], ratingsSortBy);
+			var changed = changeRadioSelection($(this));
+			if (changed) {
+				ratingsSortBy = $(this).data().value;
+				Ratings.transformRatingsBar(b.ratingsList[category], ratingsSortBy);
+			}
 		});
 
-
-		//3--beers loved and hated
+		//2--beers loved and hated
 		Beers.putBeers(b.beerList);
 		S.setVis('beers', function (vis) {
 			Beers.drawBeers(vis, b.ratingsList);
@@ -66,16 +76,23 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 		$('.js-beers-images').click(function (e) {
 			var target = $(e.target);
 			if (target.prop('tagName') === 'IMG') {
-				changeRaioSelection($(target), 'img');
+				changeRadioSelection($(target), 'img');
 				var val = target.data().value.split('-');
 				Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 			}
 		});
 
+		//3--when
+		S.setVis('when', function (vis) {
+			When.drawMatrix(vis, b.byDay, b.byHour);
+		});
+		$('.js-when-switch').click(function() {
+			var changed = changeRadioSelection($(this));
+			if (changed) {
+				When.updateGraph($(this).data().value);
+			}
+		});
 		/*
-
-		//4--when
-		When.drawMatrix(b.byDay, b.byHour);
 		//by day coxcomb chart
 		When.drawDayStats(b.byDay);
 		//by hour bar chart

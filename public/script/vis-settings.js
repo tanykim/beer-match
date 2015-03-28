@@ -1,12 +1,15 @@
 define(['jquery', 'd3'], function ($, d3) {
 
+	'use strict';
+
 	var widths = {
 		frequency: 8,
 		calendar: 12,
 		score: 8,
 		categories: 2,
 		ratings: 12,
-		beers: 8
+		beers: 8,
+		when: 12
 	};
 
 	var heights = {
@@ -15,7 +18,8 @@ define(['jquery', 'd3'], function ($, d3) {
 		score: 200,
 		categories: null,
 		ratings: null,
-		beers: null
+		beers: null,
+		when: 300
 	};
 
 	var margins = {
@@ -24,7 +28,8 @@ define(['jquery', 'd3'], function ($, d3) {
 		score: { top: 40, right: 40, bottom: 50, left: 60 },
 		categories: { top: 10, right: 2, bottom: 10, left: 2 },
 		ratings: { top: 60, right: 40, bottom: 20, left: 300 },
-		beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 40 }
+		beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 40 },
+		when: { top: 10, right: 20, bottom: 20, left: 40 }
 	}
 
    	var getWidth = function(div) {

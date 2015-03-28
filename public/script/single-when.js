@@ -1,6 +1,9 @@
-define(['moment', 'vis-settings'], function (moment, Settings) {
+define(['moment'], function (moment) {
 
-	var colors = Settings.colors;
+	'use strict';
+
+	var colors = E.colors;
+	var dim, x, y, xAxis, yAxis;
 
 	var drawDayStats = function (data) {
 
@@ -50,88 +53,28 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 		});
 	};
 
-	var drawHourStats = function (data) {
-		var margin = { top: 10, right: 20, bottom: 20, left: 40 };
-		var dim = { w: $('.hour').width() - margin.left - margin.right,
-					h: $('.day').width() - margin.top - margin.bottom };
-		var x = d3.scale.linear().range([0, dim.w])
-				.domain([0, 24]);
-		var xAxis = d3.svg.axis().scale(x).orient('bottom').tickSize(-dim.h).ticks(24);
-		var y = d3.scale.linear().range([0, dim.h])
-				.domain([Math.ceil(_.max(_.values(_.pluck(data, 'total'))) / 10) * 10, 0]);
-		var yAxis = d3.svg.axis().scale(y).orient('left').tickSize(-dim.w);
+	function updateGraph(val) {
 
-		var svg = d3.select('#vis-hour').append('svg')
-			.attr('width', dim.w + margin.left + margin.right)
-			.attr('height', dim.h + margin.top + margin.bottom)
-			.append('g')
-			.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+ 		d3.selectAll('.js-matrix-block')
+			.transition()
+			.attr('x', function (d) { return d.x[val]; })
+			.attr('y', function (d) { return d.y[val]; })
+			.attr('width', function (d) { return d.width[val]; })
+			.attr('height', function (d) { return d.height[val]; })
+			.style('opacity', function (d) { return d.opacity[val]; });
 
-		svg.append('g')
-			.attr('class', 'x axis')
-			.attr('transform', 'translate(0, ' + dim.h + ')')
-			.call(xAxis);
-		svg.append('g')
-			.attr('class', 'y axis')
-			.call(yAxis);
+		d3.select('.js-matrix-x').transition().call(xAxis[val]);
+		d3.select('.js-matrix-y').transition().call(yAxis[val]);
 
-		function getSum (arr, i) {
-			// console.log(arr);
-			return _.reduce(arr.slice(0, i + 1), function (memo, num) {
-					return memo + num;
-				}, 0);
-		}
-		_.each(data, function (val, key) {
-			svg.append('rect')
-				.attr('x', x(+key))
-				.attr('y', y(val.total))
-				.attr('width', dim.w/24)
-				.attr('height', dim.h - y(val.total))
-				.attr('class', 'hour-block-total');
-			_.each(val.byDay, function (day, i) {
-				var accCount = getSum(val.byDay, i);
-				svg.append('rect')
-					.attr('x', x(+key))
-					.attr('y', y(accCount))
-					.attr('width', dim.w/24)
-					.attr('fill', '#999')
-					.attr('height', dim.h - y(day))
-					.attr('class', 'hour-block-seg js-hour-block js-hour-byDay-' + i)
-					.attr('display', 'none');
-			});
-		});
-		//interaction
-		$('.js-day-text').click(function() {
-			$('.js-hour-block').hide();
-			$('.js-hour-byDay-' + $(this).data().day).fadeIn();
-		});
-	};
-
-	function callInteraction(dataset, xAxis, yAxis) {
-
-		function updateGraph(val) {
-			d3.selectAll('.js-matrix-block')
-				.transition()
-				.attr('x', function (d) { return d.x[val]; })
-				.attr('y', function (d) { return d.y[val]; })
-				.attr('width', function (d) { return d.width[val]; })
-				.attr('height', function (d) { return d.height[val]; })
-				.style('opacity', function (d) { return d.opacity[val]; });
-
-			d3.select('.js-matrix-x').transition().call(xAxis[val]);
-			d3.select('.js-matrix-y').transition().call(yAxis[val]);
-
+		if (val === 'matrix') {
+			$('.js-matrix-addedTick').show();
+			$('.js-matrix-y').find('.tick').find('line')
+				.attr('transform', 'translate(0, ' + dim.h/7/2 + ')');
+		} else {
+			$('.js-matrix-addedTick').hide();
+			$('.js-matrix-y').find('.tick').find('line').removeAttr('transform');
 		}
 
-		$('.js-dayHour-switch').click(function() {
-			var val = $(this).data().value;
-			if (!$(this).hasClass('bold')) {
-				$('.js-dayHour-switch').removeClass('bold');
-				$(this).addClass('bold');
-				updateGraph(val);
-			}
-
-		});
 	}
 
 	function getSum(arr, i) {
@@ -140,70 +83,14 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 		}, 0);
 	}
 
-	var drawMatrix = function (byDay, byHour) {
+	function createMatrixDataset (byHour, maxVals) {
 
-		//max vals
-		var maxVals = {
-			matrix: _.max(_.map(byHour, function (hour) {
-					return _.max(hour.byDay);
-				})),
-			day : _.max(_.pluck(byDay, 'total')),
-			hour: _.max(_.pluck(byHour, 'total'))
-		}
-
-		var margin = { top: 10, right: 20, bottom: 20, left: 40 };
-		var dim = { w: $('.dayHour').width() - margin.left - margin.right,
-					h: 300 - margin.top - margin.bottom };
-
-		var x = {
-			matrix: d3.scale.linear().range([0, dim.w]).domain([0, 24]),
-			day: d3.scale.linear().range([0, dim.w]).domain([0, Math.ceil(maxVals.day / 10) * 10]),
-			hour: d3.scale.linear().range([0, dim.w]).domain([0, 24])
-		};
-		var xAxisBase = d3.svg.axis().orient('bottom').scale(x.matrix).ticks(24).tickFormat(function (d) {
-				return moment(d, 'hh').format('ha');
-			});
-		var xAxis = {
-			matrix: xAxisBase,
-			day: d3.svg.axis().orient('bottom').scale(x.day),
-			hour: xAxisBase
-		};
-
-		var y = {
-			matrix: d3.scale.ordinal().rangeBands([0, dim.h]).domain([0, 1, 2, 3, 4, 5, 6]),
-			day: d3.scale.ordinal().rangeBands([0, dim.h]).domain([0, 1, 2, 3, 4, 5, 6]),
-			hour: d3.scale.linear().range([0, dim.h]).domain([Math.ceil(maxVals.hour / 10) * 10, 0])
-		};
-		var yAxisBase = d3.svg.axis().orient('left').scale(y.matrix).tickFormat(function (d) {
-				return moment(d, 'd').format('ddd');
-			});
-		var yAxis = {
-			matrix: yAxisBase,
-			day: yAxisBase,
-			hour: d3.svg.axis().orient('left').scale(y.hour)
-		};
-
-		var svg = d3.select('#vis-dayHour').append('svg')
-			.attr('width', dim.w + margin.left + margin.right)
-			.attr('height', dim.h + margin.top + margin.bottom)
-			.append('g')
-			.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-
-		svg.append('g')
-			.attr('class', 'x axis js-matrix-x')
-			.attr('transform', 'translate(0, ' + dim.h + ')')
-			.call(xAxis.matrix);
-		svg.append('g')
-			.attr('class', 'y axis js-matrix-y')
-			.call(yAxis.matrix);
-
-		//matrix dataset
 		var hourly = _.map(_.range(7), function (d) {
 			return _.map(_.range(24), function (h) {
 				return byHour[h] ? byHour[h].byDay[d] : 0;
 			});
 		});
-		var dataset = _.flatten(_.map(byHour, function (hour, i) {
+		return _.flatten(_.map(byHour, function (hour, i) {
 			return _.map(hour.byDay, function (d, day) {
 				return {
 					x: {
@@ -217,13 +104,13 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 						hour: y.hour(getSum(hour.byDay, day + 1)),
 					},
 					width: {
-						matrix: dim.w / 24 - 1,
+						matrix: dim.w / 24,
 						day: x.day(d),
-						hour: dim.w / 24 - 1
+						hour: dim.w / 24
 					},
 					height: {
-						matrix: dim.h / 7 - 1,
-						day: dim.h / 7 - 1,
+						matrix: dim.h / 7,
+						day: dim.h / 7,
 						hour: dim.h - y.hour(d)
 					},
 					opacity: {
@@ -234,6 +121,73 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 				};
 			});
 		}));
+	}
+
+	var drawMatrix = function (vis, byDay, byHour) {
+
+		var margin = vis.margin;
+		dim = vis.dim;
+		var svg = vis.svg;
+
+		//max vals
+		var maxVals = {
+			matrix: _.max(_.map(byHour, function (hour) {
+					return _.max(hour.byDay);
+				})),
+			day : _.max(_.pluck(byDay, 'total')),
+			hour: _.max(_.pluck(byHour, 'total'))
+		}
+
+		var dayTicks = E.getAxisTicks(maxVals.day, dim.w);
+		var xBase = d3.scale.linear().range([0, dim.w]).domain([0, 24]);
+		x = {
+			matrix: xBase,
+			day: d3.scale.linear().range([0, dim.w]).domain([0, dayTicks.endPoint]),
+			hour: xBase
+		};
+		xAxis = {
+			matrix: d3.svg.axis().orient('bottom').scale(x.matrix)
+					.tickSize(-dim.h)
+					.tickPadding(E.noTicks.padding)
+					.ticks(24).tickFormat(function (d) {
+						return moment(d, 'hh').format('ha');
+					}),
+			day: d3.svg.axis().orient('bottom').scale(x.day)
+					.tickSize(-dim.h)
+					.tickPadding(E.noTicks.padding)
+					.ticks(dayTicks.count),
+			hour: d3.svg.axis().orient('bottom').scale(x.hour)
+					.ticks(24).tickFormat(function (d) {
+						return moment(d, 'hh').format('ha');
+					})
+		};
+
+		var hourTicks = E.getAxisTicks(maxVals.hour, dim.h);
+		var yBase = d3.scale.ordinal().rangeBands([0, dim.h]).domain([0, 1, 2, 3, 4, 5, 6]);
+		y = {
+			matrix: yBase,
+			day: yBase,
+			hour: d3.scale.linear().range([0, dim.h]).domain([hourTicks.endPoint, 0])
+		};
+		yAxis = {
+			matrix: d3.svg.axis().orient('left').scale(y.matrix)
+					.tickSize(-dim.w)
+					.tickPadding(E.noTicks.padding)
+					.tickFormat(function (d) {
+						return moment(d, 'd').format('ddd');
+					}),
+			day: d3.svg.axis().orient('left').scale(y.matrix)
+					.tickFormat(function (d) {
+						return moment(d, 'd').format('ddd');
+					}),
+			hour: d3.svg.axis().orient('left').scale(y.hour)
+					.tickSize(-dim.w)
+					.tickPadding(E.noTicks.padding)
+					.ticks(hourTicks.count)
+		};
+
+		//matrix dataset
+		var dataset = createMatrixDataset(byHour, maxVals);
 		svg.selectAll('.js-matrix-block')
 			.data(dataset)
 			.enter().append('rect')
@@ -245,13 +199,28 @@ define(['moment', 'vis-settings'], function (moment, Settings) {
 			.style('opacity', function (d) { return d.opacity.matrix; })
 			.attr('class', 'js-matrix-block');
 
-		callInteraction(dataset, xAxis, yAxis);
+		svg.append('g')
+			.attr('class', 'x axis js-matrix-x')
+			.attr('transform', 'translate(0, ' + dim.h + ')')
+			.call(xAxis.matrix);
 
+		svg.append('g')
+			.attr('class', 'y axis js-matrix-y')
+			.call(yAxis.matrix);
+
+		//move tick lines
+		$('.js-matrix-y').find('.tick').find('line')
+			.attr('transform', 'translate(0, ' + dim.h/7/2 + ')');
+		svg.append('line')
+			.attr('x2', dim.w)
+			.attr('y2', 0)
+			.attr('class', 'stroke-tick js-matrix-addedTick');
+
+		//FIXME: add legends, add label on axis
 	};
 
 	return {
-		drawDayStats: drawDayStats,
-		drawHourStats: drawHourStats,
+		updateGraph: updateGraph,
 		drawMatrix: drawMatrix
 	}
 });
