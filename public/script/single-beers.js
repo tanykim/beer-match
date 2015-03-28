@@ -1,45 +1,44 @@
-define(['vis-settings', 'moment'], function (Settings, moment) {
+define(['moment'], function (moment) {
 
-    var colors = Settings.colors;
+    var colors = E.colors;
+    var dim, margin, svg, r;
 
-    function getCenterBeerPositions(key, order, baseR, margin, dim, text) {
+    function getCenterBeerPositions(category, order, text) {
 
         var positions = {
             xPos: dim.w/2,
             yPos: dim.h/2,
             dy: 0,
-            textX: dim.w/2 + ( (key === 'abv' || key === 'brewery') ? -dim.h/4 : dim.h/4),
-            textY: dim.h/2 + ( (key === 'abv' || key === 'style') ? -dim.h/4 : dim.h/4),
-            textA: 'middle',
-            nameClass: '--small'
+            textX: dim.w/2 + ( (category === 'abv' || category === 'brewery') ? -dim.h/4 : dim.h/4),
+            textY: dim.h/2 + ( (category === 'abv' || category === 'style') ? -dim.h/4 : dim.h/4),
+            anchor: 'pos-middle',
+            size: 'size-small',
+            fill: 'fill-grey'
         }
-        // if (_.isNull(order)) {
-        //  console.log(positions.textX);
-        // }
 
         if (!_.isNull(order)) {
-            var dot = d3.select('.js-rating-' + key + '-' + order);
+            var dot = d3.select('.js-beers-' + category + '-' + order);
             var xPos = +dot.attr('cx');
             var yPos = +dot.attr('cy');
 
             // text position
-            var dy = -baseR * 4;
+            var dy = -r * 4;
             // if line goes down
             if (yPos > dim.h/2) {
-                dy = baseR * 4;
+                dy = r * 4;
             }
             // if text is too long and cut
             var textX = xPos;
-            var textA = 'middle';
+            var anchor = 'pos-middle';
             var textW = text.length * 20;
             var outOfLeft = textW / 2 - (margin.left + xPos);
             var outOfRight = textW / 2 - (margin.right + dim.w - xPos);
             if (outOfLeft > 0) {
                 textX = 0;
-                textA = 'start';
+                anchor = '';
             } else if (outOfRight > 0) {
                 textX = dim.w;
-                textA = 'end';
+                anchor = 'pos-end';
             }
             positions = {
                 xPos: xPos,
@@ -47,85 +46,87 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
                 dy: dy,
                 textX: textX,
                 textY: yPos,
-                textA: textA,
-                nameClass: ''
+                anchor: anchor,
+                size: 'size-large',
+                fill: ''
             };
         }
 
         return positions;
-
     };
 
-    function updateCenterBeer(b, maxCount, vis) {
+    function updateCenterBeer(b, maxCount) {
 
-        var baseR = vis.r;
-        var dim = vis.dim;
-        var margin = vis.margin;
+        //html update
+        $('.js-beers-name').html(b.name)
+        $('.js-beers-brewery').html(b.categories.brewery.name);
+        $('.js-beers-count').html(b.count);
+        $('.js-beers-times').html(b.count === 1 ? 'check-in' : 'check-ins');
 
-        $('.js-fav-name').html(b.name);
-        $('.js-fav-count').html(b.count);
-        $('.js-fav-times').html(b.count === 1 ? 'check-in' : 'check-ins');
-        $('.js-fav-beer-img').hide().attr('href', b.label).fadeIn('fast');
+        //center beer image transition
+        $('.js-beers-beer-img').hide().attr('href', b.label).fadeIn('fast');
 
-        _.each(b.categories, function (d, key) {
-            var p = getCenterBeerPositions(key, d.order, baseR, margin, dim, d.name);
+        _.each(b.categories, function (d, category) {
+            var p = getCenterBeerPositions(category, d.order, d.name);
 
-            d3.select('.js-fav-beer-bg-' + key).transition()
+            //selected circle and lines
+            d3.select('.js-beers-beer-bg-' + category).transition()
                 .attr('cx', p.xPos)
                 .attr('cy', p.yPos)
-                .attr('r', Math.sqrt(d.count/ maxCount[key]) * (margin.oR + margin.top));
-            d3.select('.js-fav-beer-line-' + key).transition()
+                .attr('r', Math.sqrt(d.count/ maxCount[category]) * (margin.oR + margin.top));
+            d3.select('.js-beers-beer-line-' + category).transition()
                 .attr('x2', p.xPos).attr('y2', p.yPos);
-            d3.select('.js-fav-beer-bg-center-' + key).transition()
-                .attr('cx', p.xPos)
-                .attr('cy', p.yPos);
-            d3.select('.js-fav-beer-text-' + key).text('').transition()
+
+            //reset all dots
+            d3.selectAll('.js-beers-dot-' + category)
+                .style('fill', colors[category])
+                .style('opacity', 0.3);
+
+            //blacken the selected dot
+            d3.select('.js-beers-' + category + '-' + d.order).transition()
+                .style('fill', '')
+                .style('opacity', 1);
+
+            //update text
+            d3.select('.js-beers-beer-text-' + category).text('').transition()
                 .attr('x', p.textX).attr('y', p.textY).attr('dy', p.dy)
-                .attr('text-anchor', p.textA)
                 .text(d.name)
-                .attr('class', 'fav-beer-text' + (p.nameClass) + ' js-fav-beer-text-' + key);
-            d3.select('.js-fav-beer-text-count-' + key).text('').transition()
+                .attr('class', 'unselectable ' + p.size + ' ' + p.anchor + ' ' + p.fill + ' js-beers-beer-text-' + category);
+            d3.select('.js-beers-beer-text-count-' + category).text('').transition()
                 .attr('x', p.xPos).attr('y', p.textY).attr('dy', p.dy + 14)
                 .text(d.count === 0 ? '' : d.count + ' check-ins');
         });
     }
 
-    var drawCenterBeer = function (vis, b, maxCount) {
-
-        var svg = vis.svg;
-        var dim = vis.dim;
-        var margin = vis.margin;
-        var baseR = vis.r;
+    var drawCenterBeer = function () {
 
         //bg Radius, link line & name
-        _.each(b.categories, function (d, key) {
+        _.each(E.categoryList, function (category) {
             svg.append('line')
                 .attr('x1', dim.w/2)
                 .attr('x2', dim.w/2)
                 .attr('y1', dim.h/2)
                 .attr('y2', dim.h/2)
-                .attr('class', 'fav-beer-line js-fav-beer-line-' + key);
+                .attr('class', 'stroke-black stroke-2 js-beers-beer-line-' + category);
             svg.append('circle')
                 .attr('cx', dim.w/2)
                 .attr('cy', dim.h/2)
-                .attr('r', baseR)
-                .attr('fill', '#000')
-                .attr('opacity', 1)
-                .attr('class', 'js-fav-beer-bg-center-' + key);
+                .attr('r', r)
+                .style('fill', '#000')
+                .style('opacity', 1)
+                .attr('class', 'beers-' + category);
             svg.append('text')
                 .attr('x', dim.w/2)
                 .attr('y', dim.h/2)
                 .attr('dy', 0)
                 .text('')
-                .attr('text-anchor', 'middle')
-                .attr('class', 'fav-beer-text js-fav-beer-text-' + key);
+                .attr('class', 'size-large pos-middle unselectable js-beers-beer-text-' + category);
             svg.append('text')
                 .attr('x', dim.w/2)
                 .attr('y', dim.h/2)
                 .attr('dy', 0)
                 .text('')
-                .attr('text-anchor', 'middle')
-                .attr('class', 'fav-beer-text-count js-fav-beer-text-count-' + key);
+                .attr('class', 'size-small pos-middle fill-grey unselectable js-beers-beer-text-count-' + category);
         });
 
         //image background
@@ -140,32 +141,21 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
                 .attr('preserveAspectRatio', 'xMidYMid slice')
                 .attr('width', margin.iR)
                 .attr('height', margin.iR)
-                .attr('class', 'js-fav-beer-img');
+                .attr('class', 'js-beers-beer-img');
         svg.append('circle')
             .attr('cx', dim.w/2)
             .attr('cy', dim.h/2)
             .attr('r', margin.iR)
             .attr('fill', 'url(#beer-label)')
-            .attr('class', 'fav-beer-img js-fav-beer-img');
-
-        updateCenterBeer(b, maxCount, vis);
+            .attr('class', 'stroke-grey stroke-1 js-beers-beer-img');
     };
 
-    var drawFavoritesCenter = function (ratings) {
+    var drawBeers = function (vis, ratings) {
 
-        // Math.floor($('.favorites-beer').width())
-
-        var margin = { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 40};
-        var dim = { w: $('.favorites-beer').width(),
-                    h: _.max([$(window).height()-60-margin.top-margin.bottom-margin.oR, 500])};
-        // dim.w = dim.h;
+        margin = vis.margin;
+        dim = vis.dim;
+        svg = vis.svg;
         var maxR = dim.h / 2;
-
-        var svg = d3.select('#vis-fav-chart').append('svg')
-            .attr('width', dim.w + margin.left + margin.right)
-            .attr('height', dim.h + margin.top + margin.bottom)
-            .append('g')
-            .attr('translate', 'translate(' + margin.left + ', ' + margin.top + ')');
 
         //vertical and horitontal lines
         svg.append('line')
@@ -173,13 +163,13 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
             .attr('x2', dim.w/2 + maxR)
             .attr('y1', dim.h/2)
             .attr('y2', dim.h/2)
-            .attr('class', 'fav-divide');
+            .attr('class', 'stroke-grey stroke-1');
         svg.append('line')
             .attr('x1', dim.w/2)
             .attr('x2', dim.w/2)
             .attr('y1', 0)
             .attr('y2', dim.h)
-            .attr('class', 'fav-divide');
+            .attr('class', 'stroke-grey stroke-1');
 
         //radials
         var gapBase = (maxR - margin.oR - margin.iR) / 11;
@@ -188,179 +178,95 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
                 .attr('cx', dim.w/2)
                 .attr('cy', dim.h/2)
                 .attr('r', margin.iR + gapBase * (i + 1))
-                .attr('class', 'fav-radial-' + (i % 2));
+                .style('fill', 'none')
+                .attr('class', 'stroke-1 ' + (i % 2 === 0 ? 'stroke-grey' : 'stroke-lightGrey'));
             var score = i/2;
             svg.append('text')
                 .attr('x', dim.w/2)
                 .attr('y', (maxR - margin.iR) - gapBase * (i + 1))
-                .attr('text-anchor', 'middle')
+                .attr('dy', 6)
                 .text(score)
-                .attr('class', 'fav-score-text');
+                .attr('class', 'pos-middle size-small');
         });
 
         //draw circles
         //10 degrees
         var angleMargin = Math.PI/36;
         var baseAngle = Math.PI/2 - angleMargin * 2;
-        var r = 6;
+        r = 6;
         var i = 0;
+        _.each(ratings, function (data, category) {
 
-        _.each(ratings, function (data, key) {
-            //draw center beer big circle
+            //draw selected big circle
             svg.append('circle')
                 .attr('cx', dim.w/2)
                 .attr('cy', dim.w/2)
                 .attr('r', 0)
-                .attr('fill', colors[key])
+                .attr('fill', colors[category])
                 .attr('opacity', 0.5)
-                .attr('class', 'js-fav-beer-bg-' + key);
+                .attr('class', 'js-beers-beer-bg-' + category);
+
             //draw dot
             _.each(data, function (d) {
                 var distance = gapBase * (d.rating * 2 + 1) + margin.iR;
                 var angle = angleMargin + baseAngle / _.size(data) * d.order.count + Math.PI/2 * (i + 1);
-                // var angle = angleMargin + baseAngle / maxVal * d.count + Math.PI/2 * (i + 1);
                 var xPos = distance * Math.sin(angle);
                 var yPos = distance * Math.cos(angle);
                 svg.append('circle')
                     .attr('cx', xPos + dim.w/2)
                     .attr('cy', yPos + dim.h/2)
                     .attr('r', r)
-                    .attr('fill', colors[key])
-                    .attr('opacity', 0.3)
-                    .attr('class', 'js-rating-dot js-rating-' + key + '-' + d.order.count)
+                    .style('fill', colors[category])
+                    .style('opacity', 0.3)
+                    .attr('class', 'js-beers-dot-' + category + ' js-beers-' + category + '-' + d.order.count)
                     .on('mouseover', function() {
-                        // $(this).css('cursor', 'pointer');
                         d3.select(this).attr('opacity', 1);
                         svg.append('text')
                             .attr('x', xPos + dim.w/2)
                             .attr('y', yPos + dim.h/2 - 10)
                             .text(d.name + ' (' + d.count + ')')
-                            .attr('fill', colors[key])
-                            .attr('class', 'fav-beer-dot-text js-fav-beer-dot-text');
-                        // console.log(d.rating, d.name, d.count);
+                            .style('fill', colors[category])
+                            .attr('class', 'size-small pos-middle js-beers-beer-dot-text');
                     })
                     .on('mouseout', function() {
                         d3.select(this).attr('opacity', 0.3);
-                        $('.js-fav-beer-dot-text').remove();
+                        $('.js-beers-beer-dot-text').remove();
                     });
             });
-            //draw center beer
-            i = i + 1;
-        });
 
-        return {
-            svg: svg,
-            dim: dim,
-            margin: margin,
-            r: r
-        };
+            i = i + 1;
+
+            drawCenterBeer();
+        });
     };
 
-    var putFavorites = function (beerList, ratings, maxCount, vis) {
+    var putBeers = function (beerList) {
 
         function addBeer(beer, key, i, j) {
-            // console.log(beer, key, i, j);
-            $('.js-fav-' + key + '-list').find('span').last()
+            $('.js-beers-' + key + '-list').find('span').last()
                 .append('<img src="' + beer.label + '" width="40"' +
-                    'class="label-image link js-fav-beer-' + key + '-' + i + '-' + j +'">');
-            $('.js-fav-beer-' + key + '-' + i + '-' + j).click(function() {
-                $('.label-image').removeClass('label-image--selected');
-                $(this).addClass('label-image--selected');
-                var b = beerList[key][i].list[j];
-                // console.log(b, maxCount, vis);
-                updateCenterBeer(b, maxCount, vis);
-                // $('.js-fav-detail').html(b.name + ' (drank ' + b.count + ' times)');
-                // $('.js-fav-center-img').attr('href', beer.label);
-            });
+                    'class="label-image link" ' +
+                    'data-value="' + key + '-' + i + '-' + j + '">');
         }
         _.each(beerList, function (sort, key) {
-            _.each(sort, function (list, i) {
-                $('.js-fav-' + key + '-list').append('<span>' + list.title + ': </span>');
-                _.each(list.list, function (beer, j) {
-                    addBeer(beer, key, i, j);
+            if (_.isEmpty(sort)) {
+                $('.js-beers-' + key + '-list').html('No beers');
+            } else {
+                _.each(sort, function (list, i) {
+                    $('.js-beers-' + key + '-list')
+                        .append('<span><span class="label-rating">' + list.title + ': </span> </span>');
+                    _.each(list.list, function (beer, j) {
+                        addBeer(beer, key, i, j);
+                    });
                 });
-            });
+            }
         });
-    };
-
-    var drawTrends = function (allBeers, timeRange, monthDiff) {
-
-        //up to 20 beers
-        var filtered = _.filter(_.sortBy(allBeers, function (d) {
-            return d.count;
-        }).reverse(), function (d) {
-            return d.count > 1;
-        }).slice(0, 20);
-
-        var maxMonthlyCount = _.max(_.map(filtered, function (d) {
-            return _.max(d.months);
-        }));
-
-        var margin = { top: 10, right: 20, bottom: 20, left: 40 };
-        var dim = { w: $('.fav-trend').width() - margin.left - margin.right,
-                    h: 300 - margin.top - margin.bottom };
-
-        var x = d3.time.scale().range([0, dim.w]).domain(timeRange);
-        var xAxis = d3.svg.axis().orient('bottom').scale(x);
-
-        var y = d3.scale.linear().range([0, dim.h]).domain([Math.ceil(maxMonthlyCount / 10) * 10, 0]);
-        var yAxis = d3.svg.axis().orient('left').scale(y);
-
-        var svg = d3.select('#vis-fav-trend').append('svg')
-            .attr('width', dim.w + margin.left + margin.right)
-            .attr('height', dim.h + margin.top + margin.bottom)
-            .append('g')
-            .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-
-        svg.append('g')
-            .attr('class', 'x axis')
-            .attr('transform', 'translate(0, ' + dim.h + ')')
-            .call(xAxis);
-        svg.append('g')
-            .attr('class', 'y axis')
-            .call(yAxis);
-
-        var allMonths = _.map(_.range(monthDiff), function (i) {
-            return moment(timeRange[0]).add(i, 'months').format('YYYYMM');
-        });
-
-        var line = d3.svg.line()
-            .x(function (d) {
-                return x(moment(d[0], 'YYYYMM')._d);
-            })
-            .y(function (d) {
-                return y(d[1]);
-            })
-            .interpolate('monotone');
-
-        _.each(filtered, function (obj, i) {
-            var beer = _.map(allMonths, function (m) {
-                var val = obj.months[m] ? obj.months[m] : 0;
-                return [m, val];
-            });
-            svg.append('path')
-                .datum(beer)
-                .attr('d', line)
-                .attr('stroke', Settings.beerColors[i % 9])
-                .attr('stroke-width', 1)
-                .attr('fill', 'none')
-                .attr('class', 'js-trends-' + i);
-        });
-
-        var temp = _.map(filtered, function (d) {
-            var months = _.object(_.map(d.months, function (m, k) {
-                return [k, (m + 1) * 10 + Math.round(Math.random(0, 1) * 10)]
-            }));
-            return { appId: d.bid, months: months, name: d.name };
-        });
-        console.log(JSON.stringify(temp));
-
     };
 
     return {
-        drawTrends: drawTrends,
-        drawFavoritesCenter: drawFavoritesCenter,
+        updateCenterBeer: updateCenterBeer,
         drawCenterBeer: drawCenterBeer,
-        putFavorites: putFavorites
+        drawBeers: drawBeers,
+        putBeers: putBeers
     }
 });

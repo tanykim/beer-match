@@ -5,7 +5,8 @@ define(['jquery', 'd3'], function ($, d3) {
 		calendar: 12,
 		score: 8,
 		categories: 2,
-		ratings: 12
+		ratings: 12,
+		beers: 8
 	};
 
 	var heights = {
@@ -13,7 +14,8 @@ define(['jquery', 'd3'], function ($, d3) {
 		calendar: null,
 		score: 200,
 		categories: null,
-		ratings: null
+		ratings: null,
+		beers: null
 	};
 
 	var margins = {
@@ -21,7 +23,8 @@ define(['jquery', 'd3'], function ($, d3) {
 		calendar: { top: 50, right: 20, bottom: 20, left: 40 },
 		score: { top: 40, right: 40, bottom: 50, left: 60 },
 		categories: { top: 10, right: 2, bottom: 10, left: 2 },
-		ratings: { top: 60, right: 40, bottom: 20, left: 300 }
+		ratings: { top: 60, right: 40, bottom: 20, left: 300 },
+		beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 40 }
 	}
 
    	var getWidth = function(div) {
@@ -38,7 +41,7 @@ define(['jquery', 'd3'], function ($, d3) {
    	};
 
    	var setVisNoSVG = function (div, callback) {
-   		var w = getWidth(div); // 15 is margin
+   		var w = getWidth(div);
    		var vis = {
    			w: w,
    			margin: margins[div],
@@ -55,7 +58,7 @@ define(['jquery', 'd3'], function ($, d3) {
 		var vis = {
 			dim: {
 				w: getWidth(div) - margins[div].left - margins[div].right,
-				h: heights[div] - margins[div].top - margins[div].bottom
+				h: (_.isNull(heights[div]) ? getWidth(div) : heights[div]) - margins[div].top - margins[div].bottom
 			},
 			margin: margins[div]
 		}

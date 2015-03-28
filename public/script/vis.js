@@ -5,8 +5,11 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 
 	'use strict';
 
-	function changeRaioSelection(elm) {
-		elm.parent().find('span').removeClass('selected');
+	function changeRaioSelection(elm, tag) {
+		if (!tag) {
+			tag = 'span';
+		}
+		elm.parent().find(tag).removeClass('selected');
 		elm.addClass('selected');
 	}
 	var startVis = function(b) {
@@ -14,7 +17,7 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 		//view change
 		$('.js-single-svg').empty();
 
-		//1--count
+		//0--count
 		Count.setUnit = Count.setUnit(b.avgUnit);
 		S.setVis('frequency', function (vis) {
 			Count.drawFrequency(vis, b.countByPeriod, b.avgCount, b.avgUnit);
@@ -25,14 +28,12 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 			Count.transformCount($(this).data().value, b.countByPeriod, b.avgCount);
 		});
 
-
-		//2--ratings chart
+		//1--ratings
 		S.setVis('score', function (vis) {
 			Ratings.drawScoresStats(vis, b.scoreAvg, b.scoreCount);
 		});
 		S.setVisNoSVG('categories', function (vis) {
-			console.log(vis);
-			_.each(['style', 'abv', 'brewery', 'country'], function (c) {
+			_.each(E.categoryList, function (c) {
 				Ratings.drawCategories(vis, c, b.userinfo.checkinCount, b.ratingsList[c]);
 			});
 		});
@@ -55,18 +56,23 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 			Ratings.transformRatingsBar(b.ratingsList[category], ratingsSortBy);
 		});
 
-		/*
+
 		//3--beers loved and hated
-		var timeRange = _.map(b.timeRange, function (d) {
-            return moment(d.slice(0, 9), 'YYYY-MM-DD').startOf('month')._d;
-        });
-        var monthDiff = moment(timeRange[1]).diff(timeRange[0], 'months');
-        if (monthDiff > 0) {
-			Beers.drawTrends(b.allBeers, timeRange, monthDiff);
-		}
-		var vB= Beers.drawFavoritesCenter(b.ratingsList);
-		Beers.drawCenterBeer(vB, b.beerList.loves[0].list[0], b.maxCount);
-		Beers.putFavorites(b.beerList, b.ratingsList, b.maxCount, vB);
+		Beers.putBeers(b.beerList);
+		S.setVis('beers', function (vis) {
+			Beers.drawBeers(vis, b.ratingsList);
+			Beers.updateCenterBeer(b.beerList.loves[0].list[0], b.maxCount);
+		});
+		$('.js-beers-images').click(function (e) {
+			var target = $(e.target);
+			if (target.prop('tagName') === 'IMG') {
+				changeRaioSelection($(target), 'img');
+				var val = target.data().value.split('-');
+				Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
+			}
+		});
+
+		/*
 
 		//4--when
 		When.drawMatrix(b.byDay, b.byHour);

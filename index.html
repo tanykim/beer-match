@@ -231,28 +231,29 @@
 		</div>
 
 		<!-- 2 beers like and hate -->
-		<div class="vis-contents js-single-contents-2">
-			<div class="favorites-trend">
-				Your taste change overtime
-				<div id="vis-fav-trend" class="js-single-svg fav-trend"></div>
-			</div>
-			<div class="favorites-beer">
-				<div id="vis-fav-chart" class="js-single-svg favorites-beer-chart"></div>
-			</div>
-			<div class="favorites-list">
-				<div class="favorites-title">
-					<div class="name js-fav-name"></div>
-					<div>
-						total <span class="count-number js-fav-count"></span>
-						<span class="js-fav-times"></span>
+		<div class="vis-contents single-beers js-single-contents-2">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-4 js-beers-images">
+						<div class="list-title js-beers-loves">Beers Your Love (by rating)</div>
+						<div class="list-beers js-single-svg js-beers-loves-list"></div>
+						<div class="list-title js-beers-hates">Beers Your Hate (by rating)</div>
+						<div class="list-beers js-single-svg js-beers-hates-list"></div>
+						<div class="list-title js-beers-mosts">Beers You Drink Most Time (by count)</div>
+						<div class="list-beers js-single-svg js-beers-mosts-list"></div>
 					</div>
+					<div class="col-xs-8 title">
+						<div>
+							<span class="name js-beers-name"></span> by
+							<span class="brewery js-beers-brewery"></span>
+						</div>
+						<div>
+							total <span class="count-number js-beers-count"></span>
+							<span class="js-beers-times"></span>
+						</div>
+					</div>
+					<div id="vis-beers" class="col-xs-8 beers"></div>
 				</div>
-				<div class="favorites-list-title js-fav-loves">Beers Your Love</div>
-				<div class="favorites-list-beers js-single-svg js-fav-loves-list"></div>
-				<div class="favorites-list-title js-fav-hates">Beers Your Hate</div>
-				<div class="favorites-list-beers js-single-svg js-fav-hates-list"></div>
-				<div class="favorites-list-title js-fav-mosts">Beers You drink most time</div>
-				<div class="favorites-list-beers js-single-svg js-fav-mosts-list"></div>
 			</div>
 		</div>
 

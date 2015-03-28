@@ -256,53 +256,47 @@
 	}
 }
 
-/* favorite */
-.favorites-title {
-	text-align: center;
-	.name {
-		.bold();
-		font-size: @large;
+.single-beers {
+	.list-title {
+		background-color: #efefef;
+		font-weight: 700;
+		padding: 0.5em;
 	}
-	.count {
-		font-size: @small;
+	.list-beers {
+		border: 1px solid #efefef;
+		padding: 0.5em;
+		margin-bottom: 15px;
+		.selected {
+			border-width: 2px !important;
+			border-color: #000 !important;
+			margin: 3px !important;
+
+		}
 	}
-	.count-number {
-		.bold();
+	.label-rating {
+		margin-left: 4px;
 	}
-}
-.favorites {
-	width: 100%;
-	overflow: hidden;
-}
-.favorites-beer {
-	width: 70%;
-	float: left;
-}
-.label-image {
-	border-radius: 20px;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #666;
-	vertical-align: middle;
-	margin: 4px;
-}
-.label-image--selected {
-	border-width: 2px !important;
-	border-color: #000 !important;
-	margin: 3px !important;
-}
-.favorites-list {
-	width: 30%;
-	float: left;
-}
-.favorites-list-title {
-	background-color: #efefef;
-	font-weight: 700;
-	padding: 0.5em;
-}
-.favorites-list-beers {
-	border: 1px solid #efefef;
-	padding: 0.5em;
+	.label-image {
+		border-radius: 20px;
+		border-width: 1px;
+		border-style: solid;
+		border-color: @darkGrey;
+		vertical-align: middle;
+		margin: 4px;
+	}
+	.title {
+		text-align: center;
+		.name {
+			.bold();
+			font-size: @large;
+		}
+		.count {
+			font-size: @small;
+		}
+		.count-number {
+			.bold();
+		}
+	}
 }
 
 /* when */
@@ -359,15 +353,6 @@
 
 
 /* d3 */
-path, line{
-  shape-rendering: geometricPrecision;
-}
-.axis text {
-	font-size: @tiny;
-}
-.axis .tick line {
-	stroke: #999;
-}
 .freq-label {
 	text-anchor: middle;
 }
@@ -436,58 +421,6 @@ path, line{
 	text-anchor: middle;
 }
 
-.fav-divide {
-	stroke: #999;
-	stroke-width: 1;
-}
-.fav-radial-0 {
-	stroke: #999;
-	stroke-width: 1;
-	fill: none;
-}
-.fav-radial-1 {
-	stroke: #e5e5e5;
-	stroke-width: 1;
-	fill: none;
-}
-.fav-radial-y {
-	stroke: #999;
-	stroke-dasharray: 5, 3;
-	stroke-width: 1;
-}
-.fav-radial-y-tick {
-	text-anchor: middle;
-}
-.fav-score-text {
-	font-size: @small;
-}
-.fav-beer-img {
-	stroke: #999;
-	stroke-width: 1;
-}
-.fav-beer-line {
-	stroke: #000;
-	stroke-width: 2;
-}
-.fav-beer-text {
-	font-size: @large;
-	.unselectable();
-}
-.fav-beer-text--small, .fav-beer-text-count {
-	font-size: @small;
-	fill: #999;
-	.unselectable();
-}
-.fav-beer-dot-text {
-	font-size: @small;
-	text-anchor: middle;
-}
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
 .ratings-avg {
 	stroke: #000;
 	stroke-width: 2;

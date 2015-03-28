@@ -24,18 +24,45 @@ path, line{
 .size-tiny {
 	font-size: @tiny;
 }
+.size-small {
+	font-size: @small;
+}
 .size-normal {
 	font-size: @normal;
+}
+.size-large {
+	font-size: @large;
 }
 .size-huge {
 	font-size: @huge;
 }
-/*line*/
+
+/* line */
 .stroke-black {
 	stroke: #000;
 }
+.stroke-grey {
+	stroke: @grey;
+}
+.stroke-lightGrey {
+	stroke: @lightGrey;
+}
+.stroke-1 {
+	stroke-width: 1;
+}
 .stroke-2 {
 	stroke-width: 2;
+}
+
+/* fill */
+.fill-grey {
+	fill: @grey;
+}
+/* lines rendering */
+.categories, .beers {
+	path, line {
+		shape-rendering: geometricPrecision;
+	}
 }
 
 .freq-block {
@@ -87,11 +114,7 @@ path, line{
 	font-size: @tiny;
 }
 
-.categories {
-	path, line {
-		shape-rendering: geometricPrecision;
-	}
-}
+
 
 .ratings-arc-over {
 	font-size: @small;

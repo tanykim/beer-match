@@ -36,6 +36,9 @@ var E = {
         }
     },
 
+    //categories
+    categoryList: ['style', 'abv', 'brewery', 'country'],
+
     //colors
 	beerColors: ['#e8dd21', '#ffc61e', '#f99b0c', '#d38235', '#d86018', '#7c2529', '#643335', '#3f2021', '#25282a'],
 	colors: { style: '#ffc61e', abv: '#d86018',
