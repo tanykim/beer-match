@@ -5,54 +5,6 @@ define(['moment'], function (moment) {
 	var colors = E.colors;
 	var dim, x, y, xAxis, yAxis;
 
-	var drawDayStats = function (data) {
-
-		var dim = { w: $('.day').width(), h: $('.day').width() };
-		var svg = d3.select('#vis-day').append('svg')
-			.attr('width', dim.w)
-			.attr('height', dim.h)
-			.append('g');
-
-		var maxR = dim.w/2 - 40;
-		var maxVal = _.max(_.pluck(data, 'total'));
-		var baseA = Math.PI * 2 / 7;
-		var arc = function (val, i) {
-			var r = maxR * Math.sqrt(val / maxVal);
-			return d3.svg.arc()
-				.innerRadius(0)
-		    	.outerRadius(r)
-		    	.startAngle(baseA * i)
-		    	.endAngle(baseA * (i + 1));
-		};
-		_.each(data, function (d, i) {
-			//arc of total checkins
-		    svg.append('path')
-		    	.attr('d', arc(d.total, i))
-		    	.attr('fill', '#000')
-		    	.attr('transform', 'translate(' + dim.w/2 + ', ' + dim.h/2 + ')');
-		    //arc of at public venue
-		    svg.append('path')
-		    	.attr('d', arc(d.venue, i))
-		    	.attr('fill', '#ccc')
-		    	.attr('transform', 'translate(' + dim.w/2 + ', ' + dim.h/2 + ')');
-		    //day divide line
-		    svg.append('line')
-		    	.attr('x1', dim.w/2)
-		    	.attr('x2', Math.cos(i * Math.PI * 2 / 7 - Math.PI/2) * dim.w/2 + dim.w/2)
-		    	.attr('y1', dim.h/2)
-		    	.attr('y2', Math.sin(i * Math.PI * 2 / 7 - Math.PI/2) * dim.h/2 + dim.h/2)
-		    	.attr('stroke', '#cc0000');
-		    //day divide line
-		    svg.append('text')
-		    	.attr('x', dim.w - 40)
-		    	.attr('y', dim.h/2)
-		    	.text(moment().day(i).format('ddd'))
-		    	.attr('transform', 'rotate(' + (360/7 * (i+1) - 90) + ', ' + dim.w/2 + ', ' + dim.h/2 + ')')
-		    	.attr('data-day', i)
-		    	.attr('class', 'link js-day-text');
-		});
-	};
-
 	function updateGraph(val) {
 
  		d3.selectAll('.js-matrix-block')

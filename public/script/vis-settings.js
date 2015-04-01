@@ -9,7 +9,10 @@ define(['jquery', 'd3'], function ($, d3) {
 		categories: 2,
 		ratings: 12,
 		beers: 8,
-		when: 12
+		when: 12,
+		where: 12,
+		day: 4,
+		timeline: 12
 	};
 
 	var heights = {
@@ -19,7 +22,10 @@ define(['jquery', 'd3'], function ($, d3) {
 		categories: null,
 		ratings: null,
 		beers: null,
-		when: 300
+		when: 300,
+		where: null,
+		day: null,
+		timeline: null
 	};
 
 	var margins = {
@@ -29,14 +35,18 @@ define(['jquery', 'd3'], function ($, d3) {
 		categories: { top: 10, right: 2, bottom: 10, left: 2 },
 		ratings: { top: 60, right: 40, bottom: 20, left: 300 },
 		beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 40 },
-		when: { top: 10, right: 20, bottom: 20, left: 40 }
-	}
+		when: { top: 10, right: 20, bottom: 20, left: 40 },
+		where: { top: 20, right: 100, bottom: 0, left: 100 },
+		day: { top: 0, right: 0, bottom: 0, left: 0 },
+		timeline: { top: 40, right: 40, bottom: 20, left: 300 }
+	};
 
    	var getWidth = function(div) {
    		return $('.vis').find('.container').outerWidth() / 12 * widths[div] - 15 * 2; // 15 is margin
    	};
 
    	function drawSVG(vis, div) {
+   		console.log(vis, div);
    		var svg = d3.select('#vis-' + div).append('svg')
 			.attr('width', vis.dim.w + vis.margin.left + vis.margin.right)
 			.attr('height', vis.dim.h + vis.margin.top + vis.margin.bottom)

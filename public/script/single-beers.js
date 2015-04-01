@@ -1,6 +1,6 @@
 define(['moment'], function (moment) {
 
-    var colors = E.colors;
+    var colors = E.category.colors;
     var dim, margin, svg, r;
 
     function getCenterBeerPositions(category, order, text) {
@@ -101,7 +101,7 @@ define(['moment'], function (moment) {
     var drawCenterBeer = function () {
 
         //bg Radius, link line & name
-        _.each(E.categoryList, function (category) {
+        _.each(E.category.list, function (category) {
             svg.append('line')
                 .attr('x1', dim.w/2)
                 .attr('x2', dim.w/2)

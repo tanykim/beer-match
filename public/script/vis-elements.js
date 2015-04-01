@@ -37,12 +37,19 @@ var E = {
     },
 
     //categories
-    categoryList: ['style', 'abv', 'brewery', 'country'],
+    category: {
+    	list: ['style', 'abv', 'brewery', 'country'],
+    	colors: {
+    		style: '#ffc61e', abv: '#d86018',
+			brewery: '#7c2529', country: '#3f2021'
+    	}
+    },
 
     //colors
 	beerColors: ['#e8dd21', '#ffc61e', '#f99b0c', '#d38235', '#d86018', '#7c2529', '#643335', '#3f2021', '#25282a'],
-	colors: { style: '#ffc61e', abv: '#d86018',
-			brewery: '#7c2529', country: '#3f2021'},
+	// colors: { style: '#ffc61e', abv: '#d86018',
+	// 		brewery: '#7c2529', country: '#3f2021'},
+
 	users: ['#cc0000', '#00cc00'],
 
 	//vis

@@ -1,6 +1,6 @@
 define(function() {
 
-	var colors = E.colors;
+	var colors = E.category.colors;
 
 	//for bars
 	var dim, margin, sv, x, xAxis, baseH;

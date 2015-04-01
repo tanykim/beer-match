@@ -143,7 +143,7 @@
 			-----
 			<span class="link underline bold js-timeline-switch js-timeline-type" data-type="type" data-value="bars">Bars</span>
 			<span class="link underline js-timeline-switch js-timeline-type" data-type="type" data-value="bubble">Bubble</span>
-			<div id="vis-timeline" class="js-match-svg timeline"></div>
+			<!-- <div id="vis-timeline" class="js-match-svg timeline"></div> -->
 		</div>
 
 		<!-- 5 where do we drink -->
@@ -271,28 +271,32 @@
 					<div id="vis-when" class="js-single-svg"></div>
 				</div>
 			</div>
-			<!-- <div id="vis-hour" class="js-single-svg hour"></div> -->
 		</div>
 
 		<!-- 4 where -->
-		<div class="vis-contents js-single-contents-4">
-			<div id="vis-venue-connection" class="js-single-svg venue-connection"></div>
-			<div class="venue-title">
-				<div class="name js-venue-title-name"></div>
-				<div class="desc js-venue-title-score"></div>
-				<div class="desc js-venue-title-type"></div>
-				<div class="desc js-venue-title-city"></div>
+		<div class="vis-contents single-where js-single-contents-4">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-2"></div>
+					<div id="vis-map" class="col-xs-8 map js-single-svg"></div>
+					<div class="col-xs-2"></div>
+				</div>
 			</div>
-			<div class="venue-detail">
-				<div id="vis-venue-map" class="venue-map"></div>
+			<div class="container">
+				<div class="row">
+					<div id="vis-where" class="col-xs-12 where js-single-svg"></div>
+				</div>
 			</div>
 		</div>
 
 		<!-- 5 when & where -->
-			<div id="vis-day" class="js-single-svg day"></div>
-
-		<div class="vis-contents js-single-contents-5">
-			<div id="vis-venue-timeline" class="js-single-svg venue-timeline"></div>
+		<div class="vis-contents single-whenWhere js-single-contents-5">
+			<div class="container">
+				<div class="row">
+					<div id="vis-day" class="col-xs-4 day js-single-svg"></div>
+					<div id="vis-timeline" class="col-xs-12 timeline js-single-svg"></div>
+				</div>
+			</div>
 		</div>
 
 		<!-- footer -->
@@ -500,7 +504,7 @@
 	<div class="pic" style="background-image: url(<%= avatar2 %>)"></div>
 </script>
 
-<script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script>
+<!-- <script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script> -->
 <script data-main="/script/main" src="/script/require.js"></script>
 
 </body>

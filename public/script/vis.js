@@ -1,7 +1,7 @@
 define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beers', 'single-when', 'single-where',
-	'match-score', 'match-style', 'match-time', 'match-venues'],
+	'single-whenWhere', 'match-score', 'match-style', 'match-time', 'match-venues'],
 
-	function (moment, S, Count, Ratings, Beers, When, Where, Score, Styles, Time, Venues) {
+	function (moment, S, Count, Ratings, Beers, When, Where, WhenWhere, Score, Styles, Time, Venues) {
 
 	'use strict';
 
@@ -40,7 +40,7 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 			Ratings.drawScoresStats(vis, b.scoreAvg, b.scoreCount);
 		});
 		S.setVisNoSVG('categories', function (vis) {
-			_.each(E.categoryList, function (c) {
+			_.each(E.category.list, function (c) {
 				Ratings.drawCategories(vis, c, b.userinfo.checkinCount, b.ratingsList[c]);
 			});
 		});
@@ -92,23 +92,16 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 				When.updateGraph($(this).data().value);
 			}
 		});
-		/*
-		//by day coxcomb chart
-		When.drawDayStats(b.byDay);
-		//by hour bar chart
-		When.drawHourStats(b.byHour);
 
-		//5--venue
-		Where.drawVenueConnection(b.venues);
+		//4-where
 		Where.createHeatmap(b.locationList);
-		var w1 = $('.js-venue-name').width();
-		var w2 = $('.js-venue-type').width();
-		var w3 = $('.js-venue-city').width();
-		Where.putVenues(b.venues, w1, w2, w3);
-		Where.drawTimeline(b.venueByTime, b.timeRange);
-		*/
-		//call interaction
-		// callInteraction();
+		Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
+
+		//5-when and where
+		S.setVis('day', function (vis) {
+			WhenWhere.drawDayStats(vis, b.byDay);
+		});
+		WhenWhere.drawTimeline(b.venueByTime, b.timeRange, S.setVisNoSVG('timeline'));
 
 	};
 
