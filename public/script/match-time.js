@@ -1,6 +1,6 @@
 define(['vis-settings', 'moment'], function (Settings, moment) {
 
-	var colors = Settings.colors;
+	var colors = E.colors;
 
 	var status = {
 		value: 'absolute',
@@ -60,7 +60,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 		var maxRVal = _.map(_.range(2), function (user) {
 			return _.max(_.map([byDay[user], byHour[user]], function (sort) {
 				return _.max(sort);
-			}));			
+			}));
 		});
 
 		var maxR = Math.min(dim.w/48 + margin.right, dim.h/2);
@@ -185,7 +185,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 				$(this).addClass('bold');
 				var selected = $(this).data().value;
 				status[type] = selected;
-				updateGraph(type, selected);				
+				updateGraph(type, selected);
 			}
 		});
 	}
@@ -193,7 +193,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 	var drawTimeline = function (byDay, byHour, byDayHour) {
 
 		var margin = { top: 20, right: 20, bottom: 20, left: 20, middle: 30 };
-		var dim = { w: $('.timeline').width() - margin.left - margin.right,
+		var dim = { w: $('.match-timeline').width() - margin.left - margin.right,
 					h: 200 };
 
 		var x = d3.scale.linear().range([0, dim.w]).domain([0, 7 * 24]);
@@ -235,7 +235,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 			return d3.svg.axis().scale(y[d].absolute).orient('left').tickSize(-dim.w);
 		})
 
-		var svg = d3.select('#vis-timeline').append('svg')
+		var svg = d3.select('#vis-match-timeline').append('svg')
 			.attr('width', dim.w + margin.left + margin.right)
 			.attr('height', dim.h * 2 + margin.middle + margin.top + margin.bottom)
 			.append('g')
@@ -279,7 +279,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 
 		//new one-level array dataset
 		var dataset = getDayHourDataset(byDay, byHour, byDayHour, x, y, maxY, dim, margin);
-			
+
 		// console.log(dataset);
 
 		//draw circle by Hour and bars
@@ -291,7 +291,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 				.attr('cx', function (d) { return d.cx.day; })
 				.attr('cy', function (d) { return d.cy; })
 				.attr('r', function (d) { return d.r.absolute_day; })
-				.attr('fill', Settings.users[i])
+				.attr('fill', E.users[i])
 				.style('opacity', 1/24)
 				.attr('class', 'js-timeline-elm js-timeline-bubble js-timeline-bubble-' + i)
 				.style('display', 'none');
@@ -303,7 +303,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
 				.attr('y', function (d) { return d.y.absolute; })
 				.attr('width', function (d) { return d.width; })
 				.attr('height', function (d) { return d.height.absolute; })
-				.attr('fill', Settings.users[i])
+				.attr('fill', E.users[i])
 				.attr('class', 'js-timeline-elm js-timeline-bar js-timeline-bar-' + i);
 
 

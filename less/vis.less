@@ -314,7 +314,43 @@
 	}
 }
 
+.match-score {
+	.score {
+		text-align: center;
+		background-color: @lightGrey;
+		font-size: @huge * 2;
+		border-radius: 1em;
+		padding: 0.5em;
+	}
+	.by {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		margin-top: 1em;
+		.elm {
+			border: 1px solid @lightGrey;
+			text-align: center;
+			flex-grow: 2;
+			margin: 0 0.5em;
+			.title {
+				background: @lightGrey;
+				padding: 0.5em;
+			}
+			.number {
+				font-size: @large;
+				padding: 0.5em;
+			}
+		}
+	}
+}
 
+.match-counts {
+	.number {
+		font-size: @large;
+		margin-top: 1em;
+		text-align: center;
+	}
+}
 /* when */
 .day {
 	width: 30%;
@@ -453,43 +489,7 @@
 	fill: #fff;
 }
 
-/* match */
-.behavior .domain {
-	stroke: none;
-}
-.behavior path {
-	fill: none;
-	stroke-width: 2px;
-}
-.behavior-line-center {
-	stroke: #000;
-	stroke-width: 2px;
-}
-.behavior-line-0 {
-	stroke: @user1;
-}
-.behavior-line-1 {
-	stroke: @user2;
-}
-.behavior-circle-0 {
-	stroke: @user1;
-	fill: #fff;
-}
-.behavior-circle-1 {
-	stroke: @user2;
-	fill: #fff;
-}
-.counts-circle {
-	stroke: none;
-	fill: #ccc;
-}
-.counts-text {
-	font-size: 2em;
-	text-anchor: middle;
-}
-.counts-label {
-	text-align: center;
-}
+
 .both {
 	text-align: center;
 }

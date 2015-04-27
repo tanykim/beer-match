@@ -50,7 +50,7 @@ var E = {
 	// colors: { style: '#ffc61e', abv: '#d86018',
 	// 		brewery: '#7c2529', country: '#3f2021'},
 
-	users: ['#cc0000', '#00cc00'],
+	users: ['#801E47', '#3A5F4E'],
 
 	//vis
 	noTicks: { size: 0, padding: 9 },

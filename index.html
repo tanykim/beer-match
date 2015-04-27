@@ -90,22 +90,49 @@
 	<div class="vis-contents-wrapper">
 
 		<!-- 0 match score & behavior-->
-		<div class="vis-contents js-match-contents-0">
-			Match Score
-			<div class="js-match-score"></div>
-			<ul>
-				<li> By distinctive beers: <span class="js-match-score-beer"> </span></li>
-				<li> By style: <span class="js-match-score-style"> </span></li>
-				<li> By ABV: <span class="js-match-score-abv"> </span></li>
-			</ul>
-			<div id="vis-behavior" class="js-match-svg behavior"></div>
+		<div class="vis-contents match-score js-match-contents-0">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-4"></div>
+					<div class="score col-xs-4">
+						<span class="bold js-match-score"></span> %
+					</div>
+					<div class="col-xs-4"></div>
+				</div>
+				<div class="row">
+					<div class="col-xs-2"></div>
+					<div class="by col-xs-8">
+						<div class="elm">
+							<div class="title">Distinctive Beers</div>
+							<div class="number"><span class="bold js-match-score-beer"> </span> %</div>
+						</div>
+						<div class="elm">
+							<div class="title">Style</div>
+							<div class="number"><span class="bold js-match-score-style"> </span> %</div>
+						</div>
+						<div class="elm">
+							<div class="title">ABV</div>
+							<div class="number"><span class="bold js-match-score-abv"> </span> %</div>
+						</div>
+					</div>
+					<div class="col-xs-2"></div>
+				</div>
+				<div class="row">
+					<div id="vis-behavior" class="behavior col-xs-12 js-match-svg"></div>
+				</div>
+			</div>
 		</div>
 
-		<!-- 1 who drink more -->
-		<div class="vis-contents js-match-contents-1">
-			Who drink more?
-			<div id="vis-counts" class="js-match-svg counts"></div>
-			<div class="counts-label">BEER / <span class="js-counts"></span></div>
+		<!-- 1 who drinks more -->
+		<div class="vis-contents match-counts js-match-contents-1">
+			<div class="container">
+				<div class="row">
+					<div id="vis-counts" class="counts col-xs-12 js-match-svg"></div>
+				</div>
+				<div class="row">
+					<div class="number col-xs-12">BEERS / <span class="js-counts"></span></div>
+				</div>
+			</div>
 		</div>
 
 		<!-- 2 beers (dis/)agree -->
@@ -143,7 +170,7 @@
 			-----
 			<span class="link underline bold js-timeline-switch js-timeline-type" data-type="type" data-value="bars">Bars</span>
 			<span class="link underline js-timeline-switch js-timeline-type" data-type="type" data-value="bubble">Bubble</span>
-			<!-- <div id="vis-timeline" class="js-match-svg timeline"></div> -->
+			<div id="vis-match-timeline" class="js-match-svg match-timeline"></div>
 		</div>
 
 		<!-- 5 where do we drink -->
@@ -504,7 +531,7 @@
 	<div class="pic" style="background-image: url(<%= avatar2 %>)"></div>
 </script>
 
-<!-- <script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script> -->
+<script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script>
 <script data-main="/script/main" src="/script/require.js"></script>
 
 </body>

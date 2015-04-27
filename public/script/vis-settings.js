@@ -12,7 +12,9 @@ define(['jquery', 'd3'], function ($, d3) {
 		when: 12,
 		where: 12,
 		day: 4,
-		timeline: 12
+		timeline: 12,
+		behavior: 12,
+		counts: 12,
 	};
 
 	var heights = {
@@ -25,7 +27,9 @@ define(['jquery', 'd3'], function ($, d3) {
 		when: 300,
 		where: null,
 		day: null,
-		timeline: null
+		timeline: null,
+		behavior: 300,
+		counts: 200,
 	};
 
 	var margins = {
@@ -38,7 +42,9 @@ define(['jquery', 'd3'], function ($, d3) {
 		when: { top: 10, right: 20, bottom: 20, left: 40 },
 		where: { top: 20, right: 100, bottom: 0, left: 100 },
 		day: { top: 0, right: 0, bottom: 0, left: 0 },
-		timeline: { top: 40, right: 40, bottom: 20, left: 300 }
+		timeline: { top: 40, right: 40, bottom: 20, left: 300 },
+		behavior: { top: 60, right: 20, bottom: 60, left: 20 },
+		counts: { top: 0, right: 0, bottom: 0, left: 0 }
 	};
 
    	var getWidth = function(div) {

@@ -250,13 +250,8 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
             // 1: all day drink, -1: all night drink
             return bySeg[0] / getSum(bySeg) * 2 - 1;
         });
-        this.behavior = {
-            count: stCount,
-            explorer: stExplorer,
-            weekend: stWeekend,
-            social: stSocial,
-            daytime : stDaytime
-        };
+        this.behavior = [stCount, stExplorer, stWeekend, stSocial, stDaytime];
+
         console.log('stats count--', stCount);
         console.log('stats explorer--', stExplorer);
         console.log('stats weekend--', stWeekend);

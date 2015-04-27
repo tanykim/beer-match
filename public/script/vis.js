@@ -22,6 +22,7 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 		//view change
 		$('.js-single-svg').empty();
 
+
 		//0--count
 		Count.setUnit(b.avgUnit);
 		S.setVis('frequency', function (vis) {
@@ -110,9 +111,17 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 		$('.js-match-svg').empty();
 
 		console.log('---match view');
-		Score.putMatch(m.matchScore, m.matchList);
-		Score.drawCount(m.avgCount);
-		Score.drawBehavior(m.behavior);
+
+		//0--match scores
+		Score.putScore(m.matchScore, m.matchList);
+		S.setVis('behavior', function (vis) {
+			Score.drawBehavior(vis, m.behavior);
+		});
+
+		//1--average count
+		S.setVis('counts', function (vis) {
+			Score.drawCount(vis, m.avgCount);
+		});
 		Styles.drawChord(m.styles);
 		Score.drawBoth(m.beersList, m.distinctive);
 		Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);

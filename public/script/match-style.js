@@ -1,6 +1,6 @@
 define(['vis-settings', 'moment'], function (Settings, moment) {
 
-    var colors = Settings.colors;
+    var colors = E.colors;
 
     var drawChord = function (data) {
 
@@ -25,8 +25,8 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
         svg.append('g').selectAll('path')
             .data(chord.groups)
             .enter().append('path')
-            .style('fill', function(d) { 
-                return (d.index < data.divide ? Settings.users[0] : Settings.users[1]);
+            .style('fill', function(d) {
+                return (d.index < data.divide ? E.users[0] : E.users[1]);
             })
             .attr('d', d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
             .on('mouseover', fade(.1))
@@ -56,7 +56,7 @@ define(['vis-settings', 'moment'], function (Settings, moment) {
             .enter().append('path')
             .attr('d', d3.svg.chord().radius(innerRadius))
             .attr('class', function (d) {
-                return d.source.index == d.target.index ? 'styles-dummy' : 'styles-linked js-styles-path'; 
+                return d.source.index == d.target.index ? 'styles-dummy' : 'styles-linked js-styles-path';
             })
 
         // Returns an array of tick angles and labels, given a group.
