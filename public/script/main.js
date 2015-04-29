@@ -10,6 +10,8 @@ require.config({
         d3: '../bower_components/d3/d3',
         moment: '../bower_components/moment/moment',
         momentTZ: '../bower_components/moment-timezone/moment-timezone',
+        chroma: '../bower_components/chroma-js/chroma.min',
+        textures: '../bower_components/textures/textures.min',
         socketio: '../socket.io/socket.io',
         elements: 'vis-elements'
     }
@@ -19,11 +21,13 @@ require([
     'underscore',
     'd3',
     'moment',
+    'chroma',
+    'textures',
     'socketio',
     'match',
     'vis',
     'elements'
-], function ($, _, d3, moment, io, Match, Vis, E) {
+], function ($, _, d3, moment, chroma, textures, io, Match, Vis, E) {
 
     'use strict';
 

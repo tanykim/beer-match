@@ -12,8 +12,8 @@ define(function () {
         }
     }
 
-    var map, marker,
-        infoBubbles = new nokia.maps.map.component.InfoBubbles();
+    // var map, marker,
+    //     infoBubbles = new nokia.maps.map.component.InfoBubbles();
 
     var unitH, dim, svg, maxR, maxRVal;
 

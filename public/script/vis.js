@@ -1,19 +1,24 @@
-define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beers', 'single-when', 'single-where',
-	'single-whenWhere', 'match-score', 'match-style', 'match-time', 'match-venues'],
+define(['moment', 'vis-settings',
+	'single-count', 'single-ratings', 'single-beers',
+	'single-when', 'single-where', 'single-whenWhere',
+	'match-score', 'match-style', 'match-time', 'match-venues'],
 
-	function (moment, S, Count, Ratings, Beers, When, Where, WhenWhere, Score, Styles, Time, Venues) {
+	function (moment, S, Count, Ratings, Beers, When, Where, WhenWhere,
+		Score, Styles, Time, Venues) {
 
 	'use strict';
 
 	function changeRadioSelection(elm, tag) {
-		if (elm.hasClass('selected')) {
+		if (elm.find('i').hasClass('fa-dot-circle-o')) {
 			return false;
 		} else {
 			if (!tag) {
 				tag = 'span';
 			}
-			elm.parent().find(tag).removeClass('selected');
-			elm.addClass('selected');
+			elm.parent().find(tag).find('i')
+				.removeClass('fa-dot-circle-o').addClass('fa-circle-o');
+			elm.find('i')
+				.removeClass('fa-circle-o').addClass('fa-dot-circle-o');
 			return true;
 		}
 	}
@@ -22,20 +27,29 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 		//view change
 		$('.js-single-svg').empty();
 
-
 		//0--count
-		Count.setUnit(b.avgUnit);
+		var countScale = function (length) {
+			return S.getChroma(
+				[E.beerColors[0], E.colors.count, E.beerColors[7]], length);
+		}
+		Count.setUnit(b.avgUnit,
+			countScale(b.countByPeriod.frequency[b.avgUnit].counts.length));
 		S.setVis('frequency', function (vis) {
-			Count.drawFrequency(vis, b.countByPeriod, b.avgCount, b.avgUnit);
+			Count.drawFrequency(vis, b.countByPeriod, b.avgCount);
 		});
-		Count.drawCalendar(S.setVisNoSVG('calendar'), b.timeRange, b.countByPeriod, b.avgUnit);
+		Count.drawCalendar(S.setVisNoSVG('calendar'), b.timeRange,
+			b.countByPeriod);
 		$('.js-count-period').click(function() {
 			var changed = changeRadioSelection($(this));
 			if (changed) {
-				Count.transformCount($(this).data().value, b.countByPeriod, b.avgCount);
+				var unit = $(this).data().value;
+				Count.transformCount(unit,
+					countScale(b.countByPeriod.frequency[unit].counts.length),
+					b.countByPeriod, b.avgCount);
 			}
 		});
 
+		/*
 		//1--ratings
 		S.setVis('score', function (vis) {
 			Ratings.drawScoresStats(vis, b.scoreAvg, b.scoreCount);
@@ -103,6 +117,7 @@ define(['moment', 'vis-settings', 'single-count', 'single-ratings', 'single-beer
 			WhenWhere.drawDayStats(vis, b.byDay);
 		});
 		WhenWhere.drawTimeline(b.venueByTime, b.timeRange, S.setVisNoSVG('timeline'));
+		*/
 
 	};
 

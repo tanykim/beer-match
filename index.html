@@ -8,6 +8,7 @@
 <html>
 <head>
 <title>BEER Match - Powered by UNTAPPD</title>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/style/bootstrap.css"/>
 <link rel="stylesheet" href="/style/style.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,8 +82,6 @@
 			</div>
 		</div>
 	</div>
-
-
 </div>
 
 <!-- match -->
@@ -198,24 +197,14 @@
 
 		<!-- 0 basic stats -->
 		<div class="vis-contents single-count js-single-contents-0">
-			<div class="container">
-				<div class="row">
-					<div class="col-xs-12 vis-radio">
-						<span data-value="day" class="link js-count-period js-count-period-day"> Day </span>
-						<span data-value="week" class="link js-count-period js-count-period-week"> Week </span>
-						<span data-value="month" class="link js-count-period js-count-period-month"> Month </span>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-2"></div>
-					<div id="vis-frequency" class="col-xs-8 frequency js-single-svg"></div>
-					<div class="col-xs-2"></div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 sober">You were sober for <span class="bold js-count-sober"> XX unit </span> out of total <span class="bold js-count-total"> XX unit</span>.</div>
-					<div id="vis-calendar" class="col-xs-12 calendar js-single-svg"></div>
-				</div>
+			<div class="vis-radio">
+				<span data-value="day" class="link js-count-period js-count-period-day"><i class="fa fa-circle-o"></i> Day </span>
+				<span data-value="week" class="link js-count-period js-count-period-week"><i class="fa fa-circle-o"></i> Week </span>
+				<span data-value="month" class="link js-count-period js-count-period-month"><i class="fa fa-circle-o"></i> Month </span>
 			</div>
+			<div id="vis-frequency" class="frequency js-single-svg"></div>
+			<div class="sober">You were sober for <span class="bold js-count-sober"> XX unit </span> out of total <span class="bold js-count-total"> XX unit</span>.</div>
+			<div id="vis-calendar" class="calendar js-single-svg"></div>
 		</div>
 
 		<!-- 1 ratings -->
@@ -333,7 +322,6 @@
 		</div>
 
 	</div> <!-- vis contents -->
-
 </div> <!-- vis -->
 
 <!-- header -->
@@ -531,7 +519,7 @@
 	<div class="pic" style="background-image: url(<%= avatar2 %>)"></div>
 </script>
 
-<script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script>
+<!-- <script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script> -->
 <script data-main="/script/main" src="/script/require.js"></script>
 
 </body>

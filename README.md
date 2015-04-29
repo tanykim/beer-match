@@ -1,6 +1,6 @@
 # Beer Match
 
-Beer Match is a web-based visualization project powered by data from Untapped (http://untappd.com). This code includes both server-side (based on NodeJS) and client-side. Beer Match is not affiliated or endorsed by Untapped. 
+Beer Match is a web-based visualization project powered by data from Untapped (http://untappd.com). This code includes both server-side (based on NodeJS) and client-side. Beer Match is not affiliated or endorsed by Untapped.
 
 ## Version
 0.0.1
@@ -55,7 +55,7 @@ Then go to the public folder and install necessary libraries.
 
 ```
 $ cd public
-$ bower install d3 moment-timezone moment underscore jquery
+$ bower install d3 moment-timezone moment underscore jquery chroma-js textures
 ```
 
 ## Start the server

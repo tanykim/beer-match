@@ -1,7 +1,7 @@
 path, line{
   shape-rendering: crispEdges; /* geometricPrecision */
 }
-@line-light: rgba(0, 0, 0, 0.3);
+@line-light: fade(@black, 10%);
 
 .axis .tick line {
 	stroke: @line-light;
@@ -41,6 +41,9 @@ path, line{
 .stroke-black {
 	stroke: #000;
 }
+.stroke-dark {
+	stroke: @dark;
+}
 .stroke-grey {
 	stroke: @grey;
 }
@@ -49,6 +52,9 @@ path, line{
 }
 .stroke-tick {
 	stroke: @line-light;
+}
+.stroke-none {
+	stroke: none;
 }
 .stroke-1 {
 	stroke-width: 1;
@@ -61,11 +67,25 @@ path, line{
 }
 
 /* fill */
+.fill-dark {
+	fill: @dark;
+}
+.fill-black {
+	fill: @black;
+}
 .fill-grey {
 	fill: @grey;
 }
 .fill-white {
 	fill: #fff;
+}
+.fill-none {
+	fill: none;
+}
+
+/* text */
+.weight-700 {
+	font-weight: 700;
 }
 
 /* lines rendering */
@@ -74,59 +94,6 @@ path, line{
 		shape-rendering: geometricPrecision;
 	}
 }
-
-
-
-.freq-block {
-	stroke: none;
-}
-
-
-
-.cal-y-label {
-	text-anchor: end;
-	/*font-size: @tiny;*/
-}
-.cal-x-year {
-	/*font-size: @tiny;*/
-	/*color: #000;*/
-	font-weight: 700;
-}
-.cal-x-month {
-	/*font-size: @tiny;*/
-	color: #666;
-}
-.cal-divide {
-	stroke: #000;
-	stroke-width: 1;
-	fill: none;
-}
-.cal-day {
-	stroke: none;
-	/*fill: #999999;*/
-}
-.cal-week {
-	stroke: none;
-	fill: #666;
-	display: none;
-}
-.cal-year {
-	stroke: #000;
-	stroke-opacity: 0.5;
-	stroke-width: 2;
-	fill: #cc0000;
-	opacity: 0.3;
-}
-.cal-day--before {
-	stroke: none;
-	fill: #e5e5e5;
-}
-.cal-tooltip {
-	fill: #000;
-	font-size: @tiny;
-}
-
-
 
 .ratings-arc-over {
 	font-size: @small;

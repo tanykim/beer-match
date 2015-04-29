@@ -1,4 +1,4 @@
-define(['jquery', 'd3'], function ($, d3) {
+define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 
 	'use strict';
 
@@ -14,7 +14,7 @@ define(['jquery', 'd3'], function ($, d3) {
 		day: 4,
 		timeline: 12,
 		behavior: 12,
-		counts: 12,
+		counts: 12
 	};
 
 	var heights = {
@@ -29,12 +29,12 @@ define(['jquery', 'd3'], function ($, d3) {
 		day: null,
 		timeline: null,
 		behavior: 300,
-		counts: 200,
+		counts: 200
 	};
 
 	var margins = {
-		frequency: { top: 100, right: 40, bottom: 50, left: 60 },
-		calendar: { top: 50, right: 20, bottom: 20, left: 40 },
+		frequency: { top: 100, right: 30, bottom: 50, left: 70 },
+		calendar: { top: 40, right: 20, bottom: 20, left: 40 },
 		score: { top: 40, right: 40, bottom: 50, left: 60 },
 		categories: { top: 10, right: 2, bottom: 10, left: 2 },
 		ratings: { top: 60, right: 40, bottom: 20, left: 300 },
@@ -48,16 +48,18 @@ define(['jquery', 'd3'], function ($, d3) {
 	};
 
    	var getWidth = function(div) {
-   		return $('.vis').find('.container').outerWidth() / 12 * widths[div] - 15 * 2; // 15 is margin
+        // 15 is margin
+   		return $('.vis')
+            .find('.container').outerWidth() / 12 * widths[div] - 15 * 2;
    	};
 
    	function drawSVG(vis, div) {
-   		console.log(vis, div);
    		var svg = d3.select('#vis-' + div).append('svg')
 			.attr('width', vis.dim.w + vis.margin.left + vis.margin.right)
 			.attr('height', vis.dim.h + vis.margin.top + vis.margin.bottom)
 			.append('g')
-			.attr('transform', 'translate(' + vis.margin.left + ', ' + vis.margin.top + ')');
+			.attr('transform',
+                'translate(' + vis.margin.left + ', ' + vis.margin.top + ')');
 		return svg;
    	};
 
@@ -79,7 +81,9 @@ define(['jquery', 'd3'], function ($, d3) {
 		var vis = {
 			dim: {
 				w: getWidth(div) - margins[div].left - margins[div].right,
-				h: (_.isNull(heights[div]) ? getWidth(div) : heights[div]) - margins[div].top - margins[div].bottom
+				h: (_.isNull(heights[div]) ?
+                    getWidth(div) :
+                    heights[div]) - margins[div].top - margins[div].bottom
 			},
 			margin: margins[div]
 		}
@@ -87,9 +91,17 @@ define(['jquery', 'd3'], function ($, d3) {
 		callback(vis);
    	};
 
+    var getChroma = function (range, count) {
+        var scale = chroma.scale(range).domain([0, count]);
+        return _.map(_.range(count), function (i) {
+            return scale(i).hex();
+        });
+    };
+
 	return {
 		setVisNoSVG: setVisNoSVG,
-		setVis: setVis
+		setVis: setVis,
+        getChroma: getChroma
 	};
 
 });

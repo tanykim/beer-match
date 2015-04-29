@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /*Montserrat*/
-@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
 /* font size: 24, 18, 16, 14, 12 px*/
 @huge: 1.5em;
@@ -12,6 +12,7 @@
 @font-size: 16;
 
 /* colors */
+@black: #000;
 @dark: #25282A;
 @light: #e5e5e5;
 @yellow: #FFC61E;
@@ -21,6 +22,8 @@
 @darkGrey: #666666;
 @lightGrey: #e5e5e5;
 @grey: #999999;
+@white: #fff;
+@lightest: #efefef;
 
 @whiteTrans: rgba(255, 255, 255, 0.8);
 
@@ -75,11 +78,15 @@
 	user-select: none;
 	cursor: default;
 }
+.shadow {
+    box-shadow: 0 0 6px fade(@dark, 50%);
+}
+
 body {
 	margin: 0;
 	padding: 0;
-	font-family: 'Lato', Helvetica, arial, sans-serif;
-	letter-spacing: 0.03em;
+	font-family: 'Open Sans', Helvetica, arial, sans-serif;
+	/*letter-spacing: 0.04em;*/
 }
 
 ul {
