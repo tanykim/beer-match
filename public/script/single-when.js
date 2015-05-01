@@ -1,33 +1,78 @@
-define(['moment'], function (moment) {
+define(['moment', 'textures'], function (moment, textures) {
 
 	'use strict';
 
+	var selected = 'matrix';
 	var colors;
 	var dim, x, y, xAxis, yAxis;
+	var tx, mb;
 
-	function updateGraph(val) {
+	function resetMaxTexture() {
+		d3.select('.js-matrix-block-' + mb).style('fill', E.colors.when);
+	}
 
- 		d3.selectAll('.js-matrix-block')
-			.transition()
-			.attr('x', function (d) { return d.x[val]; })
-			.attr('y', function (d) { return d.y[val]; })
-			.attr('width', function (d) { return d.width[val]; })
-			.attr('height', function (d) { return d.height[val]; })
-			.style('opacity', function (d) { return d.opacity[val]; });
+	var updateGraph = function (option) {
 
-		d3.select('.js-matrix-x').transition().call(xAxis[val]);
-		d3.select('.js-matrix-y').transition().call(yAxis[val]);
+		selected = option;
 
-		if (val === 'matrix') {
-			$('.js-matrix-addedTick').show();
+		if (selected === 'matrix') {
+	 		d3.selectAll('.js-matrix-block')
+					.transition().duration(750)
+				.style('fill-opacity', function (d) { return d.opacity[option]; })
+				.attr('class', 'stroke-tick js-matrix-block')
+				.each('end', function (d) {
+					d3.select(this).transition().delay(500)
+						.attr('x', function (d) { return d.x[option]; })
+						.attr('y', function (d) { return d.y[option]; })
+						.attr('width', function (d) { return d.width[option]; })
+						.attr('height', function (d) { return d.height[option]; });
+				});
+			$('.js-matrix-legend').show();
 			$('.js-matrix-y').find('.tick').find('line')
 				.attr('transform', 'translate(0, ' + dim.h/7/2 + ')');
+			$('.js-matrix-vals-hour').hide();
+			$('.js-matrix-vals-day').hide();
+			$('.js-matrix-lable-x').hide();
+			$('.js-matrix-lable-y').hide();
 		} else {
-			$('.js-matrix-addedTick').hide();
+			resetMaxTexture();
+	 		d3.selectAll('.js-matrix-block')
+					.transition().duration(750)
+				.attr('x', function (d) { return d.x[option]; })
+				.attr('y', function (d) { return d.y[option]; })
+				.attr('width', function (d) { return d.width[option]; })
+				.attr('height', function (d) { return d.height[option]; })
+				.each('end', function (d, i) {
+					d3.select(this).transition().delay(500)
+						.style('fill-opacity', function (d) {
+							return d.opacity[option];
+						})
+						.attr('class', 'stroke-when js-matrix-block');
+					if (i === 24 * 7 - 1) {
+						if (selected === 'day') {
+							$('.js-matrix-vals-day').show();
+						} else {
+							$('.js-matrix-vals-hour').show();
+						}
+					}
+				});
+			if (selected === 'day') {
+				$('.js-matrix-vals-hour').hide();
+				$('.js-matrix-lable-x').show();
+				$('.js-matrix-lable-y').hide();
+			} else {
+				$('.js-matrix-vals-day').hide();
+				$('.js-matrix-lable-x').hide();
+				$('.js-matrix-lable-y').show();
+			}
 			$('.js-matrix-y').find('.tick').find('line').removeAttr('transform');
+			$('.js-matrix-legend').hide();
+			$('.js-matrix-tooltip').hide();
 		}
 
-	}
+		d3.select('.js-matrix-x').transition().call(xAxis[option]);
+		d3.select('.js-matrix-y').transition().call(yAxis[option]);
+	};
 
 	function getSum(arr, i) {
 		return _.reduce(arr.slice(0, i), function (memo, num) {
@@ -48,21 +93,21 @@ define(['moment'], function (moment) {
 					x: {
 						matrix: x.matrix(i),
 						day: x.day(getSum(hourly[day], i)),
-						hour: x.hour(i)
+						hour: x.hour(i) + 1
 					},
 					y: {
 						matrix: y.matrix(day),
-						day: y.day(day),
+						day: y.day(day) + 1,
 						hour: y.hour(getSum(hour.byDay, day + 1)),
 					},
 					width: {
 						matrix: dim.w / 24,
 						day: x.day(d),
-						hour: dim.w / 24
+						hour: dim.w / 24 - 2
 					},
 					height: {
 						matrix: dim.h / 7,
-						day: dim.h / 7,
+						day: dim.h / 7 - 2,
 						hour: dim.h - y.hour(d)
 					},
 					opacity: {
@@ -70,28 +115,75 @@ define(['moment'], function (moment) {
 						day: 1,
 						hour: 1
 					},
-					val: {
-						matrix: d,
-						hour: hour.total,
-						day: byDay[day].total
-					},
-					str: {
-						matrix: moment(day, 'e').format('dddd') + ' & ' +
+					val: d,
+					str: moment(day, 'e').format('dddd') + ' & ' +
 							moment(i, 'H').format('ha') + ' - ' +
 							moment(i, 'H').add(1, 'hours').format('ha'),
-						day: moment(day, 'e').format('dddd'),
-						hour: moment(i, 'H').format('ha') + ' - ' +
-							moment(i, 'H').add(1, 'hours').format('ha')
-					}
+					order: i * 7 + day
 				};
 			});
 		}));
 	}
 
+	function drawBlocks(svg, dim, dataset) {
+		svg.selectAll('.js-matrix-block')
+			.data(dataset)
+				.enter().append('rect')
+			.attr('x', function (d) { return d.x.matrix; })
+			.attr('y', function (d) { return d.y.matrix; })
+			.attr('width', function (d) { return d.width.matrix; })
+			.attr('height', function (d) { return d.height.matrix; })
+			.style('fill', E.colors.when)
+			.style('fill-opacity', function (d) { return d.opacity.matrix; })
+			.attr('class', function (d, i) {
+				return 'stroke-1 stroke-tick js-matrix-block ' +
+					'js-matrix-block-' + i;
+			})
+			.on('mouseover', function (d, i) {
+				resetMaxTexture();
+				if (selected === 'matrix') {
+					$('.js-matrix-tooltip').show();
+					E.setTooltipText([d.str, d.val + ' check-ins'],
+						'matrix', dim.w, d.x.matrix + d.width.matrix / 2,
+						d.y.matrix);
+					d3.select(this).style('fill', tx.url())
+						.style('fill-opacity', 1);
+				}
+			})
+			.on('mouseout', function (d) {
+				$('.js-matrix-tooltip').hide();
+				d3.select(this).style('fill', E.colors.when);
+				if (selected === 'matrix') {
+					d3.select(this).style('fill-opacity', d.opacity.matrix);
+				}
+			});
+	}
+
+	function drawValues(svg, dim, byHour, byDay) {
+		svg.selectAll('.js-matrix-vals-hour')
+			.data(_.pluck(byHour, 'total'))
+				.enter().append('text')
+			.attr('x', function (d, i) { return dim.w / 48 * (i * 2 + 1); })
+			.attr('y', function (d) { return y.hour(d) - 6; })
+			.text(function (d) { return d; })
+			.attr('class', 'fill-when size-middle pos-middle ' +
+				'js-matrix-vals-hour')
+		svg.selectAll('.js-matrix-vals-day')
+			.data(_.pluck(byDay, 'total'))
+				.enter().append('text')
+			.attr('x', function (d) { return x.day(d) + 6; })
+			.attr('y', function (d, i) { return dim.h / 14 * (i * 2 + 1) + 4; })
+			.text(function (d) { return d; })
+			.attr('class', 'fill-when size-middle js-matrix-vals-day')
+		$('.js-matrix-vals-hour').hide();
+		$('.js-matrix-vals-day').hide();
+
+
+	}
+
 	var drawMatrix = function (vis, byDay, byHour, c) {
 
 		colors = c;
-
 		var margin = vis.margin;
 		dim = vis.dim;
 		var svg = vis.svg;
@@ -115,7 +207,7 @@ define(['moment'], function (moment) {
 		};
 		xAxis = {
 			matrix: d3.svg.axis().orient('bottom').scale(xBase)
-					.tickSize(-dim.h)
+					.tickSize(0)
 					.tickPadding(E.noTicks.padding)
 					.tickFormat(function (d) {
 						return moment(d, 'hh').format('ha');
@@ -141,7 +233,7 @@ define(['moment'], function (moment) {
 		};
 		yAxis = {
 			matrix: d3.svg.axis().orient('left').scale(y.matrix)
-					.tickSize(-dim.w)
+					.tickSize(0)
 					.tickPadding(E.noTicks.padding)
 					.tickFormat(function (d) {
 						return moment(d, 'd').format('ddd');
@@ -158,46 +250,43 @@ define(['moment'], function (moment) {
 
 		//matrix dataset
 		var dataset = createMatrixDataset(byHour, byDay, maxVals.matrix);
-		svg.selectAll('.js-matrix-block')
-			.data(dataset)
-			.enter().append('rect')
-			.attr('x', function (d) { return d.x.matrix; })
-			.attr('y', function (d) { return d.y.matrix; })
-			.attr('width', function (d) { return d.width.matrix; })
-			.attr('height', function (d) { return d.height.matrix; })
-			.style('fill', E.colors.when)
-			.style('opacity', function (d) { return d.opacity.matrix; })
-			.attr('class', 'js-matrix-block')
-			.on('mouseover', function (d) {
-				// console.log(d.str);
-			});
 
+		//darw blocks
+		drawBlocks(svg, dim, dataset);
+		drawValues(svg, dim, byHour, byDay);
+
+		//axis
 		svg.append('g')
 			.attr('class', 'x axis js-matrix-x')
 			.attr('transform', 'translate(0, ' + dim.h + ')')
 			.call(xAxis.matrix);
-
 		svg.append('g')
 			.attr('class', 'y axis js-matrix-y')
 			.call(yAxis.matrix);
 
-		//move tick lines
-		$('.js-matrix-y').find('.tick').find('line')
-			.attr('transform', 'translate(0, ' + dim.h/7/2 + ')');
-		svg.append('line')
-			.attr('x2', dim.w)
-			.attr('y2', 0)
-			.attr('class', 'stroke-tick js-matrix-addedTick');
-
-		//color vals
+		//legends
 		var chromaVals = E.getAxisTicks(maxVals.matrix);
-		E.drawChromaLegend(svg, dim.w, -margin.top, chromaVals.count,
-			chromaVals.step, 'matrix', colors);
-
-		E.putAxisLable(svg, dim.w/2, dim.h + E.noTicks.lableBottom,
-			'chech-ins', 'x', 'small', true);
+		E.drawChromaLegend(svg, dim.w, 10,
+			chromaVals.endPoint / 10, 'matrix', colors);
+		E.putAxisLable(svg, dim.w / 2, dim.h + E.noTicks.lableBottom,
+			'chech-ins', 'x', 'small', 'js-matrix-lable-x');
 		E.putAxisLable(svg, -dim.h / 2, -margin.left + 15,
-			'chech-ins', 'y', 'small', true);
+			'chech-ins', 'y', 'small', 'js-matrix-lable-y');
+		$('.js-matrix-lable-x').hide();
+		$('.js-matrix-lable-y').hide();
+
+		//tooltip at the max day position
+		E.drawTooltip(svg, 'matrix', 2);
+		var maxBlock = _.max(dataset, function (d) { return d.val; });
+		E.setTooltipText([maxBlock.str, maxBlock.val + ' check-ins'],
+			'matrix', dim.w, maxBlock.x.matrix + maxBlock.width.matrix / 2,
+			maxBlock.y.matrix);
+
+		tx = textures.lines().size(6).background(E.colors.when);
+		svg.call(tx);
+		mb = maxBlock.order;
+		d3.select('.js-matrix-block-' + mb).style('fill', tx.url())
+			.style('fill-opacity', 1);
 
 	};
 

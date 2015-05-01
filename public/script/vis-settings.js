@@ -39,7 +39,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		categories: { top: 60, right: 20, bottom: 10, left: 20 },
 		ratings: { top: 60, right: 20, bottom: 20, left: 240 },
 		beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 40 },
-		when: { top: 40, right: 20, bottom: 40, left: 65 },
+		when: { top: 70, right: 20, bottom: 40, left: 65 },
 		where: { top: 20, right: 100, bottom: 0, left: 100 },
 		day: { top: 0, right: 0, bottom: 0, left: 0 },
 		timeline: { top: 40, right: 40, bottom: 20, left: 300 },
@@ -118,7 +118,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
     };
 
     var getChroma = function (range, count) {
-        var scale = chroma.scale(range).domain([0, count]);
+        var scale = chroma.scale(range).domain([0, count - 1]);
         return _.map(_.range(count), function (i) {
             return scale(i).hex();
         });

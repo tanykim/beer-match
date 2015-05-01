@@ -13,7 +13,7 @@ define(['moment', 'vis-settings',
 		//view change
 		$('.js-single-svg').empty();
 
-		//0--count
+		/*0--count
 		var countScale = function (length) {
 			return S.getChroma(
 				[E.beerColors[0], E.colors.count, E.beerColors[7]], length);
@@ -87,12 +87,11 @@ define(['moment', 'vis-settings',
 			var val = $(this).data().value.split('-');
 			Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 		});
-
+		*/
 
 		//3--when
 		var whenScale = function (length) {
-			return S.getChroma(
-				['#fff', E.colors.when], length);
+			return S.getChroma(['#fff', '#7c2529'], length);
 		}
 		S.setVis('when', function (vis) {
 			When.drawMatrix(vis, b.byDay, b.byHour, whenScale(10));

@@ -63,7 +63,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		x.domain([0, frequency.counts.length]);
 		xAxis.scale(x).tickFormat(function (d) { return d * frequency.gap; });
 		d3.select('.js-freq-axis-x').call(xAxis);
-		$('.js-freq-lable-x').html('beers / ' + unit);
+		$('.js-freq-lable-x').html('check-ins / ' + unit);
 
 		var yTicks = E.getAxisTicks(_.max(frequency.counts), dim.h);
 		y.domain([yTicks.endPoint, 0]);
@@ -126,9 +126,9 @@ define(['moment', 'textures'], function (moment, textures) {
 			.call(yAxis);
 
 		E.putAxisLable(svg, dim.w/2, dim.h + E.noTicks.lableBottom,
-			'beers /' + unit, 'x', 'middle', false, 'js-freq-lable-x');
+			'check-ins /' + unit, 'x', 'middle', 'js-freq-lable-x');
 		E.putAxisLable(svg, -dim.h / 2, -40,
-			'number of ' + unit + 's', 'y', 'middle', false, 'js-freq-lable-y');
+			'number of ' + unit + 's', 'y', 'middle', 'js-freq-lable-y');
 
 		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
 	};
@@ -214,7 +214,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		var svg = vis.draw({dim: dim, margin: margin}, 'calendar');
 
 		//draw scale legend
-		E.drawChromaLegend(svg, dim.w, -margin.top/2,
+		E.drawChromaLegend(svg, dim.w,
 			data.frequency[unit].counts.length,
 			data.frequency[unit].gap, 'calendar', colors);
 
@@ -291,7 +291,7 @@ define(['moment', 'textures'], function (moment, textures) {
 			return d[unit] === data.maxCount[unit];
 		});
 		showTextures(svg, data, maxRange[0]);
-		E.setTooltipText([maxRange[0][unit] + ' beers',
+		E.setTooltipText([maxRange[0][unit] + ' check-ins',
 			getTooltipString(moment(maxRange[0].date, 'YYYYMMDD'))],
 			'cal', dim.w, getX(maxRangeIds[0]), getY(maxRangeIds[0]));
 	};

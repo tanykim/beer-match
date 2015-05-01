@@ -162,16 +162,16 @@ var E = {
                 .attr('width', unitW)
                 .attr('height', E.legendH)
                 .style('fill', colors[i])
-                .attr('class', 'stroke-tick stroke-1 ' +
-                    'js-' + c + '-legend-block');
+                .style('opacity', 1)
+                .attr('class', 'stroke-tick ' + 'js-' + c + '-legend-block');
         });
         d3.select('.js-' + c + '-legend-max').text(step * gap);
     },
 
-    drawChromaLegend: function (svg, dimW, yPos, step, gap, c, colors) {
+    drawChromaLegend: function (svg, dimW, step, gap, c, colors) {
         svg.append('g')
             .attr('transform', 'translate(' + (dimW - E.legendW - 40) +
-                ', ' + yPos + ')')
+                ', -40)')
             .attr('class', 'js-' + c + '-legend');
         d3.select('.js-' + c + '-legend').append('text')
             .attr('x', 5)
@@ -179,20 +179,24 @@ var E = {
             .text('0')
             .attr('class', 'size-small');
         d3.select('.js-' + c + '-legend').append('text')
+            .attr('x', -5)
+            .attr('y', E.legendH - 5)
+            .text('check-ins')
+            .attr('class', 'pos-end fill-grey size-small');
+        d3.select('.js-' + c + '-legend').append('text')
             .attr('x', E.legendW + 25)
             .attr('y', E.legendH - 5)
             .attr('class', 'size-small js-' + c + '-legend-max');
         E.updateChroma(step, gap, c, colors);
     },
 
-    putAxisLable: function (svg, x, y, str, axis, size, hide, jsc) {
+    putAxisLable: function (svg, x, y, str, axis, size, jsc) {
         svg.append('text')
             .attr('x', x)
             .attr('y', y)
             .text(str)
             .attr('transform', axis === 'y' ? 'rotate(-90)' : '')
             .attr('class', 'pos-middle fill-grey size-' + size +
-                (hide ? ' hide' : '') +
                 (jsc ? ' ' + jsc : ''));
     }
 
