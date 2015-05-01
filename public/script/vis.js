@@ -37,9 +37,6 @@ define(['moment', 'vis-settings',
 		});
 
 		//1--ratings
-		S.setVis('score', function (vis) {
-			Ratings.drawScoresStats(vis, b.scoreAvg, b.scoreCount);
-		});
 		S.setVisNoSVG('categories', function (vis) {
 			Ratings.drawCategories(vis, 'style', b.userinfo.checkinCount,
 				b.ratingsList);
@@ -75,7 +72,10 @@ define(['moment', 'vis-settings',
 			}
 		});
 
-		/*
+		S.setVis('score', function (vis) {
+			Ratings.drawScoresStats(vis, b.scoreAvg, b.scoreCount);
+		});
+
 		//2--beers loved and hated
 		Beers.putBeers(b.beerList);
 		S.setVis('beers', function (vis) {
@@ -90,6 +90,7 @@ define(['moment', 'vis-settings',
 				Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 			}
 		});
+		/*
 
 		//3--when
 		S.setVis('when', function (vis) {

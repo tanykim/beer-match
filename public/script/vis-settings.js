@@ -8,7 +8,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		score: 2.4,
 		categories: 2,
 		ratings: 6,
-		beers: 8,
+		beers: 7,
 		when: 12,
 		where: 12,
 		day: 4,
@@ -93,10 +93,12 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
     var updateSelection = function (elm, tag) {
         elm.parent().find(tag).removeClass('selected');
         elm.addClass('selected');
-        elm.parent().find('span').find('i')
-            .removeClass('fa-dot-circle-o').addClass('fa-circle-o');
-        elm.find('i')
-            .removeClass('fa-circle-o').addClass('fa-dot-circle-o');
+        if (tag === 'span') {
+            elm.parent().find('span').find('i')
+                .removeClass('fa-dot-circle-o').addClass('fa-circle-o');
+            elm.find('i')
+                .removeClass('fa-circle-o').addClass('fa-dot-circle-o');
+        }
     }
 
     var changeRadioSelection = function (elm, tag) {

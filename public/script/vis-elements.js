@@ -26,7 +26,7 @@ var E = {
             single: [
                 '1. How much do I drink?',
                 '2. What matters?',
-                '3. Beers I love & hate',
+                '3. love & hate',
                 '4. When do I drink?',
                 '5. Where do I drink?',
                 '6. When & Where'

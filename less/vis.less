@@ -225,6 +225,7 @@
 		background-color: fade(@lightGrey, 50%);
 	}
 }
+
 /* each element common */
 .90p {
 	width: 90%;
@@ -237,8 +238,20 @@
 .vis-shadow {
     box-shadow: 0 0 2px fade(@dark, 30%);
 }
+.vis-wrapper {
+	.90p();
+	.wrapper-left {
+		margin-right: 1em;
+		display: inline-block;
+		vertical-align: top;
+	}
+	.wrapper-right {
+		display: inline-block;
+		vertical-align: top;
+	}
+}
 
-/* each element common */
+/* each element */
 .single-count {
 	text-align: center;
 	.radio {
@@ -279,64 +292,61 @@
 			background-color: fade(@country, 50%);
 		}
 	}
-	.vis-wrapper {
-		.90p();
-		.wrapper-left {
-			margin-right: 1em;
-			display: inline-block;
-			vertical-align: top;
-		}
-		.categories {
-			.vis-shadow();
-		}
-		.average {
-			font-size: @small;
-			background-color: @darkGrey;
-			color: @white;
-			padding: 0.5em;
-			margin-top: 2em;
-			margin-bottom: 1em;
-			border-radius: 0.5em;
-		}
-		.wrapper-right {
-			display: inline-block;
-			.vis-shadow();
-			.radio-sortBy {
-				padding-top: 1em;
-				padding-right: 1em;
-				text-align: right;
-			}
+	.categories {
+		.vis-shadow();
+	}
+	.average {
+		font-size: @small;
+		background-color: @darkGrey;
+		color: @white;
+		padding: 0.5em;
+		margin-top: 2em;
+		margin-bottom: 1em;
+		border-radius: 0.5em;
+	}
+	.ratings-wrapper {
+		.vis-shadow();
+		.radio-sortBy {
+			padding-top: 1em;
+			padding-right: 1em;
+			text-align: right;
 		}
 	}
 }
 
 .single-beers {
-	.list-title {
-		background-color: #efefef;
-		font-weight: 700;
-		padding: 0.5em;
-	}
-	.list-beers {
-		border: 1px solid #efefef;
-		padding: 0.5em;
-		margin-bottom: 15px;
-		.selected {
-			border-width: 2px !important;
-			border-color: #000 !important;
-			margin: 3px !important;
-
+	text-align: center;
+	.list-wrapper {
+		width: 30%;
+		.list {
+			text-align: left;
+			.vis-shadow();
+			margin-bottom: 1em;
 		}
-	}
-	.label-rating {
-		margin-left: 4px;
-	}
-	.label-image {
-		border-radius: 20px;
-		border-width: 1px;
-		border-style: solid;
-		border-color: @darkGrey;
-		vertical-align: middle;
-		margin: 4px;
+		.list-title {
+			background-color: @lightGrey;
+			.bold();
+			padding: 0.5em 0.8em;
+		}
+		.list-beers {
+			padding: 0.5em 0.3em 0.5em 0.8em;
+			.label-rating {
+				color: @darkGrey;
+				margin-left: 4px;
+			}
+			.label-image {
+				border-radius: 20px;
+				vertical-align: middle;
+				margin: 3px;
+				padding: 1px;
+				background-color: @lightGrey;
+				height: 40px;
+			}
+			.selected {
+				border: 1px solid @black;
+				background-color: @black;
+			}
+		}
 	}
 	.title {
 		text-align: center;
@@ -344,8 +354,36 @@
 			.bold();
 			font-size: @large;
 		}
-		.count {
+		.score {
+			color: @darkGrey;
+		}
+		.info {
+			margin-top: 1em;
 			font-size: @small;
+			color: @grey;
+			span {
+				color: @white;
+				padding: 0.15em 0.5em;
+			}
+			.style {
+				background-color: @style;
+				color: @black;
+			}
+			.abv {
+				background-color: @abv;
+			}
+			.brewery {
+				background-color: @brewery;
+			}
+			.country {
+				background-color: @country;
+			}
+		}
+		.count {
+			color: @darkGrey;
+			font-size: @small;
+			margin-top: 1em;
+			margin-bottom: 1em;
 		}
 		.count-number {
 			.bold();
