@@ -2,7 +2,7 @@ define(['moment'], function (moment) {
 
 	'use strict';
 
-	var colors = E.colors;
+	var colors;
 	var dim, x, y, xAxis, yAxis;
 
 	function updateGraph(val) {
@@ -35,7 +35,7 @@ define(['moment'], function (moment) {
 		}, 0);
 	}
 
-	function createMatrixDataset (byHour, maxVals) {
+	function createMatrixDataset (byHour, byDay, maxVals) {
 
 		var hourly = _.map(_.range(7), function (d) {
 			return _.map(_.range(24), function (h) {
@@ -66,16 +66,31 @@ define(['moment'], function (moment) {
 						hour: dim.h - y.hour(d)
 					},
 					opacity: {
-						matrix: d / maxVals.matrix,
+						matrix: d / maxVals,
 						day: 1,
 						hour: 1
+					},
+					val: {
+						matrix: d,
+						hour: hour.total,
+						day: byDay[day].total
+					},
+					str: {
+						matrix: moment(day, 'e').format('dddd') + ' & ' +
+							moment(i, 'H').format('ha') + ' - ' +
+							moment(i, 'H').add(1, 'hours').format('ha'),
+						day: moment(day, 'e').format('dddd'),
+						hour: moment(i, 'H').format('ha') + ' - ' +
+							moment(i, 'H').add(1, 'hours').format('ha')
 					}
 				};
 			});
 		}));
 	}
 
-	var drawMatrix = function (vis, byDay, byHour) {
+	var drawMatrix = function (vis, byDay, byHour, c) {
+
+		colors = c;
 
 		var margin = vis.margin;
 		dim = vis.dim;
@@ -94,32 +109,35 @@ define(['moment'], function (moment) {
 		var xBase = d3.scale.linear().range([0, dim.w]).domain([0, 24]);
 		x = {
 			matrix: xBase,
-			day: d3.scale.linear().range([0, dim.w]).domain([0, dayTicks.endPoint]),
+			day: d3.scale.linear().range([0, dim.w])
+				.domain([0, dayTicks.endPoint]),
 			hour: xBase
 		};
 		xAxis = {
-			matrix: d3.svg.axis().orient('bottom').scale(x.matrix)
+			matrix: d3.svg.axis().orient('bottom').scale(xBase)
 					.tickSize(-dim.h)
 					.tickPadding(E.noTicks.padding)
-					.ticks(24).tickFormat(function (d) {
+					.tickFormat(function (d) {
 						return moment(d, 'hh').format('ha');
 					}),
 			day: d3.svg.axis().orient('bottom').scale(x.day)
 					.tickSize(-dim.h)
 					.tickPadding(E.noTicks.padding)
 					.ticks(dayTicks.count),
-			hour: d3.svg.axis().orient('bottom').scale(x.hour)
-					.ticks(24).tickFormat(function (d) {
+			hour: d3.svg.axis().orient('bottom').scale(xBase)
+					.tickFormat(function (d) {
 						return moment(d, 'hh').format('ha');
 					})
 		};
 
 		var hourTicks = E.getAxisTicks(maxVals.hour, dim.h);
-		var yBase = d3.scale.ordinal().rangeBands([0, dim.h]).domain([0, 1, 2, 3, 4, 5, 6]);
+		var yBase = d3.scale.ordinal().rangeBands([0, dim.h])
+			.domain([0, 1, 2, 3, 4, 5, 6]);
 		y = {
 			matrix: yBase,
 			day: yBase,
-			hour: d3.scale.linear().range([0, dim.h]).domain([hourTicks.endPoint, 0])
+			hour: d3.scale.linear().range([0, dim.h])
+				.domain([hourTicks.endPoint, 0])
 		};
 		yAxis = {
 			matrix: d3.svg.axis().orient('left').scale(y.matrix)
@@ -139,7 +157,7 @@ define(['moment'], function (moment) {
 		};
 
 		//matrix dataset
-		var dataset = createMatrixDataset(byHour, maxVals);
+		var dataset = createMatrixDataset(byHour, byDay, maxVals.matrix);
 		svg.selectAll('.js-matrix-block')
 			.data(dataset)
 			.enter().append('rect')
@@ -147,9 +165,12 @@ define(['moment'], function (moment) {
 			.attr('y', function (d) { return d.y.matrix; })
 			.attr('width', function (d) { return d.width.matrix; })
 			.attr('height', function (d) { return d.height.matrix; })
-			.style('fill', '#000')
+			.style('fill', E.colors.when)
 			.style('opacity', function (d) { return d.opacity.matrix; })
-			.attr('class', 'js-matrix-block');
+			.attr('class', 'js-matrix-block')
+			.on('mouseover', function (d) {
+				// console.log(d.str);
+			});
 
 		svg.append('g')
 			.attr('class', 'x axis js-matrix-x')
@@ -168,11 +189,20 @@ define(['moment'], function (moment) {
 			.attr('y2', 0)
 			.attr('class', 'stroke-tick js-matrix-addedTick');
 
-		//FIXME: add legends, add label on axis
+		//color vals
+		var chromaVals = E.getAxisTicks(maxVals.matrix);
+		E.drawChromaLegend(svg, dim.w, -margin.top, chromaVals.count,
+			chromaVals.step, 'matrix', colors);
+
+		E.putAxisLable(svg, dim.w/2, dim.h + E.noTicks.lableBottom,
+			'chech-ins', 'x', 'small', true);
+		E.putAxisLable(svg, -dim.h / 2, -margin.left + 15,
+			'chech-ins', 'y', 'small', true);
+
 	};
 
 	return {
-		updateGraph: updateGraph,
-		drawMatrix: drawMatrix
+		drawMatrix: drawMatrix,
+		updateGraph: updateGraph
 	}
 });

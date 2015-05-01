@@ -3,8 +3,6 @@ define(['moment', 'textures'], function (moment, textures) {
 	var unit, colors;
 	var svg, dim, margin, xAxis, yAxis, x, y; //frequency
 	var block = 12; //calendar
-	var legendW = 200;
-	var legendH = 20;
 
 	function drawFreqBlocks(data, maxCount, avgCount) {
 
@@ -52,24 +50,6 @@ define(['moment', 'textures'], function (moment, textures) {
             .attr('class', 'size-huge pos-middle fill-white js-freq-block');
 	}
 
-	function updateLegend(step, gap) {
-
-		var unitW = legendW / step;
-
-		_.each(_.range(step), function (i) {
-			d3.select('.js-count-legend').append('rect')
-				.attr('x', 20 + unitW * i)
-				.attr('y', 0)
-				.attr('width', unitW)
-				.attr('height', legendH)
-				.style('fill', colors[i])
-				.attr('class', 'stroke-tick stroke-1 js-count-legend-block');
-		});
-
-		d3.select('.js-count-legend-max')
-			.text(step * gap);
-	}
-
 	var transformCount = function (u, c, data, avgCount) {
 
 		unit = u;
@@ -95,8 +75,8 @@ define(['moment', 'textures'], function (moment, textures) {
 		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
 
 		//calendar
-		d3.selectAll('.js-count-legend-block').remove();
-		updateLegend(frequency.counts.length, frequency.gap);
+		$('.js-calendar-legend-block').remove();
+		E.updateChroma(frequency.counts.length, frequency.gap, 'calendar', colors);
 		d3.selectAll('.js-cal-block').style('fill', function (d) {
 			var cId = 0;
 			for (var i = frequency.counts.length ; i > 0 ; i--) {
@@ -145,17 +125,10 @@ define(['moment', 'textures'], function (moment, textures) {
 			.attr('class', 'y axis js-freq-axis-y')
 			.call(yAxis);
 
-		svg.append('text')
-			.attr('x', dim.w / 2)
-			.attr('y', dim.h + E.noTicks.lableBottom)
-			.text('beers /' + unit)
-			.attr('class', 'pos-middle fill-grey js-freq-lable-x');
-		svg.append('text')
-			.attr('x', - dim.h / 2)
-			.attr('y', -40)
-			.text('number of ' + unit + 's')
-			.attr('class', 'pos-middle fill-grey js-freq-lable-y')
-			.attr('transform', 'rotate(-90)');
+		E.putAxisLable(svg, dim.w/2, dim.h + E.noTicks.lableBottom,
+			'beers /' + unit, 'x', 'middle', false, 'js-freq-lable-x');
+		E.putAxisLable(svg, -dim.h / 2, -40,
+			'number of ' + unit + 's', 'y', 'middle', false, 'js-freq-lable-y');
 
 		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
 	};
@@ -194,24 +167,6 @@ define(['moment', 'textures'], function (moment, textures) {
 			.attr('dy', dy)
 			.text(str)
 			.attr('class', c + ' size-tiny');
-	}
-
-	function drawLegend(svg, dimW, margin, data) {
-
-		svg.append('g')
-			.attr('transform', 'translate(' + (dimW - legendW - 40) +
-				', ' + (- margin.top / 2) + ')')
-			.attr('class', 'js-count-legend');
-		d3.select('.js-count-legend').append('text')
-			.attr('x', 5)
-			.attr('y', legendH - 5)
-			.text('0')
-			.attr('class', 'size-small');
-		d3.select('.js-count-legend').append('text')
-			.attr('x', legendW + 25)
-			.attr('y', legendH - 5)
-			.attr('class', 'size-small js-count-legend-max');
-		updateLegend(data.counts.length, data.gap);
 	}
 
 	function getColor(data, d) {
@@ -259,7 +214,9 @@ define(['moment', 'textures'], function (moment, textures) {
 		var svg = vis.draw({dim: dim, margin: margin}, 'calendar');
 
 		//draw scale legend
-		drawLegend(svg, dim.w, margin, data.frequency[unit]);
+		E.drawChromaLegend(svg, dim.w, -margin.top/2,
+			data.frequency[unit].counts.length,
+			data.frequency[unit].gap, 'calendar', colors);
 
 		//y axis day label
 		putAxisLabels(svg, rowC, gap);

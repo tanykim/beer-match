@@ -326,22 +326,15 @@ define(['textures'], function (textures) {
 				.attr('class', 'size-tiny')
 		});
 
-		svg.append('text')
-			.attr('x', dim.w/2)
-			.attr('y', dim.h + E.noTicks.lableBottom)
-			.text('check-ins')
-			.attr('class', 'pos-middle fill-grey size-small')
+		E.putAxisLable(svg, dim.w/2, dim.h + E.noTicks.lableBottom,
+			'chech-ins', 'x', 'small');
+		E.putAxisLable(svg, -dim.h / 2 + 4, -margin.left + 10,
+			'score', 'y', 'small');
 		svg.append('path')
 			.attr('d', E.drawStar(8))
 			.attr('transform', 'translate( ' + (-margin.left + 6) + ', ' +
 				(dim.h / 2 + 24)+ ')')
 			.attr('class', 'fill-grey stroke-none')
-		svg.append('text')
-			.attr('x', -dim.h / 2 + 4)
-			.attr('y', -margin.left + 10)
-			.text('score')
-			.attr('transform', 'rotate(-90)')
-			.attr('class', 'pos-middle fill-grey size-small')
 	};
 
 	return {

@@ -87,19 +87,23 @@ define(['moment', 'vis-settings',
 			var val = $(this).data().value.split('-');
 			Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 		});
-		/*
+
 
 		//3--when
+		var whenScale = function (length) {
+			return S.getChroma(
+				['#fff', E.colors.when], length);
+		}
 		S.setVis('when', function (vis) {
-			When.drawMatrix(vis, b.byDay, b.byHour);
+			When.drawMatrix(vis, b.byDay, b.byHour, whenScale(10));
 		});
 		$('.js-when-switch').click(function() {
-			var changed = changeRadioSelection($(this));
+			var changed = S.changeRadioSelection($(this));
 			if (changed) {
 				When.updateGraph($(this).data().value);
 			}
 		});
-
+/*
 		//4-where
 		Where.createHeatmap(b.locationList);
 		Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));

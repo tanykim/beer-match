@@ -48,7 +48,8 @@ var E = {
         ratings: {
             style: '#ffc61e', abv: '#d86018',
             brewery: '#7c2529', country: '#3f2021'
-        }
+        },
+        when: '#7c2529'
     },
     lightGrey: '#e5e5e5',
     beerColors: ['#e8dd21', '#ffc61e', '#f99b0c', '#d38235', '#d86018',
@@ -67,10 +68,15 @@ var E = {
             gap = gap / 2;
         }
         var slicesCount = Math.ceil((maxVal + 1) / gap);
+        var count = Math.min(10, slicesCount);
+        if (len) {
+            count = len / slicesCount < 20 ? 5 : count;
 
+        }
         return {
         	endPoint: slicesCount * gap,
-        	count: len / slicesCount < 20 ? 5 : Math.min(10, slicesCount)
+        	count: count,
+            step: slicesCount * gap / count
         }
 	},
 
@@ -142,5 +148,52 @@ var E = {
                 .x(function (d) { return d[0] * k;})
                 .y(function (d) { return d[1] * k;});
         return line(star) + 'Z';
+    },
+
+    legendW: 200,
+    legendH: 20,
+
+    updateChroma: function (step, gap, c, colors) {
+        var unitW = E.legendW / step;
+        _.each(_.range(step), function (i) {
+            d3.select('.js-' + c + '-legend').append('rect')
+                .attr('x', 20 + unitW * i)
+                .attr('y', 0)
+                .attr('width', unitW)
+                .attr('height', E.legendH)
+                .style('fill', colors[i])
+                .attr('class', 'stroke-tick stroke-1 ' +
+                    'js-' + c + '-legend-block');
+        });
+        d3.select('.js-' + c + '-legend-max').text(step * gap);
+    },
+
+    drawChromaLegend: function (svg, dimW, yPos, step, gap, c, colors) {
+        svg.append('g')
+            .attr('transform', 'translate(' + (dimW - E.legendW - 40) +
+                ', ' + yPos + ')')
+            .attr('class', 'js-' + c + '-legend');
+        d3.select('.js-' + c + '-legend').append('text')
+            .attr('x', 5)
+            .attr('y', E.legendH - 5)
+            .text('0')
+            .attr('class', 'size-small');
+        d3.select('.js-' + c + '-legend').append('text')
+            .attr('x', E.legendW + 25)
+            .attr('y', E.legendH - 5)
+            .attr('class', 'size-small js-' + c + '-legend-max');
+        E.updateChroma(step, gap, c, colors);
+    },
+
+    putAxisLable: function (svg, x, y, str, axis, size, hide, jsc) {
+        svg.append('text')
+            .attr('x', x)
+            .attr('y', y)
+            .text(str)
+            .attr('transform', axis === 'y' ? 'rotate(-90)' : '')
+            .attr('class', 'pos-middle fill-grey size-' + size +
+                (hide ? ' hide' : '') +
+                (jsc ? ' ' + jsc : ''));
     }
+
 }
