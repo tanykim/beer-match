@@ -8,7 +8,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		score: 2.4,
 		categories: 2,
 		ratings: 6,
-		beers: 7,
+		beers: 6,
 		when: 12,
 		where: 12,
 		day: 4,
