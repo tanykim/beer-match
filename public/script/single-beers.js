@@ -1,6 +1,6 @@
 define(['moment'], function (moment) {
 
-    var colors = E.category.colors;
+    var colors = E.colors.ratings;
     var dim, margin, svg, r;
 
     function getCenterBeerPositions(category, order, text) {
@@ -101,7 +101,7 @@ define(['moment'], function (moment) {
     var drawCenterBeer = function () {
 
         //bg Radius, link line & name
-        _.each(E.category.list, function (category) {
+        _.each(['style', 'abv', 'brewery', 'country'], function (category) {
             svg.append('line')
                 .attr('x1', dim.w/2)
                 .attr('x2', dim.w/2)
@@ -208,8 +208,8 @@ define(['moment'], function (moment) {
 
             //draw dot
             _.each(data, function (d) {
-                var distance = gapBase * (d.rating * 2 + 1) + margin.iR;
-                var angle = angleMargin + baseAngle / _.size(data) * d.order.count + Math.PI/2 * (i + 1);
+                var distance = gapBase * (d.score * 2 + 1) + margin.iR;
+                var angle = angleMargin + baseAngle / _.size(data) * d.id + Math.PI/2 * (i + 1);
                 var xPos = distance * Math.sin(angle);
                 var yPos = distance * Math.cos(angle);
                 svg.append('circle')
@@ -218,7 +218,7 @@ define(['moment'], function (moment) {
                     .attr('r', r)
                     .style('fill', colors[category])
                     .style('opacity', 0.3)
-                    .attr('class', 'js-beers-dot-' + category + ' js-beers-' + category + '-' + d.order.count)
+                    .attr('class', 'js-beers-dot-' + category + ' js-beers-' + category + '-' + d.id)
                     .on('mouseover', function() {
                         d3.select(this).attr('opacity', 1);
                         svg.append('text')

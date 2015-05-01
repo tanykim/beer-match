@@ -186,7 +186,7 @@
 		padding-top: @visHeaderH * 2;
 		padding-bottom: @visHeaderH;
 		overflow: hidden;
-		border-bottom: 1px dashed #999;
+		border-bottom: 2px solid @yellow;
 	}
 	.vis-contents-footer {
 		color: @light;
@@ -211,7 +211,20 @@
 		border: 1px solid @lightGrey;
 	}
 }
-
+.vis-radio-sub {
+	line-height: 2em;
+	font-size: small;
+	span {
+		display: inline-block;
+		padding: 0 1em;
+		background-color: @white;
+		border-radius: 0.5em;
+		border: 1px solid @lightGrey;
+	}
+	.selected {
+		background-color: fade(@lightGrey, 50%);
+	}
+}
 /* each element common */
 .90p {
 	width: 90%;
@@ -228,6 +241,11 @@
 /* each element common */
 .single-count {
 	text-align: center;
+	.radio {
+		.selected {
+			background-color: fade(@vis-count, 50%);
+		}
+	}
 	.frequency {
 		.60p();
 		padding-top: 1em;
@@ -246,20 +264,49 @@
 }
 
 .single-ratings {
-	.average {
-		text-align: center;
+	text-align: center;
+	.radio {
+		.style.selected {
+			background-color: fade(@style, 50%);
+		}
+		.abv.selected {
+			background-color: fade(@abv, 50%);
+		}
+		.brewery.selected {
+			background-color: fade(@brewery, 50%);
+		}
+		.country.selected {
+			background-color: fade(@country, 50%);
+		}
 	}
-	.score {
-		background-color: @lightGrey;
-	}
-	.categories-title {
-		text-align: center;
-	}
-	.categories {
-		background-color: @lightGrey;
-	}
-	.ratings {
-		background-color: @lightGrey;
+	.vis-wrapper {
+		.90p();
+		.wrapper-left {
+			margin-right: 1em;
+			display: inline-block;
+			vertical-align: top;
+		}
+		.categories {
+			.vis-shadow();
+		}
+		.average {
+			font-size: @small;
+			background-color: @darkGrey;
+			color: @white;
+			padding: 0.5em;
+			margin-top: 2em;
+			margin-bottom: 1em;
+			border-radius: 0.5em;
+		}
+		.wrapper-right {
+			display: inline-block;
+			.vis-shadow();
+			.radio-sortBy {
+				padding-top: 1em;
+				padding-right: 1em;
+				text-align: right;
+			}
+		}
 	}
 }
 
@@ -359,15 +406,17 @@
 	}
 }
 /* when */
-.day {
-	width: 30%;
-	margin: 0 auto;
-	/*background-color: #efefef;*/
-	float: left;
-}
-.hour {
-	width: 70%;
-	float: left;
+.single-whenWhere {
+	.day {
+		width: 30%;
+		margin: 0 auto;
+		/*background-color: #efefef;*/
+		float: left;
+	}
+	.hour {
+		width: 70%;
+		float: left;
+	}
 }
 .hour-block-total {
 	fill: #000;

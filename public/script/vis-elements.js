@@ -1,5 +1,6 @@
 var E = {
-	//text for UI
+
+    //text for UI
     msgs: {
         intro: {
             init: 'Explore your beers and see a match with a friend!' +
@@ -41,25 +42,21 @@ var E = {
         }
     },
 
-    //categories
-    category: {
-    	list: ['style', 'abv', 'brewery', 'country'],
-    	colors: {
-    		style: '#ffc61e', abv: '#d86018',
-			brewery: '#7c2529', country: '#3f2021'
-    	}
-    },
-
     //colors
-	beerColors: ['#e8dd21', '#ffc61e', '#f99b0c', '#d38235', '#d86018',
-        '#7c2529', '#643335', '#3f2021', '#25282a'],
     colors: {
-        count: '#f99b0c'
+        count: '#f99b0c',
+        ratings: {
+            style: '#ffc61e', abv: '#d86018',
+            brewery: '#7c2529', country: '#3f2021'
+        }
     },
-	users: ['#801E47', '#3A5F4E'],
+    lightGrey: '#e5e5e5',
+    beerColors: ['#e8dd21', '#ffc61e', '#f99b0c', '#d38235', '#d86018',
+        '#7c2529', '#643335', '#3f2021', '#25282a'],
+    users: ['#801E47', '#3A5F4E'],
 
-	//vis
-	noTicks: { size: 0, padding: 9 }, //ticks size
+    //vis
+	noTicks: { size: 0, padding: 9, lableTop: -26, lableBottom: 40 }, //ticks size
 
 	getAxisTicks: function (maxVal, len) {
 		//gap: 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000...
@@ -73,12 +70,12 @@ var E = {
 
         return {
         	endPoint: slicesCount * gap,
-        	count: len / slicesCount < 16 ? 5 : Math.min(10, slicesCount)
+        	count: len / slicesCount < 20 ? 5 : Math.min(10, slicesCount)
         }
 	},
 
-    ttP: 12, //tooltip Padding
-    ttL: 20, //tooltip line height
+    ttP: 14, //tooltip Padding
+    ttL: 22, //tooltip line height
 
     drawTooltip: function (svg, name, count) {
 
@@ -92,22 +89,11 @@ var E = {
             .attr('y', 0)
             .attr('class', 'js-' + name + '-tooltip-text');
         _.each(_.range(count), function (i) {
-            d3.select('.js-cal-tooltip-text').append('tspan')
+            d3.select('.js-' + name + '-tooltip-text').append('tspan')
                     .attr('x', 0)
                     .attr('dy', -E.ttL)
                     .attr('class', 'fill-white size-tiny js-' + name +
                         '-tooltip-text-' + i);
-        });
-    },
-
-    setTooltipText: function (strArray, name, dir) {
-        _.each(strArray, function (d, i) {
-            d3.select('.js-' + name + '-tooltip-text-' + i)
-                .text(d)
-                .attr('x', dir * E.ttP)
-                .attr('class', 'fill-white size-tiny js-' + name +
-                    '-tooltip-text-' + i + ' ' +
-                    (dir === 1 ? 'pos-start' : 'pos-end'));
         });
     },
 
@@ -117,5 +103,44 @@ var E = {
                 ' h ' + width * dir +
                 ' v ' + height +
                 ' h ' + -dir * (width - 10) + ' z';
+    },
+
+    setTooltipText: function (strArray, name, dimW, x, y) {
+
+        var dir = x < dimW / 2 ? 1 : -1;
+
+        _.each(strArray, function (d, i) {
+            d3.select('.js-' + name + '-tooltip-text-' + i)
+                .text(d)
+                .attr('x', dir * E.ttP)
+                .attr('class', 'fill-white size-tiny js-' + name +
+                    '-tooltip-text-' + i + ' ' +
+                    (dir === 1 ? 'pos-start' : 'pos-end'));
+        });
+        $('.js-' + name + '-tooltip-bg')
+            .attr('d',
+                E.getTooltipPath(dir,
+                    $('.js-' + name + '-tooltip-text').width() +
+                    E.ttP * 2, (E.ttL * 2 + E.ttP - 4) ));
+        $('.js-' + name + '-tooltip').attr('transform',
+            'translate(' + (x + E.ttP / 2) + ', ' +
+                y + ')');
+    },
+
+    drawStar: function (k) {
+        var c1 = Math.cos(0.2 * Math.PI);
+        var c2 = Math.cos(0.4 * Math.PI);
+        var s1 = Math.sin(0.2 * Math.PI);
+        var s2 = Math.sin(0.4 * Math.PI);
+        var r = 1;
+        var hr = r / 1.5;
+        var r1 = 1.5 * r * c2/c1;
+        var star = [[0,-r], [r1*s1,-r1*c1], [r*s2,-r*c2], [r1*s2,r1*c2],
+                [r*s1,r*c1], [0,r1], [-r*s1,r*c1], [-r1*s2,r1*c2],
+                [-r*s2,-r*c2],[-r1*s1,-r1*c1],[0,-r]];
+        var line = d3.svg.line()
+                .x(function (d) { return d[0] * k;})
+                .y(function (d) { return d[1] * k;});
+        return line(star) + 'Z';
     }
 }

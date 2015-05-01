@@ -197,10 +197,10 @@
 
 		<!-- 0 basic stats -->
 		<div class="vis-contents single-count js-single-contents-0">
-			<div class="vis-radio">
-				<span data-value="day" class="link js-count-period js-count-period-day"><i class="fa fa-circle-o"></i> Day </span>
-				<span data-value="week" class="link js-count-period js-count-period-week"><i class="fa fa-circle-o"></i> Week </span>
-				<span data-value="month" class="link js-count-period js-count-period-month"><i class="fa fa-circle-o"></i> Month </span>
+			<div class="vis-radio radio">
+				<span data-value="day" class="link day js-count-period"><i class="fa fa-circle-o"></i> Day </span>
+				<span data-value="week" class="link week js-count-period"><i class="fa fa-circle-o"></i> Week </span>
+				<span data-value="month" class="link month js-count-period"><i class="fa fa-circle-o"></i> Month </span>
 			</div>
 			<div id="vis-frequency" class="frequency js-single-svg"></div>
 			<div class="sober">You were sober for <span class="bold js-count-sober"> XX unit </span> out of total <span class="bold js-count-total"> XX unit</span>.</div>
@@ -209,41 +209,27 @@
 
 		<!-- 1 ratings -->
 		<div class="vis-contents single-ratings js-single-contents-1">
-			<div class="container">
-				<div class="row">
-					<div class="col-xs-4 average">
-						average rating </br>
-						<span class="js-score-avg"></span>
+			<div class="vis-radio radio">
+				<span data-value="style" class="link style selected js-ratings-title"><i class="fa fa-dot-circle-o"></i> Style </span>
+				<span data-value="abv" class="link abv js-ratings-title"><i class="fa fa-circle-o"></i> ABV </span>
+				<span data-value="brewery" class="link brewery js-ratings-title"><i class="fa fa-circle-o"></i> Brewery </span>
+				<span data-value="country" class="link country js-ratings-title"><i class="fa fa-circle-o"></i> Country </span>
+			</div>
+			<div class="vis-wrapper">
+				<div class="wrapper-left">
+					<div id="vis-categories" class="categories js-single-svg"></div>
+					<div class="average">Average Score: <span class="js-score-avg"></span></div>
+					<div id="vis-score" class="score js-single-svg"></div>
+				</div>
+				<div class="wrapper-right">
+					<div class="vis-radio-sub radio-sortBy">
+						Sort By <span data-value="count" class="link selected js-ratings-sortBy"><i class="fa fa-dot-circle-o"></i>  Count </span>
+						<span data-value="score" class="link js-ratings-sortBy"><i class="fa fa-circle-o"></i> Average Score </span>
+						<span data-value="name" class="link js-ratings-sortBy"><i class="fa fa-circle-o"></i> A to Z </span>
 					</div>
-					<div id="vis-score" class="col-xs-8 score js-single-svg"></div>
-				</div>
-				<div class="row vis-radio">
-					<div class="col-xs-2"></div>
-					<span class="link selected col-xs-2 categories-title js-ratings-title" data-value="style">STYLE</span>
-					<span class="link col-xs-2 categories-title js-ratings-title" data-value="abv">ABV</span>
-					<span class="link col-xs-2 categories-title js-ratings-title" data-value="brewery">BREWERY</span>
-					<span class="link col-xs-2 categories-title js-ratings-title" data-value="country">COUNTRY</span>
-					<div class="col-xs-2"></div>
-				</div>
-				<div class="row">
-					<div class="col-xs-2"></div>
-					<div id="vis-categories-style" class="col-xs-2 categories js-single-svg"></div>
-					<div id="vis-categories-abv" class="col-xs-2 categories js-single-svg"></div>
-					<div id="vis-categories-brewery" class="col-xs-2 categories js-single-svg"></div>
-					<div id="vis-categories-country" class="col-xs-2 categories js-single-svg"></div>
-					<div class="col-xs-2"></div>
-				</div>
-				<div class="row ratings">
-					<div class="col-xs-12 vis-radio js-ratings-options-bar">
-						Sort By
-						<span data-value="count" class="link selected js-ratings-sortBy js-ratings-sortBy-count"> Count </span>
-						<span data-value="rating" class="link js-ratings-sortBy js-ratings-sortBy-rating"> Average Score </span>
-						<span data-value="name" class="link js-ratings-sortBy js-ratings-name"> A to Z </span>
-					</div>
-					<div id="vis-ratings" class="col-xs-12 js-single-svg"></div>
+					<div id="vis-ratings" class="ratings js-single-svg"></div>
 				</div>
 			</div>
-
 		</div>
 
 		<!-- 2 beers like and hate -->

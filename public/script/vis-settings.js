@@ -5,9 +5,9 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 	var widths = {
 		frequency: 8,
 		calendar: 12,
-		score: 8,
+		score: 2.4,
 		categories: 2,
-		ratings: 12,
+		ratings: 6,
 		beers: 8,
 		when: 12,
 		where: 12,
@@ -20,7 +20,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 	var heights = {
 		frequency: 300,
 		calendar: null,
-		score: 200,
+		score: 260,
 		categories: null,
 		ratings: null,
 		beers: null,
@@ -35,9 +35,9 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 	var margins = {
 		frequency: { top: 100, right: 30, bottom: 50, left: 70 },
 		calendar: { top: 40, right: 20, bottom: 20, left: 40 },
-		score: { top: 40, right: 40, bottom: 50, left: 60 },
-		categories: { top: 10, right: 2, bottom: 10, left: 2 },
-		ratings: { top: 60, right: 40, bottom: 20, left: 300 },
+		score: { top: 0, right: 20, bottom: 40, left: 54 },
+		categories: { top: 60, right: 20, bottom: 10, left: 20 },
+		ratings: { top: 60, right: 20, bottom: 20, left: 240 },
 		beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 40 },
 		when: { top: 10, right: 20, bottom: 20, left: 40 },
 		where: { top: 20, right: 100, bottom: 0, left: 100 },
@@ -48,9 +48,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 	};
 
    	var getWidth = function(div) {
-        // 15 is margin
-   		return $('.vis')
-            .find('.container').outerWidth() / 12 * widths[div] - 15 * 2;
+        var w = $('body').width() * 0.9 / 12 * widths[div];
+        return Math.min(Math.max(w, 200), 4000);
    	};
 
    	function drawSVG(vis, div) {
@@ -91,6 +90,27 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		callback(vis);
    	};
 
+    var updateSelection = function (elm, tag) {
+        elm.parent().find(tag).removeClass('selected');
+        elm.addClass('selected');
+        elm.parent().find('span').find('i')
+            .removeClass('fa-dot-circle-o').addClass('fa-circle-o');
+        elm.find('i')
+            .removeClass('fa-circle-o').addClass('fa-dot-circle-o');
+    }
+
+    var changeRadioSelection = function (elm, tag) {
+        if (!tag) {
+            tag = 'span';
+        }
+        if (elm.find('i').hasClass('fa-dot-circle-o')) {
+            return false;
+        } else {
+            updateSelection(elm, tag);
+            return true;
+        }
+    };
+
     var getChroma = function (range, count) {
         var scale = chroma.scale(range).domain([0, count]);
         return _.map(_.range(count), function (i) {
@@ -101,6 +121,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 	return {
 		setVisNoSVG: setVisNoSVG,
 		setVis: setVis,
+        changeRadioSelection: changeRadioSelection,
+        updateSelection: updateSelection,
         getChroma: getChroma
 	};
 

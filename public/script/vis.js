@@ -8,20 +8,6 @@ define(['moment', 'vis-settings',
 
 	'use strict';
 
-	function changeRadioSelection(elm, tag) {
-		if (elm.find('i').hasClass('fa-dot-circle-o')) {
-			return false;
-		} else {
-			if (!tag) {
-				tag = 'span';
-			}
-			elm.parent().find(tag).find('i')
-				.removeClass('fa-dot-circle-o').addClass('fa-circle-o');
-			elm.find('i')
-				.removeClass('fa-circle-o').addClass('fa-dot-circle-o');
-			return true;
-		}
-	}
 	var startVis = function(b) {
 
 		//view change
@@ -32,6 +18,7 @@ define(['moment', 'vis-settings',
 			return S.getChroma(
 				[E.beerColors[0], E.colors.count, E.beerColors[7]], length);
 		}
+		S.updateSelection($('.js-count-period.' + b.avgUnit));
 		Count.setUnit(b.avgUnit,
 			countScale(b.countByPeriod.frequency[b.avgUnit].counts.length));
 		S.setVis('frequency', function (vis) {
@@ -40,7 +27,7 @@ define(['moment', 'vis-settings',
 		Count.drawCalendar(S.setVisNoSVG('calendar'), b.timeRange,
 			b.countByPeriod);
 		$('.js-count-period').click(function() {
-			var changed = changeRadioSelection($(this));
+			var changed = S.changeRadioSelection($(this));
 			if (changed) {
 				var unit = $(this).data().value;
 				Count.transformCount(unit,
@@ -49,39 +36,46 @@ define(['moment', 'vis-settings',
 			}
 		});
 
-		/*
 		//1--ratings
 		S.setVis('score', function (vis) {
 			Ratings.drawScoresStats(vis, b.scoreAvg, b.scoreCount);
 		});
 		S.setVisNoSVG('categories', function (vis) {
-			_.each(E.category.list, function (c) {
-				Ratings.drawCategories(vis, c, b.userinfo.checkinCount, b.ratingsList[c]);
-			});
+			Ratings.drawCategories(vis, 'style', b.userinfo.checkinCount,
+				b.ratingsList);
 		});
+		Ratings.drawRatings(S.setVisNoSVG('ratings'), b.scoreAvg);
 
-		var category = 'style';
-		var ratingsSortBy = 'count';
-		Ratings.drawRatings(b.ratingsList[category], category, ratingsSortBy, b.scoreAvg, S.setVisNoSVG('ratings'));
-
-		//select ratings key
+		//select category
 		$('.js-ratings-title').click(function() {
-			category = $(this).data().value;
-			var changed = changeRadioSelection($(this));
+			var changed = S.changeRadioSelection($(this));
 			if (changed) {
-				Ratings.drawRatings(b.ratingsList[category], category, ratingsSortBy);
+				var category = $(this).data().value;
+
+				//revert to the first choice
+				_.each($('.js-ratings-sortBy'), function (d) {
+					if ($(d).data().value === 'count') {
+						$(d).addClass('slected');
+						$(d).find('i').removeClass('fa-circle-o').addClass('fa-dot-circle-o');
+					} else {
+						$(d).removeClass('slected');
+						$(d).find('i').removeClass('fa-dot-circle-o').addClass('fa-circle-o');
+					}
+				});
+				Ratings.updateVis(b.ratingsList[category], category);
+				Ratings.drawRatings(null, b.scoreAvg);
 			}
 		});
 
 		//sort bar chart
 		$('.js-ratings-sortBy').click(function() {
-			var changed = changeRadioSelection($(this));
+			var changed = S.changeRadioSelection($(this));
 			if (changed) {
-				ratingsSortBy = $(this).data().value;
-				Ratings.transformRatingsBar(b.ratingsList[category], ratingsSortBy);
+				Ratings.transformRatingsBar($(this).data().value);
 			}
 		});
 
+		/*
 		//2--beers loved and hated
 		Beers.putBeers(b.beerList);
 		S.setVis('beers', function (vis) {
@@ -91,7 +85,7 @@ define(['moment', 'vis-settings',
 		$('.js-beers-images').click(function (e) {
 			var target = $(e.target);
 			if (target.prop('tagName') === 'IMG') {
-				changeRadioSelection($(target), 'img');
+				S.updateSelection($(target), 'img');
 				var val = target.data().value.split('-');
 				Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 			}
