@@ -82,13 +82,10 @@ define(['moment', 'vis-settings',
 			Beers.drawBeers(vis, b.ratingsList);
 			Beers.updateCenterBeer(b.beerList.loves[0].list[0], b.maxCount);
 		});
-		$('.js-beers-images').click(function (e) {
-			var target = $(e.target);
-			if (target.prop('tagName') === 'IMG') {
-				S.updateSelection($(target), 'img');
-				var val = target.data().value.split('-');
-				Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
-			}
+		$('.js-beers-images').find('img').click(function (e) {
+			S.updateSelection($(this), 'img');
+			var val = $(this).data().value.split('-');
+			Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 		});
 		/*
 

@@ -274,7 +274,7 @@ define(['moment'], function (moment) {
     var putBeers = function (beerList) {
 
         function addBeer(beer, key, i, j) {
-            $('.js-beers-' + key + '-list').find('span').last()
+            $('.js-beers-' + key + '-list')
                 .append('<img src="' + beer.label + '" width="40"' +
                     'class="label-image link ' +
                     (key === 'loves' && i + j === 0 ? 'selected"' : '"') +
@@ -286,12 +286,10 @@ define(['moment'], function (moment) {
             } else {
                 _.each(sort, function (list, i) {
                     $('.js-beers-' + key + '-list')
-                        .append('<span><span class="label-rating">' +
-                            (i > 0 ? ' / ' : '') +
+                        .append((i > 0 ? ' / ' : '') +
                             (key === 'mosts' ?
                                 '<i class="fa fa-check-square-o"></i> ' :
-                                '<i class="fa fa-star"></i> ') +
-                            list.title + '</span></span>');
+                                '<i class="fa fa-star"></i> ') + list.title);
                     _.each(list.list, function (beer, j) {
                         addBeer(beer, key, i, j);
                     });

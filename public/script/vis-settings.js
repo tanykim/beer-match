@@ -8,7 +8,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		score: 2.4,
 		categories: 2,
 		ratings: 6,
-		beers: 6,
+		beers: 7,
 		when: 12,
 		where: 12,
 		day: 4,
@@ -49,7 +49,11 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 
    	var getWidth = function(div) {
         var w = $('body').width() * 0.9 / 12 * widths[div];
-        return Math.min(Math.max(w, 200), 4000);
+        if (div !== 'beers') {
+            return Math.min(Math.max(w, 200), 4000);
+        } else {
+            return Math.min($(window).height() - 140, w);
+        }
    	};
 
    	function drawSVG(vis, div) {
