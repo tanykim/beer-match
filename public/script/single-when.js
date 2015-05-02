@@ -80,7 +80,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		}, 0);
 	}
 
-	function createMatrixDataset (byHour, byDay, maxVals) {
+	function createMatrixDataset (byHour, byDay, maxVal) {
 
 		var hourly = _.map(_.range(7), function (d) {
 			return _.map(_.range(24), function (h) {
@@ -111,7 +111,7 @@ define(['moment', 'textures'], function (moment, textures) {
 						hour: dim.h - y.hour(d)
 					},
 					opacity: {
-						matrix: d / maxVals,
+						matrix: d / Math.max(maxVal, 10),
 						day: 1,
 						hour: 1
 					},
@@ -177,8 +177,6 @@ define(['moment', 'textures'], function (moment, textures) {
 			.attr('class', 'fill-when size-middle js-matrix-vals-day')
 		$('.js-matrix-vals-hour').hide();
 		$('.js-matrix-vals-day').hide();
-
-
 	}
 
 	var drawMatrix = function (vis, byDay, byHour, c) {
@@ -206,16 +204,13 @@ define(['moment', 'textures'], function (moment, textures) {
 			hour: xBase
 		};
 		xAxis = {
-			matrix: d3.svg.axis().orient('bottom').scale(xBase)
-					.tickSize(0)
+			matrix: d3.svg.axis().orient('bottom').scale(xBase).tickSize(0)
 					.tickPadding(E.noTicks.padding)
 					.tickFormat(function (d) {
 						return moment(d, 'hh').format('ha');
 					}),
-			day: d3.svg.axis().orient('bottom').scale(x.day)
-					.tickSize(-dim.h)
-					.tickPadding(E.noTicks.padding)
-					.ticks(dayTicks.count),
+			day: d3.svg.axis().orient('bottom').scale(x.day).tickSize(-dim.h)
+					.tickPadding(E.noTicks.padding).ticks(dayTicks.count),
 			hour: d3.svg.axis().orient('bottom').scale(xBase)
 					.tickFormat(function (d) {
 						return moment(d, 'hh').format('ha');
@@ -232,8 +227,7 @@ define(['moment', 'textures'], function (moment, textures) {
 				.domain([hourTicks.endPoint, 0])
 		};
 		yAxis = {
-			matrix: d3.svg.axis().orient('left').scale(y.matrix)
-					.tickSize(0)
+			matrix: d3.svg.axis().orient('left').scale(y.matrix).tickSize(0)
 					.tickPadding(E.noTicks.padding)
 					.tickFormat(function (d) {
 						return moment(d, 'd').format('ddd');
@@ -242,20 +236,15 @@ define(['moment', 'textures'], function (moment, textures) {
 					.tickFormat(function (d) {
 						return moment(d, 'd').format('ddd');
 					}),
-			hour: d3.svg.axis().orient('left').scale(y.hour)
-					.tickSize(-dim.w)
-					.tickPadding(E.noTicks.padding)
-					.ticks(hourTicks.count)
+			hour: d3.svg.axis().orient('left').scale(y.hour).tickSize(-dim.w)
+					.tickPadding(E.noTicks.padding).ticks(hourTicks.count)
 		};
 
 		//matrix dataset
 		var dataset = createMatrixDataset(byHour, byDay, maxVals.matrix);
-
-		//darw blocks
 		drawBlocks(svg, dim, dataset);
 		drawValues(svg, dim, byHour, byDay);
 
-		//axis
 		svg.append('g')
 			.attr('class', 'x axis js-matrix-x')
 			.attr('transform', 'translate(0, ' + dim.h + ')')
@@ -267,7 +256,8 @@ define(['moment', 'textures'], function (moment, textures) {
 		//legends
 		var chromaVals = E.getAxisTicks(maxVals.matrix);
 		E.drawChromaLegend(svg, dim.w, 10,
-			chromaVals.endPoint / 10, 'matrix', colors);
+			(maxVals.matrix > 10 ? chromaVals.endPoint : 10) / 10,
+			'matrix', colors);
 		E.putAxisLable(svg, dim.w / 2, dim.h + E.noTicks.lableBottom,
 			'chech-ins', 'x', 'small', 'js-matrix-lable-x');
 		E.putAxisLable(svg, -dim.h / 2, -margin.left + 15,
@@ -281,13 +271,10 @@ define(['moment', 'textures'], function (moment, textures) {
 		E.setTooltipText([maxBlock.str, maxBlock.val + ' check-ins'],
 			'matrix', dim.w, maxBlock.x.matrix + maxBlock.width.matrix / 2,
 			maxBlock.y.matrix);
-
 		tx = textures.lines().size(6).background(E.colors.when);
 		svg.call(tx);
 		mb = maxBlock.order;
-		d3.select('.js-matrix-block-' + mb).style('fill', tx.url())
-			.style('fill-opacity', 1);
-
+		d3.select('.js-matrix-block-' + mb).style('fill', tx.url());
 	};
 
 	return {

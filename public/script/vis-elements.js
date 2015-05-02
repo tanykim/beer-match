@@ -60,6 +60,8 @@ var E = {
 	noTicks: { size: 0, padding: 9, lableTop: -26, lableBottom: 40 }, //ticks size
 
 	getAxisTicks: function (maxVal, len) {
+
+        //no length value for chroma
 		//gap: 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000...
         var gap = Math.pow(10, maxVal.toString().length - 1);
         if (maxVal / gap < 2) {
@@ -67,17 +69,15 @@ var E = {
         } else if (maxVal / gap < 5) {
             gap = gap / 2;
         }
-        var slicesCount = Math.ceil((maxVal + 1) / gap);
+        var slicesCount = Math.ceil((maxVal + (len ? 1 : 0)) / gap);
         var count = Math.min(10, slicesCount);
         if (len) {
             count = len / slicesCount < 20 ? 5 : count;
-
         }
         return {
         	endPoint: slicesCount * gap,
-        	count: count,
-            step: slicesCount * gap / count
-        }
+        	count: count
+       }
 	},
 
     ttP: 14, //tooltip Padding
