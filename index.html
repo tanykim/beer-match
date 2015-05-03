@@ -8,6 +8,7 @@
 <html>
 <head>
 <title>BEER Match - Powered by UNTAPPD</title>
+<link href="https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css" rel="stylesheet" />
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/style/bootstrap.css"/>
 <link rel="stylesheet" href="/style/style.css"/>
@@ -282,17 +283,9 @@
 
 		<!-- 4 where -->
 		<div class="vis-contents single-where js-single-contents-4">
-			<div class="container">
-				<div class="row">
-					<div class="col-xs-2"></div>
-					<div id="vis-map" class="col-xs-8 map js-single-svg"></div>
-					<div class="col-xs-2"></div>
-				</div>
-			</div>
-			<div class="container">
-				<div class="row">
-					<div id="vis-where" class="col-xs-12 where js-single-svg"></div>
-				</div>
+			<div class="vis-wrapper">
+				<div id="vis-map" class="map js-single-svg"></div>
+				<div id="vis-where" class="where js-single-svg"></div>
 			</div>
 		</div>
 
@@ -510,7 +503,8 @@
 	<div class="pic" style="background-image: url(<%= avatar2 %>)"></div>
 </script>
 
-<!-- <script type="text/javascript" charset="UTF-8" src="http://js.cit.api.here.com/se/2.5.4/jsl.js?with=all"></script> -->
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js'></script>
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js'></script>
 <script data-main="/script/main" src="/script/require.js"></script>
 
 </body>

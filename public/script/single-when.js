@@ -271,7 +271,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		E.setTooltipText([maxBlock.str, maxBlock.val + ' check-ins'],
 			'matrix', dim.w, maxBlock.x.matrix + maxBlock.width.matrix / 2,
 			maxBlock.y.matrix);
-		tx = textures.lines().size(6).background(E.colors.when);
+		tx = textures.lines().size(6).lighter().background(E.colors.when);
 		svg.call(tx);
 		mb = maxBlock.order;
 		d3.select('.js-matrix-block-' + mb).style('fill', tx.url());

@@ -4,6 +4,7 @@
 
 /* vis header */
 .vis-header {
+	z-index: 1000;
 	position: fixed;
 	background-color: @dark;
 	width: 100%;
@@ -401,18 +402,62 @@
 		.90p();
 	}
 }
+
 .single-where {
 	.map {
-		height: 200px;
-		.nm_bubble_content {
-			font-family: 'Lato';
-			font-size: 16px;
-			padding: 1em 1.5em !important;
+		display: inline-block;
+		vertical-align: top;
+		width: 35%;
+		height: 400px;
+		.leaflet-popup-content-wrapper {
+			background: @black;
+			color: @grey;
+			font-size:16px;
+			line-height:24px;
 		}
-		.desc {
-			font-size: 12px;
-			color: @lightGrey;
+		.leaflet-popup-content-wrapper{
+			.selected {
+				text-align: center;
+				font-family: 'Open Sans';
+				padding: 0 0.5em;
+				.name {
+					color: @white;
+					img {
+						width: @huge;
+						height: @huge;
+						margin-right: 4px;
+					}
+				}
+				.location {
+					font-size: @small;
+					.type {
+						color: @vis-where-type;
+					}
+					.city {
+						color: @vis-where-city;
+					}
+				}
+				.count {
+					font-size: small;
+				}
+			}
+
 		}
+		.leaflet-popup-tip-container {
+			width: 20px;
+			height: 10px;
+		}
+		.leaflet-popup-tip {
+		  border-left: 10px solid transparent;
+		  border-right: 10px solid transparent;
+		  border-top: 15px solid @black;
+		}
+	}
+	.where {
+		display: inline-block;
+		vertical-align: top;
+		width: 60%;
+		overflow: visible;
 	}
 }
 

@@ -12,8 +12,8 @@ define(['moment', 'vis-settings',
 
 		//view change
 		$('.js-single-svg').empty();
-
-		/*0--count
+		/*
+		//0--count
 		var countScale = function (length) {
 			return S.getChroma(
 				[E.beerColors[0], E.colors.count, E.beerColors[7]], length);
@@ -87,7 +87,6 @@ define(['moment', 'vis-settings',
 			var val = $(this).data().value.split('-');
 			Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 		});
-		*/
 
 		//3--when
 		var whenScale = function (length) {
@@ -102,11 +101,13 @@ define(['moment', 'vis-settings',
 				When.updateGraph($(this).data().value);
 			}
 		});
-/*
+		*/
+
 		//4-where
 		Where.createHeatmap(b.locationList);
 		Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
 
+		/*
 		//5-when and where
 		S.setVis('day', function (vis) {
 			WhenWhere.drawDayStats(vis, b.byDay);

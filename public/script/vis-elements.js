@@ -49,7 +49,8 @@ var E = {
             style: '#ffc61e', abv: '#d86018',
             brewery: '#7c2529', country: '#3f2021'
         },
-        when: '#7c2529'
+        when: '#7c2529',
+        where: { type: '#e8dd21', city: '#f99b0c' }
     },
     lightGrey: '#e5e5e5',
     beerColors: ['#e8dd21', '#ffc61e', '#f99b0c', '#d38235', '#d86018',

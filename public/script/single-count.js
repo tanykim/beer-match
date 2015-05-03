@@ -183,7 +183,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
 	function showTextures(svg, data, d) {
 		$('#vis-calendar').find('def').remove();
-		var t = textures.lines().size(block/2).background(getColor(data, d));
+		var t = textures.lines().size(block/2).lighter().background(getColor(data, d));
 		svg.call(t);
 		d3.selectAll('.js-cal-block').filter(function (b) {
 				return b.dateId[unit] === d.dateId[unit];

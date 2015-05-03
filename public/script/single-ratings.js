@@ -247,7 +247,7 @@ define(['textures'], function (textures) {
 
 		//texture
  		$('#vis-ratings').find('def').remove();
-		tx = textures.lines().size(6).stroke(
+		tx = textures.lines().size(6).lighter().stroke(
 				category === 'brewery' || category === 'country' ?
 				'#777' : '#343434'
 			).background(colors[category]);

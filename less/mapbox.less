@@ -1,0 +1,76 @@
+/*https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css*/
+
+.leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
+    -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
+    -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
+    -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+/* modified from
+https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css */
+/* refer vis-settings for color */
+@cluster-small: #ffc61e;
+@cluster-medium: #d86018;
+@cluster-large: #3f2021;
+
+.marker-cluster-small {
+    background-color: fade(@cluster-small, 60%);
+}
+.marker-cluster-small div {
+    background-color: fade(darken(@cluster-small, 5%), 60%);
+}
+.marker-cluster-medium {
+    background-color: fade(@cluster-medium, 60%);
+}
+.marker-cluster-medium div {
+    background-color: fade(darken(@cluster-medium, 5%), 60%);
+}
+.marker-cluster-large {
+    background-color: fade(@cluster-large, 60%);
+    color: @white;
+}
+.marker-cluster-large div {
+    background-color: fade(@cluster-large, 60%);
+    color: @white;
+}
+/* IE 6-8 fallback colors */
+.leaflet-oldie .marker-cluster-small {
+    background-color: @cluster-small;
+}
+.leaflet-oldie .marker-cluster-small div {
+    background-color: darken(@cluster-small, 5%);
+}
+.leaflet-oldie .marker-cluster-medium {
+    background-color: @cluster-medium;
+ }
+.leaflet-oldie .marker-cluster-medium div {
+    background-color: rdarken(@cluster-medium, 5%);
+}
+.leaflet-oldie .marker-cluster-large {
+    background-color: cluster-large;
+    color: @white;
+}
+.leaflet-oldie .marker-cluster-large div {
+    background-color: darken(@cluster-large, 5%);
+    color: @white;
+}
+
+.marker-cluster {
+    background-clip: padding-box;
+    border-radius: 20px;
+}
+.marker-cluster div {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+    margin-top: 5px;
+    text-align: center;
+    border-radius: 15px;
+    font: 12px;
+    font-family: 'Open Sans', Helvetica, arial, sans-serif;
+    font-weight: 700;
+}
+.marker-cluster span {
+    line-height: 30px;
+}

@@ -10,7 +10,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		ratings: 6,
 		beers: 7,
 		when: 12,
-		where: 12,
+		where: 7.8,
 		day: 4,
 		timeline: 12,
 		behavior: 12,
@@ -31,16 +31,15 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		behavior: 300,
 		counts: 200
 	};
-
 	var margins = {
 		frequency: { top: 100, right: 30, bottom: 50, left: 70 },
-		calendar: { top: 40, right: 20, bottom: 20, left: 40 },
+		calendar: { top: 60, right: 20, bottom: 20, left: 40 },
 		score: { top: 0, right: 20, bottom: 40, left: 54 },
 		categories: { top: 60, right: 20, bottom: 10, left: 20 },
 		ratings: { top: 60, right: 20, bottom: 20, left: 240 },
 		beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 40 },
 		when: { top: 70, right: 20, bottom: 40, left: 65 },
-		where: { top: 20, right: 100, bottom: 0, left: 100 },
+		where: { top: 20, right: 120, bottom: 0, left: 120 },
 		day: { top: 0, right: 0, bottom: 0, left: 0 },
 		timeline: { top: 40, right: 40, bottom: 20, left: 300 },
 		behavior: { top: 60, right: 20, bottom: 60, left: 20 },
