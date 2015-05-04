@@ -89,7 +89,7 @@ define(['moment', 'vis-settings',
 			var val = $(this).data().value.split('-');
 			Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 		});
-		*/
+
 
 		//3--when
 		var whenScale = function (length) {
@@ -109,13 +109,13 @@ define(['moment', 'vis-settings',
 		//4-where
 		// Where.createHeatmap(b.locationList);
 		// Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
-
+		*/
 
 		//5-when and where
 		S.setVis('day', function (vis) {
 			WhenWhere.drawDayStats(vis, b.byDay);
 		});
-		// WhenWhere.drawTimeline(b.venueByTime, b.timeRange, S.setVisNoSVG('timeline'));
+		WhenWhere.drawTimeline(b.venueByTime, b.venueByTimeUnit, b.timeRange, S.setVisNoSVG('timeline'));
 
 	};
 

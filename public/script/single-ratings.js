@@ -195,7 +195,6 @@ define(['textures'], function (textures) {
 				.style('opacity', datum.id < 10 ? (10 - datum.id) / 10 : 1)
 		    	.on('mouseover', function() {
 		    		showMouseOver(data[i], i);
-					$('.js-ratings-tooltip').show();
 					var yPos = $('.js-ratings-bar-wrapper-' + i)
 						.attr('transform').split(',')[1];
 					E.setTooltipText([datum.beers + ' distinctive beers',

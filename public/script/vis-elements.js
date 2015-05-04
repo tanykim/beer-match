@@ -115,7 +115,9 @@ var E = {
 
     setTooltipText: function (strArray, name, dimW, x, y, offset) {
 
-        var dir = x < dimW / 2 ? 1 : -1;
+        $('.js-' + name + '-tooltip').show();
+
+        var dir = name === 'timeline' ? -1 : (x < dimW / 2 ? 1 : -1);
 
         _.each(strArray, function (d, i) {
             d3.select('.js-' + name + '-tooltip-text-' + i)

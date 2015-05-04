@@ -42,7 +42,8 @@ define(['moment', 'textures'], function (moment, textures) {
                 .attr('fill',
                     d.venue === maxVenue.venue ? tx.url() : E.colors.day)
                 .attr('transform', 'translate(' + cX + ', ' + cY + ')')
-                .on('mouseover', function() {
+                .attr('class', 'js-day-arc')
+                .on('mouseover', function () {
                     var ttp = tooltipPos(i, d.venue / 2);
                     d3.selectAll('.js-day-arc').style('fill', E.colors.day);
                     d3.select(this).style('fill', tx.url());
@@ -50,8 +51,11 @@ define(['moment', 'textures'], function (moment, textures) {
                         [d.venue + ' out of ' + d.total, d.day], 'day',
                         dim.w, ttp[0], ttp[1]
                     );
-                }).
-                attr('class', 'js-day-arc');
+                })
+                .on('mouseout', function () {
+                    d3.select(this).style('fill', E.colors.day);
+                    $('.js-day-tooltip').hide();
+                })
             svg.append('line') //day divide line
                 .attr('x1', cX)
                 .attr('x2', Math.cos((i + 1) * baseA - Math.PI / 2) * maxR + cX)
@@ -87,122 +91,194 @@ define(['moment', 'textures'], function (moment, textures) {
         );
     };
 
+    function drawLegends(svg, w, top, maxR, count, maxVal) {
+
+        var yPos = -(top - maxR * 2);
+
+        //get diameter of the cicle in a reverse order
+        var dia = _.map(_.range(count), function (i) {
+            return  Math.sqrt(maxR * maxR *
+                (maxVal - maxVal / count * i) / maxVal) * 2;
+        });
+        var xPos = function (i) {
+            var sum = _.reduce(dia.slice(0, i), function (num, memo) {
+                return memo + num;
+            }, 0);
+            return sum + maxR + 60;
+        };
+
+        _.each(_.range(count), function (i) {
+            svg.append('circle')
+                .attr('cx', w - xPos(i))
+                .attr('cy', yPos)
+                .attr('r', dia[i] / 2)
+                .attr('fill', E.beerColors[0])
+                .attr('opacity', 0.8);
+            svg.append('text')
+                .attr('x', w - xPos(i))
+                .attr('y', yPos)
+                .text(maxVal - maxVal / count * i)
+                .attr('class', 'pos-middle size-tiny v-middle');
+        });
+        svg.append('text')
+            .attr('x', w)
+            .attr('y', yPos)
+            .text('check-ins')
+            .attr('class', 'pos-end fill-grey size-tiny v-middle');
+        svg.append('text')
+            .attr('x', w - xPos(count))
+            .attr('y', yPos)
+            .text('Bubble Size:')
+            .attr('class', 'pos-end fill-grey size-tiny v-middle');
+
+    }
+
+    function getX(x, key, period, bgW) {
+        return x(moment(key, period === 'month' ? 'YYYY-M' : 'YYYY-W')) + bgW;
+    }
+
     function highlightTimelineCity(data, period, svg, dim, x, bgW) {
-        _.each(data[1][period], function (d, key) {
+        _.each(data.by, function (d, key) {
             svg.append('line')
-                .attr('x1', x(moment(key, period === 'month' ? 'YYYY-M' : 'YYYY-W')) + bgW)
+                .attr('x1', getX(x, key, period, bgW))
                 .attr('y1', 0)
-                .attr('x2', x(moment(key, period === 'month' ? 'YYYY-M' : 'YYYY-W')) + bgW)
+                .attr('x2', getX(x, key, period, bgW))
                 .attr('y2', dim.h)
-                .style('stroke', '#000')
                 .style('stroke-width', bgW)
-                .style('opacity', .1)
-                .attr('class', 'stoke-black, js-timeline-bg');
+                .attr('class', 'stroke-tick js-timeline-bg');
         });
     }
 
-    var drawTimeline = function (data, timeRange, vis) {
+    var drawTimeline = function (data, period, timeRange, vis) {
 
-        var unitH = 50;
+        var unitH = 40;
         var margin = vis.margin;
         var dim = {
             w: vis.w - margin.left - margin.right,
-            h: unitH * _.size(data) - margin.top - margin.bottom
+            h: unitH * _.size(data)
         };
         var svg = vis.draw({ dim: dim, margin: margin }, 'timeline');
 
-        var period = moment(timeRange[1]).diff(timeRange[0], 'month') > 3 ? 'month' : 'week';
-        var periodCount = moment(timeRange[1]).diff(timeRange[0], period);
-
         var x = d3.time.scale().range([0, dim.w])
-                .domain([moment(timeRange[0]).startOf(period), moment(timeRange[1]).startOf(period)]);
-        var xAxis = d3.svg.axis().scale(x).orient('top');
-
+                .domain([moment(timeRange[0]).startOf(period),
+                    moment(timeRange[1]).startOf(period)]);
+        var periodCount = moment(timeRange[1]).diff(timeRange[0], period);
+        var xAxis = d3.svg.axis().scale(x).orient('top')
+                    .ticks(Math.min(Math.floor(dim.w / 100), periodCount));
         svg.append('g')
             .attr('class', 'x axis')
             .call(xAxis);
+        svg.append('text')
+            .attr('x', dim.w / 2)
+            .attr('y', -E.noTicks.lableBottom)
+            .text(period.toUpperCase())
+            .attr('class', 'size-tiny pos-middle fill-grey');
 
-        var maxR = unitH / 2 - 6;
+        var maxVal = _.max(_.map(_.pluck(data, 'by'), function (d) {
+            return _.max(d);
+        }));
+        var axisVals = E.getAxisTicks(maxVal);
+        console.log(maxVal, axisVals);
+        var maxRVal = axisVals.endPoint;
+        var maxR = unitH / 2;
         var bgW = dim.w / periodCount / 2;
 
-        var maxRVal = _.max(_.map(data, function (city) {
-            return _.max(city[1][period]);
-        }));
+        drawLegends(svg, dim.w, margin.top, maxR, axisVals.count, maxRVal);
 
-        _.each(data.length, function (d, i) {
-            $('#vis-timeline .y:nth-child(' + i + ')').find('text')
-                .mouseover(function () {
-                    console.log(d[1], i);
-                });
+        var tx = _.map(_.range(Math.min(_.size(data), 4)), function (i) {
+            return textures.lines().size(6).lighter().background(E.beerColors[i * 2]);
         });
+        _.each(tx, function (d) {
+            return svg.call(d);
+        });
+
+        var maxCx, maxCy;
+        var maxRow = 0;
+
         _.each(data, function (d, i) {
-            var yPos = i * dim.h / _.size(data);
-            var fill = E.beerColors[i % 4 * 2];
 
-            _.each(d[1][period], function (val, label) {
-
-                var cx = x(moment(label, period === 'month' ? 'YYYY-M' : 'YYYY-W')) + bgW;
-                var cy = yPos + unitH / 2;
-                svg.append('circle')
-                    .attr('cx', cx)
-                    .attr('cy', cy)
-                    .attr('r', Math.sqrt(maxR * maxR * val / maxRVal))
-                    .style('fill', fill)
-                    .style('opacity', 0.5)
-                    .attr('class', 'js-timeline-circle js-timeline-circle-' + i);
-            });
-
+            var yPos = i * unitH;
             svg.append('text')
                 .attr('x', -E.noTicks.padding)
-                .attr('y', yPos + maxR)
-                .attr('data-value', i)
-                .text(d[0])
-                .attr('class', 'link size-normal pos-end')
-                .on('mouseover', function() {
-                    $('.js-timeline-bg').remove();
-                    $(this).attr('class', 'link size-normal pos-end bold');
-
-                    var id = $(this).data().value;
-
-                    highlightTimelineCity(data[id], period, svg, dim, x, bgW);
-
-                    d3.selectAll('.js-timeline-circle').style('opacity', 0);
-                    d3.selectAll('.js-timeline-circle-'+ id).style('opacity', 0.5);
-                    d3.select('.js-timeline-over')
-                        .attr('y', yPos)
-                        .style('fill', fill)
-                        .text(d[1].total + ' checkins:  ' + _.size(d[1][period]) + '/' + periodCount + ' ' + period + 's' );
+                .attr('y', yPos + unitH / 2)
+                .text(d.city)
+                .style('font-weight', i === 0 ? '700' : '')
+                .attr('class', 'link-text pos-end v-middle size-tiny' +
+                    (i === 0 ? ' js-timeline-city-0' : ''))
+                .on('mouseover', function () {
+                    if (i > 0) {
+                        $('.js-timeline-city-0').css('font-weight', '');
+                    }
+                    E.setTooltipText([_.size(d.by) + ' / ' + periodCount + ' ' +
+                        period + 's', 'Total ' + d.total + ' check-ins'],
+                        'timeline', dim.w, -E.noTicks.padding,
+                        yPos + unitH / 2 - 10);
+                    $(this).css('font-weight', 700);
+                    highlightTimelineCity(data[i], period, svg, dim, x, bgW);
+                    d3.selectAll('.js-timeline-c').style('opacity', 0.1);
+                    d3.selectAll('.js-timeline-c-'+ i).style('opacity', 0.8);
                 })
-                .on('mouseout', function() {
-                    $(this).attr('class', 'link size-normal pos-end');
+                .on('mouseout', function () {
+                    $(this).css('font-weight', '');
+                    $('.js-timeline-tooltip').hide();
+                    d3.selectAll('.js-timeline-c').style('opacity', 0.5);
                     $('.js-timeline-bg').remove();
-                    d3.selectAll('.js-timeline-circle').style('opacity', 0.5);
-                    d3.selectAll('.js-timeline-number').style('opacity', 0);
-                    d3.select('.js-timeline-over').text('');
                 });
-
             svg.append('line')
                 .attr('x1', 0)
                 .attr('x2', dim.w)
                 .attr('y1', yPos)
                 .attr('y2', yPos)
                 .attr('class', 'stroke-tick');
+
+            var fill = E.beerColors[i % 4 * 2];
+            _.each(d.by, function (val, key) {
+                var cx = getX(x, key, period, bgW);
+                var cy = yPos + unitH / 2;
+                if (val === maxVal) {
+                    maxCx = cx;
+                    maxCy = cy;
+                    maxRow = i % 4 * 2;
+                }
+                var r = Math.sqrt(maxR * maxR * val / maxRVal);
+                svg.append('circle')
+                    .attr('cx', cx)
+                    .attr('cy', cy)
+                    .attr('r', r)
+                    .style('fill', val === maxVal ? tx[i % 4].url() : fill)
+                    .style('opacity', val === maxVal ? 1 : 0.5)
+                    .attr('class', 'js-timeline-c js-timeline-c-' + i +
+                        (val === maxVal ? ' js-timeline-c-max' : ''))
+                    .on('mouseover', function () {
+                        if (val !== maxVal) {
+                            d3.select('.js-timeline-c-max')
+                                .style('fill', E.beerColors[maxRow])
+                                .style('opacity', 0.5);
+                        }
+                        d3.select(this).style('fill', tx[i % 4].url())
+                            .style('opacity', 1);
+                        $('.js-timeline-c-no').show();
+                        d3.select('.js-timeline-c-no')
+                            .attr('x', cx).attr('y', cy - r - 4).text(val);
+                    })
+                    .on('mouseout', function () {
+                        d3.select(this).style('fill', fill).style('opacity', 0.5);
+                        $('.js-timeline-c-no').hide();
+                    });
+            });
         });
 
-        //last line
-        svg.append('line')
-            .attr('x1', 0)
-            .attr('x2', dim.w)
-            .attr('y1', dim.h)
-            .attr('y2', dim.h)
-            .attr('class', 'stroke-tick');
-
-        //mouse over
         svg.append('text')
-            .attr('x', 0)
-            .attr('y', 0)
-            .text('')
-            .attr('class', 'pos-end js-timeline-over');
+            .attr('x', maxCx)
+            .attr('y', maxCy - maxR - 4)
+            .text(maxVal)
+            .attr('class', 'pos-middle size-small weight-700 ' +
+                'js-timeline-c-no');
+
+        E.drawTooltip(svg, 'timeline', 2);
+        E.setTooltipText([_.size(data[0].by) + ' / ' + periodCount + ' ' +
+            period + 's', 'Total ' + data[0].total + ' check-ins'],
+            'timeline', dim.w, -E.noTicks.padding, unitH / 2 - 10);
     };
 
     return {

@@ -142,7 +142,6 @@ define(['moment', 'textures'], function (moment, textures) {
 			.on('mouseover', function (d, i) {
 				resetMaxTexture();
 				if (selected === 'matrix') {
-					$('.js-matrix-tooltip').show();
 					E.setTooltipText([d.str, d.val + ' check-ins'],
 						'matrix', dim.w, d.x.matrix + d.width.matrix / 2,
 						d.y.matrix);

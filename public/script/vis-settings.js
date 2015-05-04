@@ -41,7 +41,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		when: { top: 70, right: 20, bottom: 40, left: 65 },
 		where: { top: 20, right: 120, bottom: 0, left: 120 },
 		day: { top: 0, right: 50, bottom: 20, left: 36 },
-		timeline: { top: 40, right: 20, bottom: 0, left: 240 },
+		timeline: { top: 140, right: 40, bottom: 0, left: 240 },
 		behavior: { top: 60, right: 20, bottom: 60, left: 20 },
 		counts: { top: 0, right: 0, bottom: 0, left: 0 }
 	};

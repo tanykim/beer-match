@@ -189,7 +189,6 @@ define(['moment', 'textures'], function (moment, textures) {
 				return b.dateId[unit] === d.dateId[unit];
 			}).style('fill', t.url())
 			.attr('class', 'js-cal-block js-cal-block-over');
-		$('.js-cal-tooltip').show();
 	}
 
 	var drawCalendar = function (vis, rangeStr, data) {
