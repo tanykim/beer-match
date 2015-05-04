@@ -246,7 +246,7 @@ define(['moment', 'textures'], function (moment, textures) {
 				showTextures(svg, data, d);
 				E.setTooltipText([d[unit] + ' beers',
 					getTooltipString(moment(d.date, 'YYYYMMDD'))],
-					'cal', dim.w, getX(i), getY(i));
+					'cal', dim.w, getX(i), getY(i), block / 2);
 			})
 			.on('mouseout', function (d) {
 				d3.selectAll('.js-cal-block-over')
@@ -293,7 +293,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		showTextures(svg, data, maxRange[0]);
 		E.setTooltipText([maxRange[0][unit] + ' check-ins',
 			getTooltipString(moment(maxRange[0].date, 'YYYYMMDD'))],
-			'cal', dim.w, getX(maxRangeIds[0]), getY(maxRangeIds[0]));
+			'cal', dim.w, getX(maxRangeIds[0]), getY(maxRangeIds[0]), block / 2);
 	};
 
 	var setUnit = function (u, c) {

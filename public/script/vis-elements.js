@@ -50,7 +50,8 @@ var E = {
             brewery: '#7c2529', country: '#3f2021'
         },
         when: '#7c2529',
-        where: { type: '#e8dd21', city: '#f99b0c' }
+        where: { type: '#e8dd21', city: '#f99b0c' },
+        day: '#ffc61e'
     },
     lightGrey: '#e5e5e5',
     beerColors: ['#e8dd21', '#ffc61e', '#f99b0c', '#d38235', '#d86018',
@@ -90,7 +91,7 @@ var E = {
             .attr('class', 'js-' + name + '-tooltip');
 
         d3.select('.js-' + name + '-tooltip').append('path')
-            .attr('class', 'fill-dark js-' + name + '-tooltip-bg');
+            .attr('class', 'fill-tooltip js-' + name + '-tooltip-bg');
 
         d3.select('.js-' + name + '-tooltip').append('text')
             .attr('y', 0)
@@ -112,7 +113,7 @@ var E = {
                 ' h ' + -dir * (width - 10) + ' z';
     },
 
-    setTooltipText: function (strArray, name, dimW, x, y) {
+    setTooltipText: function (strArray, name, dimW, x, y, offset) {
 
         var dir = x < dimW / 2 ? 1 : -1;
 
@@ -130,8 +131,7 @@ var E = {
                     $('.js-' + name + '-tooltip-text').width() +
                     E.ttP * 2, (E.ttL * 2 + E.ttP - 4) ));
         $('.js-' + name + '-tooltip').attr('transform',
-            'translate(' + (x + E.ttP / 2) + ', ' +
-                y + ')');
+            'translate(' + (x + (offset ? offset : 0)) + ', ' + y + ')');
     },
 
     drawStar: function (k) {

@@ -79,8 +79,14 @@ path, line{
 .fill-black {
 	fill: @black;
 }
+.fill-darkGrey {
+	fill: @darkGrey;
+}
 .fill-grey {
 	fill: @grey;
+}
+.fill-lightGrey {
+	fill: @lightGrey;
 }
 .fill-white {
 	fill: #fff;
@@ -88,9 +94,11 @@ path, line{
 .fill-none {
 	fill: none;
 }
-.fill-when {
-	fill: @vis-when;
+.fill-tooltip {
+	fill: @black;
+	opacity: 0.85;
 }
+
 
 /* text */
 .weight-700 {
@@ -103,71 +111,8 @@ path, line{
 		shape-rendering: geometricPrecision;
 	}
 }
-
-.ratings-arc-over {
-	font-size: @small;
-	text-anchor: middle;
-}
-
-.fav-divide {
-	stroke: #999;
-	stroke-width: 1;
-}
-.fav-radial-0 {
-	stroke: #999;
-	stroke-width: 1;
-	fill: none;
-}
-.fav-radial-1 {
-	stroke: #e5e5e5;
-	stroke-width: 1;
-	fill: none;
-}
-.fav-radial-y {
-	stroke: #999;
-	stroke-dasharray: 5, 3;
-	stroke-width: 1;
-}
-.fav-radial-y-tick {
-	text-anchor: middle;
-}
-.fav-score-text {
-	font-size: @small;
-}
-.fav-beer-img {
-	stroke: #999;
-	stroke-width: 1;
-}
-.fav-beer-line {
-	stroke: #000;
-	stroke-width: 2;
-}
-.fav-beer-text {
-	font-size: @large;
-	.unselectable();
-}
-.fav-beer-text--small, .fav-beer-text-count {
-	font-size: @small;
-	fill: #999;
-	.unselectable();
-}
-.fav-beer-dot-text {
-	font-size: @small;
-	text-anchor: middle;
-}
-
-.ratings-avg {
-	stroke: #000;
-	stroke-width: 2;
-
-}
-.period-path {
-	stroke: #000;
-	stroke-width: 2px;
-	fill: rgba(0, 0, 0, .5);
-}
-.period-dots {
-	stroke: #000;
-	stroke-width: 2px;
-	fill: #fff;
+.day {
+	.axis line, .axis path {
+		.stroke-darkGrey();
+	}
 }

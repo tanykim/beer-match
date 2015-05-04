@@ -166,7 +166,8 @@ define(['moment', 'textures'], function (moment, textures) {
 			.attr('x', function (d, i) { return dim.w / 48 * (i * 2 + 1); })
 			.attr('y', function (d) { return y.hour(d) - 6; })
 			.text(function (d) { return d; })
-			.attr('class', 'fill-when size-middle pos-middle ' +
+			.style('fill', E.colors.when)
+			.attr('class', 'size-middle pos-middle ' +
 				'js-matrix-vals-hour')
 		svg.selectAll('.js-matrix-vals-day')
 			.data(_.pluck(byDay, 'total'))
@@ -174,7 +175,8 @@ define(['moment', 'textures'], function (moment, textures) {
 			.attr('x', function (d) { return x.day(d) + 6; })
 			.attr('y', function (d, i) { return dim.h / 14 * (i * 2 + 1) + 4; })
 			.text(function (d) { return d; })
-			.attr('class', 'fill-when size-middle js-matrix-vals-day')
+			.style('fill', E.colors.when)
+			.attr('class', 'size-middle js-matrix-vals-day')
 		$('.js-matrix-vals-hour').hide();
 		$('.js-matrix-vals-day').hide();
 	}

@@ -241,15 +241,24 @@
 }
 .vis-wrapper {
 	.90p();
-	.wrapper-left {
-		margin-right: 1em;
-		display: inline-block;
-		vertical-align: top;
-	}
-	.wrapper-right {
-		display: inline-block;
-		vertical-align: top;
-	}
+}
+.wrapper-left {
+	margin-right: 1em;
+	display: inline-block;
+	vertical-align: top;
+}
+.wrapper-right {
+	display: inline-block;
+	vertical-align: top;
+}
+.vis-sub-heading {
+	font-size: @small;
+	background-color: @darkGrey;
+	color: @white;
+	padding: 0.5em;
+	margin-top: 2em;
+	margin-bottom: 1em;
+	border-radius: 0.5em;
 }
 
 /* each element */
@@ -297,13 +306,7 @@
 		.vis-shadow();
 	}
 	.average {
-		font-size: @small;
-		background-color: @darkGrey;
-		color: @white;
-		padding: 0.5em;
-		margin-top: 2em;
-		margin-bottom: 1em;
-		border-radius: 0.5em;
+		.vis-sub-heading();
 	}
 	.ratings-wrapper {
 		.vis-shadow();
@@ -454,13 +457,36 @@
 		}
 	}
 	.where {
-		display: inline-block;
-		vertical-align: top;
+		.wrapper-right();
 		width: 60%;
-		overflow: visible;
 	}
 }
 
+.single-whenWhere {
+	.wrapper-day {
+		.vis-shadow();
+		text-align: center;
+	}
+	.day-legend {
+		text-align: left;
+		font-size: @small;
+		margin-top: 1.5em;
+		/*margin-bottom: 1em;*/
+		display: inline-block;
+		.total {
+			color: @darkGrey;
+			margin-right: 0.2em;
+		}
+		.loc {
+			margin-right: 0.2em;
+			color: @vis-day;
+		}
+	}
+	.timeline {
+		.wrapper-right();
+		.vis-shadow();
+	}
+}
 .match-score {
 	.score {
 		text-align: center;
@@ -497,163 +523,4 @@
 		margin-top: 1em;
 		text-align: center;
 	}
-}
-/* when */
-.single-whenWhere {
-	.day {
-		width: 30%;
-		margin: 0 auto;
-		/*background-color: #efefef;*/
-		float: left;
-	}
-	.hour {
-		width: 70%;
-		float: left;
-	}
-}
-.hour-block-total {
-	fill: #000;
-	stroke: none;
-}
-.hour-block-seg {
-	fill : #999;
-	stroke: none;
-}
-
-/* venue */
-.venue-list {
-	width: 30%;
-	float: left;
-}
-.venue-title {
-	width: 100%;
-	/*text-align: center;*/
-	.name {
-		font-size: @large;
-		font-weight: 700;
-	}
-	.desc {
-		font-size: @small;
-	}
-}
-.venue-name {
-	width: 100%;
-}
-.venue-detail {
-	width: 70%;
-	float: right;
-}
-.venue-map {
-	width: 100%;
-	height: 200px;
-}
-.venue-type, .venue-city {
-	width: 50%;
-	float: left;
-}
-
-
-/* d3 */
-.freq-label {
-	text-anchor: middle;
-}
-.freq-line-avg {
-	stroke: #000;
-	stroke-width: 2;
-}
-.freq-text-avg {
-	text-anchor: middle;
-}
-.freq-block {
-	stroke: #000;
-	stroke-width: 1px;
-	stroke-opacity: 1;
-}
-.freq-label-block {
-	text-anchor: middle;
-	font-size: @tiny;
-}
-
-.cal-y-label {
-	text-anchor: end;
-	font-size: @tiny;
-}
-.cal-x-year {
-	font-size: @tiny;
-	color: #000;
-	font-weight: 700;
-}
-.cal-x-month {
-	font-size: @tiny;
-	color: #666;
-}
-.cal-divide {
-	stroke: #000;
-	stroke-width: 1;
-	fill: none;
-}
-.cal-day {
-	stroke: none;
-	/*fill: #999999;*/
-}
-.cal-week {
-	stroke: none;
-	fill: #666;
-	display: none;
-}
-.cal-year {
-	stroke: #000;
-	stroke-opacity: 0.5;
-	stroke-width: 2;
-	fill: #cc0000;
-	opacity: 0.3;
-}
-.cal-day--before {
-	stroke: none;
-	fill: #e5e5e5;
-}
-.cal-tooltip {
-	fill: #000;
-	font-size: @tiny;
-}
-
-.ratings-arc-over {
-	font-size: @small;
-	text-anchor: middle;
-}
-
-.ratings-avg {
-	stroke: #000;
-	stroke-width: 2;
-
-}
-.period-path {
-	stroke: #000;
-	stroke-width: 2px;
-	fill: rgba(0, 0, 0, .5);
-}
-.period-dots {
-	stroke: #000;
-	stroke-width: 2px;
-	fill: #fff;
-}
-
-
-.both {
-	text-align: center;
-}
-.styles-dummy {
-	opacity: 0;
-}
-.styles-linked {
-	fill: #000;
-	opacity: 0.5;
-}
-.commonVenues-name {
-	font-weight: 700;
-}
-
-.node {
-  stroke: #fff;
-  stroke-width: 1.5px;
 }

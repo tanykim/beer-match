@@ -11,8 +11,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		beers: 7,
 		when: 12,
 		where: 7.8,
-		day: 4,
-		timeline: 12,
+		day: 3.8,
+		timeline: 7.9,
 		behavior: 12,
 		counts: 12
 	};
@@ -40,8 +40,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 40 },
 		when: { top: 70, right: 20, bottom: 40, left: 65 },
 		where: { top: 20, right: 120, bottom: 0, left: 120 },
-		day: { top: 0, right: 0, bottom: 0, left: 0 },
-		timeline: { top: 40, right: 40, bottom: 20, left: 300 },
+		day: { top: 0, right: 50, bottom: 20, left: 36 },
+		timeline: { top: 40, right: 20, bottom: 0, left: 240 },
 		behavior: { top: 60, right: 20, bottom: 60, left: 20 },
 		counts: { top: 0, right: 0, bottom: 0, left: 0 }
 	};
@@ -83,9 +83,9 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		var vis = {
 			dim: {
 				w: getWidth(div) - margins[div].left - margins[div].right,
-				h: (_.isNull(heights[div]) ?
+				h: ((_.isNull(heights[div]) ?
                     getWidth(div) :
-                    heights[div]) - margins[div].top - margins[div].bottom
+                    heights[div])) - margins[div].top - margins[div].bottom
 			},
 			margin: margins[div]
 		}

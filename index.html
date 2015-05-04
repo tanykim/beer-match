@@ -291,11 +291,15 @@
 
 		<!-- 5 when & where -->
 		<div class="vis-contents single-whenWhere js-single-contents-5">
-			<div class="container">
-				<div class="row">
-					<div id="vis-day" class="col-xs-4 day js-single-svg"></div>
-					<div id="vis-timeline" class="col-xs-12 timeline js-single-svg"></div>
+			<div class="vis-wrapper">
+				<div class="wrapper-left wrapper-day">
+					<div class="day-legend">
+						<span class="total"><i class="fa fa-play fa-rotate-90"></i></span> Total Check-ins <br/>
+						<span class="loc"><i class="fa fa-play fa-rotate-90"></i></span> Check-ins with Location
+					</div>
+					<div id="vis-day" class="day js-single-svg"></div>
 				</div>
+				<div id="vis-timeline" class="timeline js-single-svg"></div>
 			</div>
 		</div>
 
