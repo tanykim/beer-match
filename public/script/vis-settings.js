@@ -51,7 +51,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
         if (div !== 'beers') {
             return Math.min(Math.max(w, 200), 4000);
         } else {
-            return Math.min($(window).height() - 140, w);
+            return Math.min($(window).height() - 100, w);
         }
    	};
 

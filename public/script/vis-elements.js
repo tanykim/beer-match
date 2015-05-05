@@ -59,7 +59,7 @@ var E = {
     users: ['#801E47', '#3A5F4E'],
 
     //vis
-	noTicks: { size: 0, padding: 9, lableTop: -26, lableBottom: 40 }, //ticks size
+	noTicks: { size: 0, padding: 9, lableTop: -26, lableBottom: 40 },
 
 	getAxisTicks: function (maxVal, len) {
 

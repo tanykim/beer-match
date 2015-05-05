@@ -16,7 +16,8 @@ define(['moment', 'textures'], function (moment, textures) {
         var cX = dim.w / 2;
         var cY = dim.h / 2;
         var maxR = Math.min(cX, cY);
-        var maxVal = E.getAxisTicks(_.max(_.pluck(data, 'total'))).endPoint;
+        var axisVals = E.getAxisTicks(_.max(_.pluck(data, 'total')), cY);
+        var maxVal = axisVals.endPoint;
         var r = d3.scale.sqrt().range([0, maxR]).domain([0, maxVal]);
         var baseA = Math.PI * 2 * 0.95 / 7;
         var arc = function (val, i) {
@@ -75,7 +76,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
         //axis line
         var y = d3.scale.sqrt().range([0, maxR]).domain([maxVal, 0]);
-        var axis = d3.svg.axis().scale(y).orient('left');
+        var axis = d3.svg.axis().scale(y).orient('left').ticks(axisVals.count);
         svg.append('g')
             .attr('transform',
                 'translate(' + cX + ', ' + (dim.h / 2 - maxR) + ')')
@@ -93,6 +94,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
     function drawLegends(svg, w, top, maxR, count, maxVal) {
 
+        //FIXME: make max
         var yPos = -(top - maxR * 2);
 
         //get diameter of the cicle in a reverse order
@@ -130,7 +132,6 @@ define(['moment', 'textures'], function (moment, textures) {
             .attr('y', yPos)
             .text('Bubble Size:')
             .attr('class', 'pos-end fill-grey size-tiny v-middle');
-
     }
 
     function getX(x, key, period, bgW) {
@@ -149,6 +150,12 @@ define(['moment', 'textures'], function (moment, textures) {
         });
     }
 
+    function getTimeStr(key, period, val) {
+        var timeStr = period === 'month' ?
+            moment(key, 'YYYY-M').format('MMM, YYYY') :
+            'Week ' + moment(key, 'YYYY-W').format('W, YYYY');
+        return [val + ' check-ins', timeStr];
+    }
     var drawTimeline = function (data, period, timeRange, vis) {
 
         var unitH = 40;
@@ -178,7 +185,6 @@ define(['moment', 'textures'], function (moment, textures) {
             return _.max(d);
         }));
         var axisVals = E.getAxisTicks(maxVal);
-        console.log(maxVal, axisVals);
         var maxRVal = axisVals.endPoint;
         var maxR = unitH / 2;
         var bgW = dim.w / periodCount / 2;
@@ -186,7 +192,8 @@ define(['moment', 'textures'], function (moment, textures) {
         drawLegends(svg, dim.w, margin.top, maxR, axisVals.count, maxRVal);
 
         var tx = _.map(_.range(Math.min(_.size(data), 4)), function (i) {
-            return textures.lines().size(6).lighter().background(E.beerColors[i * 2]);
+            return textures.lines().size(6).lighter()
+                .background(E.beerColors[i * 2]);
         });
         _.each(tx, function (d) {
             return svg.call(d);
@@ -194,6 +201,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
         var maxCx, maxCy;
         var maxRow = 0;
+        var maxKey;
 
         _.each(data, function (d, i) {
 
@@ -239,6 +247,7 @@ define(['moment', 'textures'], function (moment, textures) {
                     maxCx = cx;
                     maxCy = cy;
                     maxRow = i % 4 * 2;
+                    maxKey = key;
                 }
                 var r = Math.sqrt(maxR * maxR * val / maxRVal);
                 svg.append('circle')
@@ -257,28 +266,24 @@ define(['moment', 'textures'], function (moment, textures) {
                         }
                         d3.select(this).style('fill', tx[i % 4].url())
                             .style('opacity', 1);
-                        $('.js-timeline-c-no').show();
-                        d3.select('.js-timeline-c-no')
-                            .attr('x', cx).attr('y', cy - r - 4).text(val);
+                        E.setTooltipText(getTimeStr(key, period, val),
+                            'timeline-c', dim.w, cx, cy - r);
                     })
                     .on('mouseout', function () {
-                        d3.select(this).style('fill', fill).style('opacity', 0.5);
-                        $('.js-timeline-c-no').hide();
+                        d3.select(this).style('fill', fill)
+                            .style('opacity', 0.5);
+                        $('.js-timeline-c-tooltip').hide();
                     });
             });
         });
-
-        svg.append('text')
-            .attr('x', maxCx)
-            .attr('y', maxCy - maxR - 4)
-            .text(maxVal)
-            .attr('class', 'pos-middle size-small weight-700 ' +
-                'js-timeline-c-no');
 
         E.drawTooltip(svg, 'timeline', 2);
         E.setTooltipText([_.size(data[0].by) + ' / ' + periodCount + ' ' +
             period + 's', 'Total ' + data[0].total + ' check-ins'],
             'timeline', dim.w, -E.noTicks.padding, unitH / 2 - 10);
+        E.drawTooltip(svg, 'timeline-c', 2);
+        E.setTooltipText(getTimeStr(maxKey, period, maxVal),
+            'timeline-c', dim.w, maxCx, maxCy - maxR);
     };
 
     return {
