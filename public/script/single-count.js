@@ -4,6 +4,11 @@ define(['moment', 'textures'], function (moment, textures) {
 	var svg, dim, margin, xAxis, yAxis, x, y; //frequency
 	var block = 12; //calendar
 
+	var setUnit = function (u, c) {
+		unit = u;
+		colors = c;
+	};
+
 	function drawFreqBlocks(data, maxCount, avgCount) {
 
 		_.each(data.counts, function (val, i) {
@@ -20,7 +25,7 @@ define(['moment', 'textures'], function (moment, textures) {
 				.attr('dy', -4)
 				.text(val)
 				.style('fill', colors[i])
-				.attr('class', 'pos-middle size-normal js-freq-block')
+				.attr('class', 'pos-middle size-small js-freq-block')
 		});
 
 		//average line
@@ -30,30 +35,36 @@ define(['moment', 'textures'], function (moment, textures) {
             .attr('x2', xPos)
             .attr('y1', -margin.top / 2)
             .attr('y2', dim.h + margin.bottom/2)
-            .attr('class', 'stroke-2 stroke-dark js-freq-block');
+            .attr('class', 'stroke-2 stroke-black js-freq-block');
         svg.append('circle')
             .attr('cx', xPos)
             .attr('cy', -margin.top / 2 - 5)
             .attr('r', margin.top / 2.4)
-            .attr('class', 'fill-dark js-freq-block');
+            .attr('class', 'fill-black js-freq-block');
         svg.append('text')
             .attr('x', xPos)
             .attr('y', -margin.top / 2)
             .attr('dy', -margin.top / 8)
             .text('average')
-            .attr('class', 'size-normal pos-middle fill-white js-freq-block');
+            .attr('class', 'size-small pos-middle fill-white js-freq-block');
         svg.append('text')
             .attr('x', xPos)
             .attr('y', -margin.top / 2)
             .attr('dy', margin.top / 6)
             .text(avgCount)
-            .attr('class', 'size-huge pos-middle fill-white js-freq-block');
+            .attr('class', 'size-large pos-middle fill-white js-freq-block');
+	}
+
+	function updateSoberCount(data) {
+		var sober = data.sober[unit];
+		var unitCount = data.unitCounts[unit];
+		$('.js-count-sober').html(sober + ' ' + unit + (sober > 1 ? 's' : ''));
+		$('.js-count-total').html(unitCount + ' ' + unit + (sober > 1 ? 's' : ''));
 	}
 
 	var transformCount = function (u, c, data, avgCount) {
 
-		unit = u;
-		colors = c;
+		setUnit(u, c);
 
 		var frequency = data.frequency[unit];
 		var maxCount = data.maxCount[unit];
@@ -69,12 +80,13 @@ define(['moment', 'textures'], function (moment, textures) {
 		y.domain([yTicks.endPoint, 0]);
 		yAxis.scale(y).ticks(yTicks.count);
 		d3.select('.js-freq-axis-y').call(yAxis);
-		$('.js-freq-lable-y').html('number of ' + unit + 's');
+		$('.js-freq-lable-y').html('number of ' + unit);
 
 		$('.js-freq-block').remove();
 		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
 
 		//calendar
+		updateSoberCount(data);
 		$('.js-calendar-legend-block').remove();
 		E.updateChroma(frequency.counts.length, frequency.gap, 'calendar', colors);
 		d3.selectAll('.js-cal-block').style('fill', function (d) {
@@ -125,10 +137,10 @@ define(['moment', 'textures'], function (moment, textures) {
 			.attr('class', 'y axis js-freq-axis-y')
 			.call(yAxis);
 
-		E.putAxisLable(svg, dim.w/2, dim.h + E.noTicks.lableBottom,
-			'check-ins /' + unit, 'x', 'middle', 'js-freq-lable-x');
-		E.putAxisLable(svg, -dim.h / 2, -40,
-			'number of ' + unit + 's', 'y', 'middle', 'js-freq-lable-y');
+		E.putAxisLable(svg, dim.w / 2 , dim.h,
+			'check-ins / ' + unit, 'x', 'js-freq-lable-x');
+		E.putAxisLable(svg, -dim.h / 2, 0,
+			'number of ' + unit, 'y', 'js-freq-lable-y');
 
 		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
 	};
@@ -169,8 +181,7 @@ define(['moment', 'textures'], function (moment, textures) {
 			.attr('class', c + ' size-tiny');
 	}
 
-	function getColor(data, d) {
-
+	function getColorId(data, d) {
 		var cId = 0;
 		for (var i = data.frequency[unit].counts.length ; i > 0 ; i--) {
 			if (d[unit] >= i * data.frequency[unit].gap) {
@@ -178,12 +189,19 @@ define(['moment', 'textures'], function (moment, textures) {
 				break;
 			}
 		}
-		return colors[cId];
+		return cId;
+	}
+
+	function getColor(data, d) {
+		return colors[getColorId(data, d)];
 	}
 
 	function showTextures(svg, data, d) {
 		$('#vis-calendar').find('def').remove();
-		var t = textures.lines().size(block/2).lighter().background(getColor(data, d));
+		var cId = getColorId(data, d);
+		var t = textures.lines().size(block/2)
+			.stroke(cId > colors.length - 3 ? '#999' : '#343434')
+			.lighter().background(colors[cId]);
 		svg.call(t);
 		d3.selectAll('.js-cal-block').filter(function (b) {
 				return b.dateId[unit] === d.dateId[unit];
@@ -193,11 +211,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
 	var drawCalendar = function (vis, rangeStr, data) {
 
-		//description
-		var sober = data.sober[unit];
-		var unitCount = data.unitCounts[unit];
-		$('.js-count-sober').html(sober + ' ' + unit + 's');
-		$('.js-count-total').html(unitCount + ' ' + unit + 's');
+		updateSoberCount(data);
 
 		//number of days - start with the first day of the month
 		var sT = moment(rangeStr[0]);
@@ -243,7 +257,7 @@ define(['moment', 'textures'], function (moment, textures) {
 			.style('fill', function (d) { return getColor(data, d); })
 			.on('mouseover', function (d, i) {
 				showTextures(svg, data, d);
-				E.setTooltipText([d[unit] + ' beers',
+				E.setTooltipText([d[unit] + ' check-ins',
 					getTooltipString(moment(d.date, 'YYYYMMDD'))],
 					'cal', dim.w, getX(i), getY(i), block / 2);
 			})
@@ -289,15 +303,11 @@ define(['moment', 'textures'], function (moment, textures) {
 			}
 			return d[unit] === data.maxCount[unit];
 		});
+
 		showTextures(svg, data, maxRange[0]);
 		E.setTooltipText([maxRange[0][unit] + ' check-ins',
 			getTooltipString(moment(maxRange[0].date, 'YYYYMMDD'))],
 			'cal', dim.w, getX(maxRangeIds[0]), getY(maxRangeIds[0]), block / 2);
-	};
-
-	var setUnit = function (u, c) {
-		unit = u;
-		colors = c;
 	};
 
 	return {

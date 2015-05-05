@@ -13,13 +13,12 @@ define(['moment', 'vis-settings',
 		//view change
 		$('.js-single-svg').empty();
 
-		/*
 		//0--count
 		var countScale = function (length) {
 			return S.getChroma(
-				[E.beerColors[0], E.colors.count, E.beerColors[7]], length);
+				E.colors.calendar, length);
 		}
-		S.updateSelection($('.js-count-period.' + b.avgUnit));
+		S.changeRadioSelection($('.js-count-period-' + b.avgUnit));
 		Count.setUnit(b.avgUnit,
 			countScale(b.countByPeriod.frequency[b.avgUnit].counts.length));
 		S.setVis('frequency', function (vis) {
@@ -37,7 +36,7 @@ define(['moment', 'vis-settings',
 			}
 		});
 
-
+		/*
 		//1--ratings
 		S.setVisNoSVG('categories', function (vis) {
 			Ratings.drawCategories(vis, 'style', b.userinfo.checkinCount,
@@ -105,18 +104,16 @@ define(['moment', 'vis-settings',
 			}
 		});
 
-
 		//4-where
-		// Where.createHeatmap(b.locationList);
-		// Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
-		*/
+		Where.createHeatmap(b.locationList);
+		Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
 
 		//5-when and where
 		S.setVis('day', function (vis) {
 			WhenWhere.drawDayStats(vis, b.byDay);
 		});
 		WhenWhere.drawTimeline(b.venueByTime, b.venueByTimeUnit, b.timeRange, S.setVisNoSVG('timeline'));
-
+		*/
 	};
 
 	var startVisMatch = function (m) {

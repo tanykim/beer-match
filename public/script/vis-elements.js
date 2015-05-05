@@ -45,6 +45,7 @@ var E = {
     //colors
     colors: {
         count: '#f99b0c',
+        calendar: ['#f7e943', '#f99b0c', '#3f2021'],
         ratings: {
             style: '#ffc61e', abv: '#d86018',
             brewery: '#7c2529', country: '#3f2021'
@@ -174,7 +175,7 @@ var E = {
     drawChromaLegend: function (svg, dimW, step, gap, c, colors) {
         svg.append('g')
             .attr('transform', 'translate(' + (dimW - E.legendW - 40) +
-                ', -40)')
+                ', -30)')
             .attr('class', 'js-' + c + '-legend');
         d3.select('.js-' + c + '-legend').append('text')
             .attr('x', 5)
@@ -193,14 +194,13 @@ var E = {
         E.updateChroma(step, gap, c, colors);
     },
 
-    putAxisLable: function (svg, x, y, str, axis, size, jsc) {
+    putAxisLable: function (svg, x, y, str, axis, jsc) {
         svg.append('text')
             .attr('x', x)
-            .attr('y', y)
+            .attr('y', y + (axis === 'x' ? 40 : -40))
             .text(str)
             .attr('transform', axis === 'y' ? 'rotate(-90)' : '')
-            .attr('class', 'pos-middle fill-grey size-' + size +
-                (jsc ? ' ' + jsc : ''));
+            .attr('class', 'axis-lable ' + (jsc ? ' ' + jsc : ''));
     }
 
 }
