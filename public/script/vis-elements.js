@@ -60,7 +60,7 @@ var E = {
     users: ['#801E47', '#3A5F4E'],
 
     //vis
-	noTicks: { size: 0, padding: 9, lableTop: -26, lableBottom: 40 },
+	noTicks: { size: 0, padding: 9 },
 
 	getAxisTicks: function (maxVal, len) {
 
@@ -172,10 +172,10 @@ var E = {
         d3.select('.js-' + c + '-legend-max').text(step * gap);
     },
 
-    drawChromaLegend: function (svg, dimW, step, gap, c, colors) {
+    drawChromaLegend: function (svg, dimW, h, step, gap, c, colors) {
         svg.append('g')
             .attr('transform', 'translate(' + (dimW - E.legendW - 40) +
-                ', -30)')
+                ', ' + h + ')')
             .attr('class', 'js-' + c + '-legend');
         d3.select('.js-' + c + '-legend').append('text')
             .attr('x', 5)
@@ -186,7 +186,7 @@ var E = {
             .attr('x', -5)
             .attr('y', E.legendH / 2)
             .text('check-ins')
-            .attr('class', 'pos-end fill-grey size-small');
+            .attr('class', 'pos-end fill-grey v-middle size-small');
         d3.select('.js-' + c + '-legend').append('text')
             .attr('x', E.legendW + 25)
             .attr('y', E.legendH / 2)

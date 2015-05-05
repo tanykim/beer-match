@@ -41,6 +41,7 @@ define(['textures'], function (textures) {
 	        .attr('transform', function (d, i) {
 	        	return 'translate(0, ' +
 	        		unitH * sorted.indexOf(d.id) + ')'; });
+	    $('.js-ratings-tooltip').hide();
 	};
 
 	function showTextures(d, i) {
@@ -65,11 +66,18 @@ define(['textures'], function (textures) {
 		$('.js-ratings-text-' + i).attr('style', '');
 	}
 
-	function showMouseOver(d, i) {
+	function showMouseOver(d, i, w) {
 		if (i !== 0) {
 			hideTextures(0);
 		}
 		showTextures(d, i);
+		var yPos = $('.js-ratings-bar-wrapper-' + i)
+			.attr('transform').split(',')[1];
+		E.setTooltipText([d.beers + ' distinctive beers',
+			'Score: ' + d.score],
+			'ratings', w,
+			x(d.score) / 2,
+			+yPos.slice(0, yPos.length-1) + unitH / 2);
 	}
 
 	function showMouseOut(d, i) {
@@ -137,7 +145,7 @@ define(['textures'], function (textures) {
 		    		'translate (' + xPos + ', ' + (dim.h/2) + ')')
 		    	.on('mouseover', function() {
 					if (i < 10 && d) {
-						showMouseOver(d, i);
+						showMouseOver(d, i, drawRatings.w);
 					}
 				})
 				.on('mouseout', function() {
@@ -156,6 +164,7 @@ define(['textures'], function (textures) {
 		if (vis) {
 			margin = vis.margin;
 			dim = { w: vis.w - margin.left - margin.right, h: _.size(data) * unitH };
+			this.w = dim.w;
 			canvas.bar = vis.draw({dim: dim, margin: margin}, 'ratings');
 			x = d3.scale.linear().range([0, dim.w]).domain([0, 5]);
 			xAxis = d3.svg.axis().scale(x).orient('top').tickSize(-dim.h)
@@ -194,14 +203,7 @@ define(['textures'], function (textures) {
 				.style('fill', datum.id < 10 ? colors[category] : E.lightGrey)
 				.style('opacity', datum.id < 10 ? (10 - datum.id) / 10 : 1)
 		    	.on('mouseover', function() {
-		    		showMouseOver(data[i], i);
-					var yPos = $('.js-ratings-bar-wrapper-' + i)
-						.attr('transform').split(',')[1];
-					E.setTooltipText([datum.beers + ' distinctive beers',
-						'Score: ' + datum.score],
-						'ratings', dim.w,
-						d3.mouse(this)[0],
-						+yPos.slice(0, yPos.length-1) + unitH / 2);
+		    		showMouseOver(data[i], i, dim.w);
 				})
 				.on('mouseout', function() {
 					showMouseOut(data[0], i);
@@ -209,9 +211,9 @@ define(['textures'], function (textures) {
 				});
 			director.append('text')
 				.attr('x', -E.noTicks.padding)
-				.attr('y', unitH - 4)
+				.attr('y', unitH / 2 - 1)
 				.text(datum.name)
-				.attr('class', 'size-small pos-end js-ratings-text-' + i);
+				.attr('class', 'size-tiny pos-end v-middle js-ratings-text-' + i);
 		});
 		canvas.bar.append('g')
 			.attr('class', 'x axis js-ratings-elm')
@@ -219,16 +221,11 @@ define(['textures'], function (textures) {
 
 		//label
 		if (vis) {
+			E.putAxisLable(canvas.bar, dim.w / 2 + 10, -72, 'score', 'x');
 			canvas.bar.append('path')
 				.attr('d', E.drawStar(8))
-				.attr('transform', 'translate( ' + (dim.w / 2 - 18) + ', ' +
-					(E.noTicks.lableTop - 4)+ ')')
+				.attr('transform', 'translate( ' + (dim.w / 2 - 18) + ', -34)')
 				.attr('class', 'fill-grey stroke-none')
-			canvas.bar.append('text')
-				.attr('x', dim.w / 2 + 10)
-				.attr('y', E.noTicks.lableTop)
-				.text('score')
-				.attr('class', 'pos-middle fill-grey size-small')
 		}
 
 		//average line
@@ -242,7 +239,7 @@ define(['textures'], function (textures) {
 		E.drawTooltip(canvas.bar, 'ratings', 2);
 		E.setTooltipText(['Score: ' + data[0].score,
 			data[0].beers + ' distinctive beers'],
-			'ratings', dim.w, 5, unitH/2);
+			'ratings', dim.w, x(data[0].score) / 2, unitH / 2);
 
 		//texture
  		$('#vis-ratings').find('def').remove();
@@ -325,14 +322,14 @@ define(['textures'], function (textures) {
 				.attr('class', 'size-tiny')
 		});
 
-		E.putAxisLable(svg, dim.w/2, dim.h + E.noTicks.lableBottom,
-			'chech-ins', 'x', 'small');
-		E.putAxisLable(svg, -dim.h / 2 + 4, -margin.left + 10,
-			'score', 'y', 'small');
+		E.putAxisLable(svg, dim.w / 2, dim.h,
+			'chech-ins', 'x');
+		E.putAxisLable(svg, -dim.h / 2 + 10, 0,
+			'score', 'y');
 		svg.append('path')
 			.attr('d', E.drawStar(8))
-			.attr('transform', 'translate( ' + (-margin.left + 6) + ', ' +
-				(dim.h / 2 + 24)+ ')')
+			.attr('transform', 'translate( ' + ( -margin.left + 11) + ', ' +
+				(dim.h / 2 + 16)+ ')')
 			.attr('class', 'fill-grey stroke-none')
 	};
 

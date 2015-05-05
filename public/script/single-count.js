@@ -129,6 +129,8 @@ define(['moment', 'textures'], function (moment, textures) {
 				.tickSize(-dim.w, 0)
 				.tickPadding(E.noTicks.padding);
 
+		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
+
 		svg.append('g')
 			.attr('class', 'x axis js-freq-axis-x')
 			.attr('transform', 'translate(0, ' + dim.h + ')')
@@ -141,8 +143,6 @@ define(['moment', 'textures'], function (moment, textures) {
 			'check-ins / ' + unit, 'x', 'js-freq-lable-x');
 		E.putAxisLable(svg, -dim.h / 2, 0,
 			'number of ' + unit, 'y', 'js-freq-lable-y');
-
-		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
 	};
 
 	function getTooltipString(date) {
@@ -227,7 +227,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		var svg = vis.draw({dim: dim, margin: margin}, 'calendar');
 
 		//draw scale legend
-		E.drawChromaLegend(svg, dim.w,
+		E.drawChromaLegend(svg, dim.w, -30,
 			data.frequency[unit].counts.length,
 			data.frequency[unit].gap, 'calendar', colors);
 

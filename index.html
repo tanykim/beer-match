@@ -226,7 +226,8 @@
 				</div>
 				<div class="wrapper-right ratings-wrapper">
 					<div class="vis-radio-sub radio-sortBy">
-						Sort By <span data-value="count" class="link selected js-ratings-sortBy"><i class="fa fa-dot-circle-o"></i>  Count </span>
+						Sort By
+						<span data-value="count" class="link count selected js-ratings-sortBy"><i class="fa fa-dot-circle-o"></i>  Count </span>
 						<span data-value="score" class="link js-ratings-sortBy"><i class="fa fa-circle-o"></i> Average Score </span>
 						<span data-value="name" class="link js-ratings-sortBy"><i class="fa fa-circle-o"></i> A to Z </span>
 					</div>
@@ -241,17 +242,19 @@
 				<div class="wrapper-left">
 					<div class="title">
 						<div class="name js-beers-name"></div>
-						<div class="score js-beers-score"></div>
+						<div class="numbers">
+							<span class="score js-beers-score"></span>
+							<span class="count">
+								<i class="fa fa-check-square-o"></i> total
+								<span class="count-number js-beers-count"></span>
+								<span class="js-beers-times"></span>
+							</span>
+						</div>
 						<div class="info">
 							<span class="style js-beers-style"></span>
 							<span class="abv js-beers-abv"></span>
 							<span class="brewery js-beers-brewery"></span>
 							<span class="country js-beers-country"></span>
-						</div>
-						<div class="count">
-							<i class="fa fa-check-square-o"></i> total
-							<span class="count-number js-beers-count"></span>
-							<span class="js-beers-times"></span>
 						</div>
 					</div>
 					<div id="vis-beers" class="beers"></div>

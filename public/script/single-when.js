@@ -5,7 +5,8 @@ define(['moment', 'textures'], function (moment, textures) {
 	var selected = 'matrix';
 	var colors;
 	var dim, x, y, xAxis, yAxis;
-	var tx, mb;
+	var tx;
+	var mb;
 
 	function resetMaxTexture() {
 		d3.select('.js-matrix-block-' + mb).style('fill', E.colors.when);
@@ -125,7 +126,14 @@ define(['moment', 'textures'], function (moment, textures) {
 		}));
 	}
 
-	function drawBlocks(svg, dim, dataset) {
+	function setTextures(svg, opacity) {
+		$('#vis-matrix').find('def').remove();
+		tx = textures.lines().size(6).lighter()
+			.background('rgba(124, 37, 41, ' + opacity +')');
+		svg.call(tx);
+	}
+
+	function drawBlocks(svg, dim, dataset, maxVal) {
 		svg.selectAll('.js-matrix-block')
 			.data(dataset)
 				.enter().append('rect')
@@ -145,6 +153,7 @@ define(['moment', 'textures'], function (moment, textures) {
 					E.setTooltipText([d.str, d.val + ' check-ins'],
 						'matrix', dim.w, d.x.matrix + d.width.matrix / 2,
 						d.y.matrix);
+					setTextures(svg, d.val/maxVal);
 					d3.select(this).style('fill', tx.url())
 						.style('fill-opacity', 1);
 				}
@@ -172,10 +181,10 @@ define(['moment', 'textures'], function (moment, textures) {
 			.data(_.pluck(byDay, 'total'))
 				.enter().append('text')
 			.attr('x', function (d) { return x.day(d) + 6; })
-			.attr('y', function (d, i) { return dim.h / 14 * (i * 2 + 1) + 4; })
+			.attr('y', function (d, i) { return dim.h / 14 * (i * 2 + 1); })
 			.text(function (d) { return d; })
 			.style('fill', E.colors.when)
-			.attr('class', 'size-middle js-matrix-vals-day')
+			.attr('class', 'size-middle v-middle js-matrix-vals-day')
 		$('.js-matrix-vals-hour').hide();
 		$('.js-matrix-vals-day').hide();
 	}
@@ -241,9 +250,21 @@ define(['moment', 'textures'], function (moment, textures) {
 					.tickPadding(E.noTicks.padding).ticks(hourTicks.count)
 		};
 
+		//legends
+		var chromaVals = E.getAxisTicks(maxVals.matrix);
+		E.drawChromaLegend(svg, dim.w, -40, 10,
+			(maxVals.matrix > 10 ? chromaVals.endPoint : 10) / 10,
+			'matrix', colors);
+		E.putAxisLable(svg, dim.w / 2, dim.h,
+			'check-ins', 'x', 'js-matrix-lable-x');
+		E.putAxisLable(svg, -dim.h / 2, 0,
+			'check-ins', 'y', 'js-matrix-lable-y');
+		$('.js-matrix-lable-x').hide();
+		$('.js-matrix-lable-y').hide();
+
 		//matrix dataset
 		var dataset = createMatrixDataset(byHour, byDay, maxVals.matrix);
-		drawBlocks(svg, dim, dataset);
+		drawBlocks(svg, dim, dataset, maxVals.matrix);
 		drawValues(svg, dim, byHour, byDay);
 
 		svg.append('g')
@@ -254,26 +275,13 @@ define(['moment', 'textures'], function (moment, textures) {
 			.attr('class', 'y axis js-matrix-y')
 			.call(yAxis.matrix);
 
-		//legends
-		var chromaVals = E.getAxisTicks(maxVals.matrix);
-		E.drawChromaLegend(svg, dim.w, 10,
-			(maxVals.matrix > 10 ? chromaVals.endPoint : 10) / 10,
-			'matrix', colors);
-		E.putAxisLable(svg, dim.w / 2, dim.h + E.noTicks.lableBottom,
-			'chech-ins', 'x', 'small', 'js-matrix-lable-x');
-		E.putAxisLable(svg, -dim.h / 2, -margin.left + 15,
-			'chech-ins', 'y', 'small', 'js-matrix-lable-y');
-		$('.js-matrix-lable-x').hide();
-		$('.js-matrix-lable-y').hide();
-
 		//tooltip at the max day position
 		E.drawTooltip(svg, 'matrix', 2);
 		var maxBlock = _.max(dataset, function (d) { return d.val; });
 		E.setTooltipText([maxBlock.str, maxBlock.val + ' check-ins'],
 			'matrix', dim.w, maxBlock.x.matrix + maxBlock.width.matrix / 2,
 			maxBlock.y.matrix);
-		tx = textures.lines().size(6).lighter().background(E.colors.when);
-		svg.call(tx);
+		setTextures (svg, 1);
 		mb = maxBlock.order;
 		d3.select('.js-matrix-block-' + mb).style('fill', tx.url());
 	};

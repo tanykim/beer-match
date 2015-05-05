@@ -175,11 +175,7 @@ define(['moment', 'textures'], function (moment, textures) {
         svg.append('g')
             .attr('class', 'x axis')
             .call(xAxis);
-        svg.append('text')
-            .attr('x', dim.w / 2)
-            .attr('y', -E.noTicks.lableBottom)
-            .text(period.toUpperCase())
-            .attr('class', 'size-tiny pos-middle fill-grey');
+        E.putAxisLable(svg, dim.w / 2, -70, period.toUpperCase(), 'x');
 
         var maxVal = _.max(_.map(_.pluck(data, 'by'), function (d) {
             return _.max(d);

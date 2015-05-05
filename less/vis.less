@@ -313,6 +313,9 @@
 			padding-top: 1em;
 			padding-right: 1em;
 			text-align: right;
+			.count {
+				margin-left: 0.2em;
+			}
 		}
 	}
 }
@@ -355,11 +358,22 @@
 			.bold();
 			font-size: @large;
 		}
-		.score {
-			color: @darkGrey;
+		.numbers {
+			margin-bottom: 0.5em;
+			.score {
+				color: @darkGrey;
+				margin-right: 0.5em;
+			}
+			.count {
+				color: @darkGrey;
+				font-size: @small;
+			}
+			.count-number {
+				.bold();
+			}
 		}
 		.info {
-			margin-top: 1em;
+			margin-bottom: 1em;
 			font-size: @small;
 			color: @grey;
 			span {
@@ -379,15 +393,6 @@
 			.country {
 				background-color: @country;
 			}
-		}
-		.count {
-			color: @darkGrey;
-			font-size: @small;
-			margin-top: 1em;
-			margin-bottom: 1em;
-		}
-		.count-number {
-			.bold();
 		}
 	}
 }

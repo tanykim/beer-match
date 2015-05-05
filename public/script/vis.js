@@ -36,7 +36,6 @@ define(['moment', 'vis-settings',
 			}
 		});
 
-		/*
 		//1--ratings
 		S.setVisNoSVG('categories', function (vis) {
 			Ratings.drawCategories(vis, 'style', b.userinfo.checkinCount,
@@ -49,7 +48,6 @@ define(['moment', 'vis-settings',
 			var changed = S.changeRadioSelection($(this));
 			if (changed) {
 				var category = $(this).data().value;
-
 				//revert to the first choice
 				_.each($('.js-ratings-sortBy'), function (d) {
 					if ($(d).data().value === 'count') {
@@ -89,7 +87,6 @@ define(['moment', 'vis-settings',
 			Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 		});
 
-
 		//3--when
 		var whenScale = function (length) {
 			return S.getChroma(['#fff', '#7c2529'], length);
@@ -113,7 +110,6 @@ define(['moment', 'vis-settings',
 			WhenWhere.drawDayStats(vis, b.byDay);
 		});
 		WhenWhere.drawTimeline(b.venueByTime, b.venueByTimeUnit, b.timeRange, S.setVisNoSVG('timeline'));
-		*/
 	};
 
 	var startVisMatch = function (m) {

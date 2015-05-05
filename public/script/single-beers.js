@@ -79,12 +79,13 @@ define(['moment'], function (moment) {
         $('.js-beers-brewery').html(b.categories.brewery.name.trim());
         $('.js-beers-country').html(b.categories.country.name.trim());
         $('.js-beers-count').html(b.count);
-        $('.js-beers-times').html(b.count === 1 ? 'check-in' : 'check-ins');
+        $('.js-beers-times').html('check-in' + (b.count > 1 ? 's' : ''));
 
         //center beer image transition
         $('.js-beers-beer-img').hide().attr('href', b.label).fadeIn('fast');
 
         _.each(b.categories, function (d, category) {
+
             var p = getCenterBeerPositions(category, d.order, d.name);
 
             //selected circle and lines
@@ -119,7 +120,8 @@ define(['moment'], function (moment) {
             d3.select('.js-beers-beer-text-count-' + category).text('')
                     .transition()
                 .attr('x', p.xPos).attr('y', p.textY).attr('dy', p.dy + 14)
-                .text(d.count === 0 ? '' : d.count + ' check-ins');
+                .text(d.count > 0 ?
+                    d.count + ' check-in' + (d.count > 1 ? 's' : '') : '');
         });
     }
 
@@ -134,13 +136,6 @@ define(['moment'], function (moment) {
                 .attr('y2', dim.h/2)
                 .attr('class', 'stroke-black stroke-2 ' +
                     'js-beers-beer-line-' + category);
-            svg.append('circle')
-                .attr('cx', dim.w/2)
-                .attr('cy', dim.h/2)
-                .attr('r', r)
-                .style('fill', '#000')
-                .style('opacity', 1)
-                .attr('class', 'beers-' + category);
             svg.append('text')
                 .attr('x', dim.w/2)
                 .attr('y', dim.h/2)
@@ -153,7 +148,7 @@ define(['moment'], function (moment) {
                 .attr('y', dim.h/2)
                 .attr('dy', 0)
                 .text('')
-                .attr('class', 'size-small pos-middle fill-grey unselectable' +
+                .attr('class', 'size-small pos-middle fill-darkGrey unselectable ' +
                     'js-beers-beer-text-count-' + category);
         });
 
@@ -185,20 +180,6 @@ define(['moment'], function (moment) {
         svg = vis.svg;
         var maxR = dim.h / 2;
 
-        //vertical and horitontal lines
-        svg.append('line')
-            .attr('x1', dim.w/2 - maxR)
-            .attr('x2', dim.w/2 + maxR)
-            .attr('y1', dim.h/2)
-            .attr('y2', dim.h/2)
-            .attr('class', 'stroke-grey stroke-1');
-        svg.append('line')
-            .attr('x1', dim.w/2)
-            .attr('x2', dim.w/2)
-            .attr('y1', 0)
-            .attr('y2', dim.h)
-            .attr('class', 'stroke-grey stroke-1');
-
         //radials
         var gapBase = (maxR - margin.oR - margin.iR) / 11;
         _.each(_.range(11), function (i) {
@@ -213,10 +194,23 @@ define(['moment'], function (moment) {
             svg.append('text')
                 .attr('x', dim.w/2)
                 .attr('y', (maxR - margin.iR) - gapBase * (i + 1))
-                .attr('dy', 6)
                 .text(score)
-                .attr('class', 'pos-middle size-small');
+                .attr('class', 'pos-middle v-middle size-tiny fill-grey');
         });
+
+        //vertical and horitontal lines
+        svg.append('line')
+            .attr('x1', dim.w/2 - maxR)
+            .attr('x2', dim.w/2 + maxR)
+            .attr('y1', dim.h/2)
+            .attr('y2', dim.h/2)
+            .attr('class', 'stroke-grey stroke-1');
+        svg.append('line')
+            .attr('x1', dim.w/2)
+            .attr('x2', dim.w/2)
+            .attr('y1', 0)
+            .attr('y2', dim.h)
+            .attr('class', 'stroke-grey stroke-1');
 
         //draw circles
         //10 degrees
@@ -251,21 +245,22 @@ define(['moment'], function (moment) {
                     .attr('class', 'js-beers-dot-' + category +
                         ' js-beers-' + category + '-' + d.id)
                     .on('mouseover', function() {
-                        d3.select(this).attr('opacity', 1);
+                        d3.select(this).style('opacity', 1);
                         svg.append('text')
                             .attr('x', xPos + dim.w/2)
                             .attr('y', yPos + dim.h/2 - 10)
                             .text(d.name + ' (' + d.count + ')')
                             .style('fill', colors[category])
-                            .attr('class', 'size-small pos-middle ' +
-                                'js-beers-beer-dot-text');
+                            .attr('class', 'size-tiny ' +
+                                (category === 'style' || category === 'country' ?
+                                'pos-end' : '') +
+                                ' js-beers-beer-dot-text');
                     })
                     .on('mouseout', function() {
-                        d3.select(this).attr('opacity', 0.3);
+                        d3.select(this).style('opacity', 0.3);
                         $('.js-beers-beer-dot-text').remove();
                     });
             });
-
             i = i + 1;
             drawCenterBeer();
         });

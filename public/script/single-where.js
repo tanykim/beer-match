@@ -210,10 +210,13 @@ define(['textures'], function (textures) {
                 .attr('x', dim.w / 2)
                 .attr('y', maxR + i * unitH + 6)
                 .text(d.count)
-                .style('fill', '#fff')
+                .style('fill', i === 0 ? '#000' : '#fff')
                 .attr('class', 'size-small pos-middle link ' +
                     'js-where-count js-where-count-' + d.id)
                 .on('mouseover', function () {
+                    if (i > 0) {
+                        d3.select('.js-where-count-0').style('fill', '#fff');
+                    }
                     callMouseIx($('.js-where-bar-' + d.id), d, lids[i], true);
                 })
                 .on('click', function() {
@@ -293,11 +296,14 @@ define(['textures'], function (textures) {
             .attr('y', function (d, i) { return maxR + i * unitH - 10; })
             .attr('width', function (d) { return x(d.count); })
             .attr('height', 20)
-            .style('fill', '#000')
+            .style('fill', function (d, i) { return i === 0 ? txb.url() : '#000'; })
             .attr('class', function (d) {
                 return 'link js-where-bar js-where-bar-' + d.id;
             })
             .on('mouseover', function (d, i) {
+                if (i > i) {
+                    d3.select('.js-where-bar-0').attr('fill', '#000');
+                }
                 callMouseIx(this, d, lids[i], true);
             })
             .on('click', function (d, i) {
