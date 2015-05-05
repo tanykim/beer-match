@@ -179,18 +179,18 @@ var E = {
             .attr('class', 'js-' + c + '-legend');
         d3.select('.js-' + c + '-legend').append('text')
             .attr('x', 5)
-            .attr('y', E.legendH - 5)
+            .attr('y', E.legendH / 2)
             .text('0')
-            .attr('class', 'size-small');
+            .attr('class', 'size-tiny v-middle');
         d3.select('.js-' + c + '-legend').append('text')
             .attr('x', -5)
-            .attr('y', E.legendH - 5)
+            .attr('y', E.legendH / 2)
             .text('check-ins')
             .attr('class', 'pos-end fill-grey size-small');
         d3.select('.js-' + c + '-legend').append('text')
             .attr('x', E.legendW + 25)
-            .attr('y', E.legendH - 5)
-            .attr('class', 'size-small js-' + c + '-legend-max');
+            .attr('y', E.legendH / 2)
+            .attr('class', 'size-tiny v-middle js-' + c + '-legend-max');
         E.updateChroma(step, gap, c, colors);
     },
 

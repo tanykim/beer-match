@@ -200,7 +200,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		$('#vis-calendar').find('def').remove();
 		var cId = getColorId(data, d);
 		var t = textures.lines().size(block/2)
-			.stroke(cId > colors.length - 3 ? '#999' : '#343434')
+			.stroke(cId > colors.length - 3 ? '#666' : '#343434')
 			.lighter().background(colors[cId]);
 		svg.call(t);
 		d3.selectAll('.js-cal-block').filter(function (b) {
@@ -233,7 +233,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
 		//y axis day label
 		putAxisLabels(svg, rowC, gap);
-		var colC = Math.ceil(dim.w / block);
+		var colC = Math.floor(dim.w / block);
 		var colL = gap + 7 * block;
 		var offset = sT.day();
 

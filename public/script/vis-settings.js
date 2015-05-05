@@ -33,7 +33,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 	};
 	var margins = {
 		frequency: { top: 80, right: 30, bottom: 50, left: 70 },
-		calendar: { top: 50, right: 20, bottom: 20, left: 40 },
+		calendar: { top: 50, right: 40, bottom: 20, left: 50 },
 		score: { top: 0, right: 20, bottom: 40, left: 54 },
 		categories: { top: 60, right: 20, bottom: 10, left: 20 },
 		ratings: { top: 60, right: 20, bottom: 20, left: 240 },
