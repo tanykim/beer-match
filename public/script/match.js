@@ -99,7 +99,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         var scores = _.filter(_.map(all, function (name) {
             return _.map(dataset, function (d) {
                 var elm = _.findWhere(d.ratingsList[attr], { name: name });
-                return elm ? elm.rating * elm.count / d.maxCount[attr] : 0;
+                return elm ? elm.score * elm.count / d.maxCount[attr] : 0;
             });
         }), function (arr) {
             return arr[0] + arr[1] > 0;
@@ -176,7 +176,8 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         - abv similarity
         */
         var scoreAvgs = _.pluck(dataset, 'scoreAvg');
-        var commonBeers = _.intersection(_.pluck(dataset[0].allBeers, 'bid'), _.pluck(dataset[1].allBeers, 'bid'));
+        var commonBeers = _.intersection(_.pluck(dataset[0].allBeers, 'bid'),
+                _.pluck(dataset[1].allBeers, 'bid'));
         var byBeer = 0;
         if (!_.isEmpty(commonBeers)) {
             byBeer = getMatchByBeer(dataset, commonBeers, scoreAvgs);
@@ -197,6 +198,12 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         };
         var weighted = _.map(matchList, function (by, key) {
             return by * weight[key];
+        });
+        this.profile = _.map(_.pluck(dataset, 'userinfo'), function (d) {
+            return {
+                avatar: d.avatar,
+                firstname: d.username.split(' ')[0]
+            };
         });
         this.matchList = matchList;
         this.matchScore = Math.round(getSum(weighted) * 10) / 10;

@@ -91,36 +91,34 @@
 
 		<!-- 0 match score & behavior-->
 		<div class="vis-contents match-score js-match-contents-0">
-			<div class="container">
-				<div class="row">
-					<div class="col-xs-4"></div>
-					<div class="score col-xs-4">
-						<span class="bold js-match-score"></span> %
+			<ul class="score">
+				<li class="name-left js-match-score-name-0">name</li>
+				<li class="pic-left js-match-score-pic-0"></li>
+				<li class="line-left"></li>
+				<li class="percent">
+					<div class="percent-inner">
+						<span class="number js-match-score-number"></span>
 					</div>
-					<div class="col-xs-4"></div>
+				</li>
+				<li class="line-right"></li>
+				<li class="pic-right js-match-score-pic-1"></li>
+				<li class="name-right js-match-score-name-1">name</li>
+			</ul>
+			<div class="by">
+				<div class="elm">
+					<div class="title">Style</div>
+					<div class="number"><span class="bold js-match-score-style"> </span> %</div>
 				</div>
-				<div class="row">
-					<div class="col-xs-2"></div>
-					<div class="by col-xs-8">
-						<div class="elm">
-							<div class="title">Distinctive Beers</div>
-							<div class="number"><span class="bold js-match-score-beer"> </span> %</div>
-						</div>
-						<div class="elm">
-							<div class="title">Style</div>
-							<div class="number"><span class="bold js-match-score-style"> </span> %</div>
-						</div>
-						<div class="elm">
-							<div class="title">ABV</div>
-							<div class="number"><span class="bold js-match-score-abv"> </span> %</div>
-						</div>
-					</div>
-					<div class="col-xs-2"></div>
+				<div class="elm">
+					<div class="title">Distinctive Beers</div>
+					<div class="number"><span class="bold js-match-score-beer"> </span> %</div>
 				</div>
-				<div class="row">
-					<div id="vis-behavior" class="behavior col-xs-12 js-match-svg"></div>
+				<div class="elm">
+					<div class="title">ABV</div>
+					<div class="number"><span class="bold js-match-score-abv"> </span> %</div>
 				</div>
 			</div>
+			<div id="vis-behavior" class="behavior js-match-svg"></div>
 		</div>
 
 		<!-- 1 who drinks more -->

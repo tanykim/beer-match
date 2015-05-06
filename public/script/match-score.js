@@ -2,9 +2,15 @@ define(['moment'], function (moment) {
 
 	var colors = E.colors;
 
-	var putScore = function (score, list) {
+	var putScore = function (profile, score, list) {
 
-		$('.js-match-score').html(score);
+		_.each(profile, function (d, i) {
+			$('.js-match-score-name-' + i).html(d.firstname);
+			$('.js-match-score-pic-' + i)
+				.css('background', 'url("' + d.avatar + '")')
+				.css('background-size', '60px 60px');
+		});
+		$('.js-match-score-number').html(score);
 		_.each(list, function (d, key) {
 			$('.js-match-score-' + key).html(d);
 		});
