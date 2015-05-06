@@ -47,7 +47,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 	};
 
    	var getWidth = function(div) {
-        var w = $('body').width() * 0.9 / 12 * widths[div];
+        var w = parseInt($('body').width() * 0.9 / 12 * widths[div]);
         if (div !== 'beers') {
             return Math.min(Math.max(w, 200), 4000);
         } else {

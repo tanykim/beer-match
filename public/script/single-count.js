@@ -13,12 +13,12 @@ define(['moment', 'textures'], function (moment, textures) {
 
 		_.each(data.counts, function (val, i) {
 			svg.append('rect')
-				.attr('x', x(i) + 2)
+				.attr('x', x(i))
 				.attr('y', y(val))
-				.attr('width', dim.w/data.counts.length - 4)
+				.attr('width', dim.w/data.counts.length)
 				.attr('height', dim.h - y(val))
 				.style('fill', colors[i])
-				.attr('class', 'stroke-none js-freq-block');
+				.attr('class', 'stroke-tick js-freq-block');
 			svg.append('text')
 				.attr('x', x(i) + dim.w/data.counts.length / 2)
 				.attr('y', y(val))
@@ -129,8 +129,6 @@ define(['moment', 'textures'], function (moment, textures) {
 				.tickSize(-dim.w, 0)
 				.tickPadding(E.noTicks.padding);
 
-		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
-
 		svg.append('g')
 			.attr('class', 'x axis js-freq-axis-x')
 			.attr('transform', 'translate(0, ' + dim.h + ')')
@@ -143,6 +141,8 @@ define(['moment', 'textures'], function (moment, textures) {
 			'check-ins / ' + unit, 'x', 'js-freq-lable-x');
 		E.putAxisLable(svg, -dim.h / 2, 0,
 			'number of ' + unit, 'y', 'js-freq-lable-y');
+
+		drawFreqBlocks(frequency, maxCount, avgCount[unit]);
 	};
 
 	function getTooltipString(date) {
