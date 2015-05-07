@@ -154,14 +154,18 @@ define(['textures'], function (textures) {
             //circles
             d3.select('.js-where-city-' + lid.city).style('opacity', 1);
             d3.select('.js-where-type-' + lid.type).style('opacity', 1);
-            d3.select('.js-where-linked-city')
-                .attr('cy', maxR + unitH * lid.city)
-                .transition()
-                .attr('r', Math.sqrt(maxR * maxR * d.count / maxRVal));
-            d3.select('.js-where-linked-type')
-                .attr('cy', maxR + unitH * lid.type)
-                .transition()
-                .attr('r', Math.sqrt(maxR * maxR * d.count / maxRVal));
+            if (lid.city > -1) {
+                d3.select('.js-where-linked-city')
+                    .attr('cy', maxR + unitH * lid.city)
+                    .transition()
+                    .attr('r', Math.sqrt(maxR * maxR * d.count / maxRVal));
+            }
+            if (lid.type > -1) {
+                d3.select('.js-where-linked-type')
+                    .attr('cy', maxR + unitH * lid.type)
+                    .transition()
+                    .attr('r', Math.sqrt(maxR * maxR * d.count / maxRVal));
+            }
 
             //text
             d3.select('.js-where-text-city-' + lid.city).style('opacity', 1);
@@ -278,7 +282,7 @@ define(['textures'], function (textures) {
         //get linked ids
         var lids = _.map(data.name, function (place) {
             return _.object(_.map(['type', 'city'], function (sort) {
-                var id = '';
+                var id = -1;
                 _.each(data[sort], function (d, i) {
                     if (d.name === place[sort]) {
                         id = i;

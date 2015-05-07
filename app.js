@@ -50,7 +50,7 @@ function getTimezone(user) {
 		userId: user.user_name.toLowerCase(),
 		address: user.location,
 		avatar: user.user_avatar,
-		name: user.first_name + ' ' + user.last_name,
+		username: user.first_name + ' ' + user.last_name,
 		since: user.date_joined,
 		beerCount: user.stats.total_beers,
 		checkinCount: user.stats.total_checkins,

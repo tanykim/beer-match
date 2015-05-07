@@ -120,21 +120,21 @@ define(['moment', 'vis-settings',
 
 		//0--match scores
 		Score.putScore(m.profile, m.matchScore, m.matchList);
-		// S.setVis('behavior', function (vis) {
-		// 	Score.drawBehavior(vis, m.behavior);
-		// });
+		S.setVis('behavior', function (vis) {
+			Score.drawBehavior(vis, m.behavior);
+		});
 
 		// //1--average count
-		// S.setVis('counts', function (vis) {
-		// 	Score.drawCount(vis, m.avgCount);
-		// });
-		// Styles.drawChord(m.styles);
-		// Score.drawBoth(m.beersList, m.distinctive);
-		// Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
-		// Venues.init(m.publicCount, m.topVenueTypes);
-		// if (!_.isEmpty(m.venues)) {
-		// 	Venues.drawCommonVenues(m.venues);
-		// }
+		S.setVis('counts', function (vis) {
+			Score.drawCount(vis, m.avgCount);
+		});
+		Styles.drawChord(m.styles);
+		Score.drawBoth(m.beersList, m.distinctive);
+		Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
+		Venues.init(m.publicCount, m.topVenueTypes);
+		if (!_.isEmpty(m.venues)) {
+			Venues.drawCommonVenues(m.venues);
+		}
 
 	};
 
