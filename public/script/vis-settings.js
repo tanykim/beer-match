@@ -15,7 +15,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		timeline: 7.9,
 		behavior: 6,
         detail: 3,
-		counts: 12
+        distinctive: 6,
+        styles: 10
 	};
 
 	var heights = {
@@ -31,7 +32,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		timeline: null,
 		behavior: 350,
         detail: 280,
-		counts: 200
+		distinctive: 50,
+        style: null
 	};
 	var margins = {
 		frequency: { top: 80, right: 30, bottom: 50, left: 70 },
@@ -46,12 +48,12 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		timeline: { top: 140, right: 40, bottom: 0, left: 240 },
 		behavior: { top: 20, right: 170, bottom: 20, left: 150 },
 		detail: { top: 20, right: 20, bottom: 40, left: 40 },
-        counts: { top: 0, right: 0, bottom: 0, left: 0 }
+        distinctive: { top: 10, right: 60, bottom: 10, left: 60 }
 	};
 
    	var getWidth = function(div) {
         var w = parseInt($('body').width() * 0.9 / 12 * widths[div]);
-        if (div !== 'beers') {
+        if (div !== 'beers' && div !== 'styles') {
             return Math.min(Math.max(w, 200), 4000);
         } else {
             return Math.min($(window).height() - 100, w);

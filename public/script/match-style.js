@@ -1,20 +1,17 @@
 define(['vis-settings', 'moment'], function (Settings, moment) {
 
-    var colors = E.colors;
-
     var drawChord = function (data) {
 
         var matrix = data.matrix;
-
         var chord = d3.layout.chord()
             .padding(.02)
             .sortSubgroups(d3.descending)
             .matrix(matrix);
 
         var width = $('.styles').width(),
-            height = 500,
-            innerRadius = Math.min(width, height) * .41,
-            outerRadius = innerRadius * 1.1;
+            height = 500;
+        var innerRadius = Math.min(width, height) * .41;
+        var outerRadius = innerRadius * 1.1;
 
         var svg = d3.select('#vis-styles').append('svg')
             .attr('width', width)

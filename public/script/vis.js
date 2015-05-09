@@ -119,6 +119,7 @@ define(['moment', 'vis-settings',
 
 		console.log('---match view');
 
+		/*
 		//0--match scores
 		Score.putScore(m.profile, m.matchScore, m.matchList);
 
@@ -130,12 +131,18 @@ define(['moment', 'vis-settings',
 			Behavior.drawDetail(vis, m.avgCount);
 		});
 
-		// //1--average count
-		// S.setVis('counts', function (vis) {
-		// 	Score.drawCount(vis, m.avgCount);
+		//2--beer list
+		S.setVis('distinctive', function (vis) {
+			Both.drawDistinctive(vis, m.distinctive);
+		});
+		Both.putBoth(m.beersList);
+		*/
+
+		//3--style
+		Styles.drawChord(m.styles);
+		// S.setVisNoSVG('styles', function (vis) {
+		// 	Styles.drawChord(vis, m.styles);
 		// });
-		// Styles.drawChord(m.styles);
-		// Both.drawBoth(m.beersList, m.distinctive);
 		// Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
 		// Venues.init(m.publicCount, m.topVenueTypes);
 		// if (!_.isEmpty(m.venues)) {

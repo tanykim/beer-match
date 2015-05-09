@@ -261,6 +261,7 @@
 }
 .vis-shadow {
     box-shadow: 0 0 2px fade(@dark, 30%);
+    border-radius: 6px;
 }
 .vis-sub-heading {
 	font-size: @small;
@@ -270,6 +271,35 @@
 	margin-top: 2em;
 	margin-bottom: 1em;
 	border-radius: 0.5em;
+}
+.vis-beer-list-wrapper {
+	.list {
+		text-align: left;
+		.vis-shadow();
+		margin-bottom: 1em;
+	}
+	.list-title {
+		background-color: @lightGrey;
+		.bold();
+		padding: 0.5em 0.8em;
+	}
+	.list-beers {
+		padding: 0.5em 0.3em 0.5em 0.8em;
+		color: @darkGrey;
+		.label-image {
+			border-radius: 20px;
+			vertical-align: middle;
+			margin: 3px;
+			padding: 1px;
+			background-color: @lightGrey;
+			height: 40px;
+			border: none;
+		}
+		.selected {
+			border: 1px solid @black;
+			background-color: @black;
+		}
+	}
 }
 
 /* each element */
@@ -335,33 +365,7 @@
 	text-align: center;
 	.list-wrapper {
 		width: 30%;
-		.list {
-			text-align: left;
-			.vis-shadow();
-			margin-bottom: 1em;
-		}
-		.list-title {
-			background-color: @lightGrey;
-			.bold();
-			padding: 0.5em 0.8em;
-		}
-		.list-beers {
-			padding: 0.5em 0.3em 0.5em 0.8em;
-			color: @darkGrey;
-			.label-image {
-				border-radius: 20px;
-				vertical-align: middle;
-				margin: 3px;
-				padding: 1px;
-				background-color: @lightGrey;
-				height: 40px;
-				border: none;
-			}
-			.selected {
-				border: 1px solid @black;
-				background-color: @black;
-			}
-		}
+		.vis-beer-list-wrapper();
 	}
 	.title {
 		text-align: center;
@@ -611,10 +615,38 @@
 		}
 	}
 }
-.match-counts {
-	.number {
-		font-size: @large;
-		margin-top: 1em;
-		text-align: center;
+
+.match-both {
+	text-align: center;
+	.title {
+		.bold();
 	}
+	.list-wrapper {
+		margin-top: 1em !important;
+		.60p();
+		.vis-beer-list-wrapper();
+		.list-title, .list-beers {
+			text-align: center;
+		}
+		.list-title-sub {
+			text-align: center;
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+		}
+		.list-beers-top {
+			padding-bottom: 1em;
+			margin-bottom: 1em;
+			border-bottom: 1px solid @lightGrey;
+		}
+		.user0 {
+			color: @user0;
+		}
+		.user1 {
+			color: @user1;
+		}
+	}
+}
+
+.match-styles {
+	text-align: center;
 }
