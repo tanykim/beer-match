@@ -110,27 +110,26 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 
     function getStyles(dataset) {
         var styles = _.map(dataset, function (d, i) {
-        var list = _.sortBy(_.map(d.ratingsList.style, function (style) {
-                return {
-                    name: style.name,
-                    count: style.count,
-                    rating: style.rating
-                };
-            }), function(d) {
-                return d.count;
-            });
-            return i === 1 ? list.reverse() : list;
-            });
+            var list = _.sortBy(_.map(d.ratingsList.style, function (style) {
+                    return {
+                        name: style.name,
+                        count: style.count,
+                        rating: style.rating
+                    };
+                }), function(d) {
+                    return d.count;
+                });
+                return i === 1 ? list.reverse() : list;
+        });
+
+        var commonStyles = _.intersection(_.pluck(styles[0], 'name'), _.pluck(styles[1], 'name'));
 
         function addRow(user, styles, second) {
             var row = [];
-            var commonStyles = _.intersection(_.pluck(styles[0], 'name'), _.pluck(styles[1], 'name'));
             var getValue = function (d, same) {
                 var isContains = _.contains(commonStyles, user.name);
                 var value = 0
                 if ((isContains && !same || !isContains && same) && d.name === user.name) {
-                // if ((isContains && !same) && d.name === user.name) {
-
                     value = user.count;
                 }
                 return value;
@@ -162,7 +161,8 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         return {
             matrix: matrix,
             names: names,
-            divide: _.size(styles[1])
+            divide: _.size(styles[1]),
+            common: commonStyles.length
         };
     }
 
@@ -276,7 +276,6 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         this.distinctive = _.map(dataset, function (d) {
             return d.userinfo.beerCount;
         });
-
         this.beersList = [];
         if (commonBeers) {
             this.beersList = getBeersList(_.pluck(dataset, 'allBeers'), commonBeers);

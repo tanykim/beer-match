@@ -168,7 +168,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
         var x = d3.time.scale().range([0, dim.w])
                 .domain([moment(timeRange[0]).startOf(period),
-                    moment(timeRange[1]).startOf(period)]);
+                    moment(timeRange[1]).endOf(period)]);
         var periodCount = moment(timeRange[1]).diff(timeRange[0], period);
         var xAxis = d3.svg.axis().scale(x).orient('top')
                     .ticks(Math.min(Math.floor(dim.w / 100), periodCount));
