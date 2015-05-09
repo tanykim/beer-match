@@ -13,7 +13,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		where: 7.8,
 		day: 3.8,
 		timeline: 7.9,
-		behavior: 12,
+		behavior: 6,
+        detail: 3,
 		counts: 12
 	};
 
@@ -28,7 +29,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		where: null,
 		day: null,
 		timeline: null,
-		behavior: 300,
+		behavior: 350,
+        detail: 280,
 		counts: 200
 	};
 	var margins = {
@@ -42,8 +44,9 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		where: { top: 20, right: 120, bottom: 0, left: 120 },
 		day: { top: 0, right: 50, bottom: 20, left: 36 },
 		timeline: { top: 140, right: 40, bottom: 0, left: 240 },
-		behavior: { top: 60, right: 20, bottom: 60, left: 20 },
-		counts: { top: 0, right: 0, bottom: 0, left: 0 }
+		behavior: { top: 20, right: 170, bottom: 20, left: 150 },
+		detail: { top: 20, right: 20, bottom: 40, left: 40 },
+        counts: { top: 0, right: 0, bottom: 0, left: 0 }
 	};
 
    	var getWidth = function(div) {

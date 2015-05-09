@@ -202,13 +202,11 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         this.profile = _.map(_.pluck(dataset, 'userinfo'), function (d) {
             return {
                 avatar: d.avatar,
-                firstname: d.username.split(' ')[0]
+                firstname: d.username
             };
         });
         this.matchList = matchList;
         this.matchScore = Math.round(getSum(weighted) * 10) / 10;
-
-        console.log('Match Score---', this.matchList, this.matchScore);
 
         /* behavior compasition stats -1 to 1
         - Beer Lover - light drinker: count
@@ -220,22 +218,23 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         */
         var stCount = _.map(dataset, function (d) {
             // 0 to 40
-            return Math.min(Math.max(1/20 * d.avgCount.month - 1, -1), 1);
+            return Math.min(d.avgCount.month / 40, 1);
+            // return Math.min(Math.max(1/20 * d.avgCount.month - 1, -1), 1);
         });
         var stExplorer = _.map(dataset, function (d) {
             // 1: all differnt, -1: all same
-            return d.userinfo.beerCount / d.userinfo.checkinCount * 2 - 1;
+            return d.userinfo.beerCount / d.userinfo.checkinCount;
         });
         var days = _.map(dataset, function (d) {
             return _.pluck(d.byDay, 'total');
         });
         var stWeekend = _.map(days, function (arr, i) {
             // 1: all weekend, -1: all 7 days
-            return (arr[0] + arr[6]) / dataset[i].userinfo.checkinCount * 2 - 1;
+            return (arr[0] + arr[6]) / dataset[i].userinfo.checkinCount;
         });
         var stSocial = _.map(dataset, function (d) {
             // 1: all social, -1: all home
-            return getSum(_.pluck(d.byDay, 'venue')) / d.userinfo.checkinCount * 2 - 1;
+            return getSum(_.pluck(d.byDay, 'venue')) / d.userinfo.checkinCount;
         });
         var hours = _.map(dataset, function (d) {
                 return _.map(_.range(24), function (h) {
@@ -254,16 +253,13 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
             var bySeg = _.map(segments, function (seg) {
                 return getSum(seg);
             });
-            // 1: all day drink, -1: all night drink
-            return bySeg[0] / getSum(bySeg) * 2 - 1;
+            // 1: all day time drink, -1: all night drink
+            return bySeg[0] / dataset[i].userinfo.checkinCount;
         });
         this.behavior = [stCount, stExplorer, stWeekend, stSocial, stDaytime];
-
-        console.log('stats count--', stCount);
-        console.log('stats explorer--', stExplorer);
-        console.log('stats weekend--', stWeekend);
-        console.log('stats social--', stSocial);
-        console.log('stats segments--', stDaytime);
+        this.avgCount = _.map(dataset, function (d) {
+            return _.extend(d.avgCount, { username: d.userinfo.username });
+        });
 
         /* dataset for vis
         - URL
@@ -276,7 +272,6 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         */
         this.url = dataset[0].userinfo.userId + '+' + dataset[1].userinfo.userId;
         this.userinfo = _.pluck(dataset, 'userinfo');
-        this.avgCount = _.pluck(dataset, 'avgCount');
 
         this.distinctive = _.map(dataset, function (d) {
             return d.userinfo.beerCount;
@@ -318,11 +313,11 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
             this.venues = getVenues(_.pluck(dataset, 'allVenues'), commonVenues);
         }
 
-        console.log('common beers list--', this.beersList);
-        console.log('by day and hour--', this.byDay, this.byHour);
-        console.log('public venue count--', this.publicCount);
-        console.log('top venues--', this.topVenueTypes);
-        console.log('common venues--', this.venues);
+        // console.log('common beers list--', this.beersList);
+        // console.log('by day and hour--', this.byDay, this.byHour);
+        // console.log('public venue count--', this.publicCount);
+        // console.log('top venues--', this.topVenueTypes);
+        // console.log('common venues--', this.venues);
         // console.log('match by venues--', this.matchByVenue);
 	};
 

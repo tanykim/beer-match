@@ -50,6 +50,7 @@ require([
         $('.js-single').removeClass('hide');
         $('.js-nav').removeClass('hide');
         $('.js-goMatch').removeClass('hide');
+        $('.js-goSingles').addClass('hide');
 
         var template = _.template($('#header-single').html());
         $('.js-vis-header').html(template({

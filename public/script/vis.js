@@ -1,10 +1,11 @@
 define(['moment', 'vis-settings',
 	'single-count', 'single-ratings', 'single-beers',
 	'single-when', 'single-where', 'single-whenWhere',
-	'match-score', 'match-style', 'match-time', 'match-venues'],
+	'match-score', 'match-behavior', 'match-style',
+	'match-both', 'match-time', 'match-venues'],
 
 	function (moment, S, Count, Ratings, Beers, When, Where, WhenWhere,
-		Score, Styles, Time, Venues) {
+		Score, Behavior, Styles, Both, Time, Venues) {
 
 	'use strict';
 
@@ -120,21 +121,26 @@ define(['moment', 'vis-settings',
 
 		//0--match scores
 		Score.putScore(m.profile, m.matchScore, m.matchList);
+
+		//1--behavior
 		S.setVis('behavior', function (vis) {
-			Score.drawBehavior(vis, m.behavior);
+			Behavior.drawBehavior(vis, m.behavior);
+		});
+		S.setVis('detail', function (vis) {
+			Behavior.drawDetail(vis, m.avgCount);
 		});
 
 		// //1--average count
-		S.setVis('counts', function (vis) {
-			Score.drawCount(vis, m.avgCount);
-		});
-		Styles.drawChord(m.styles);
-		Score.drawBoth(m.beersList, m.distinctive);
-		Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
-		Venues.init(m.publicCount, m.topVenueTypes);
-		if (!_.isEmpty(m.venues)) {
-			Venues.drawCommonVenues(m.venues);
-		}
+		// S.setVis('counts', function (vis) {
+		// 	Score.drawCount(vis, m.avgCount);
+		// });
+		// Styles.drawChord(m.styles);
+		// Both.drawBoth(m.beersList, m.distinctive);
+		// Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
+		// Venues.init(m.publicCount, m.topVenueTypes);
+		// if (!_.isEmpty(m.venues)) {
+		// 	Venues.drawCommonVenues(m.venues);
+		// }
 
 	};
 

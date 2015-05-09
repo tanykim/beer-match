@@ -32,8 +32,8 @@ var E = {
                 '6. When & Where'
             ],
             match: [
-                '1. Match scores',
-                '2. Who drinks more?',
+                '1. Taste Match',
+                '2. Drinking Behavior',
                 '3. Beers (dis/)agreed',
                 '4. Shared styles',
                 '5. When do we drink?',
@@ -57,7 +57,7 @@ var E = {
     lightGrey: '#e5e5e5',
     beerColors: ['#e8dd21', '#ffc61e', '#f99b0c', '#d38235', '#d86018',
         '#7c2529', '#643335', '#3f2021', '#25282a'],
-    users: ['#801E47', '#3A5F4E'],
+    users: ['#e55d5d', '#8cc33c'],
 
     //vis
 	noTicks: { size: 0, padding: 9 },

@@ -118,17 +118,20 @@
 					<div class="number"><span class="bold js-match-score-abv"> </span> %</div>
 				</div>
 			</div>
-			<div id="vis-behavior" class="behavior js-match-svg"></div>
 		</div>
 
-		<!-- 1 who drinks more -->
-		<div class="vis-contents match-counts js-match-contents-1">
-			<div class="container">
-				<div class="row">
-					<div id="vis-counts" class="counts col-xs-12 js-match-svg"></div>
+		<!-- 1 behavior -->
+		<div class="vis-contents match-behavior js-match-contents-1">
+			<div class="vis-wrapper behavior-wrapper">
+				<div class="wrapper-left">
+					<div id="vis-behavior" class="behavior js-match-svg"></div>
 				</div>
-				<div class="row">
-					<div class="number col-xs-12">BEERS / <span class="js-counts"></span></div>
+				<div class="wrapper-right detail-wrapper">
+					<div class="detail-legend js-detail-title">Title</div>
+					<div id="vis-detail" class="detail js-match-svg"></div>
+					<div class="sub hide js-detail-sub">
+						<span class="total"><i class="fa fa-stop"></i></span>total check-ins
+					</div>
 				</div>
 			</div>
 		</div>
@@ -298,7 +301,7 @@
 				<div class="wrapper-left wrapper-day">
 					<div class="day-legend">
 						<span class="total"><i class="fa fa-play fa-rotate-90"></i></span> Total Check-ins <br/>
-						<span class="loc"><i class="fa fa-play fa-rotate-90"></i></span> Check-ins with Location
+						<span class="part"><i class="fa fa-play fa-rotate-90"></i></span> Check-ins with Location
 					</div>
 					<div id="vis-day" class="day js-single-svg"></div>
 				</div>
