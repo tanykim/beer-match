@@ -163,7 +163,6 @@ define(['textures'], function (textures) {
 
 	var drawDetail = function (vis, c) {
 
-		console.log(count);
 		count = c;
 		var margin = vis.margin;
 		var dim = vis.dim;

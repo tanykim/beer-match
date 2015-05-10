@@ -400,10 +400,22 @@ define(['moment', 'textures'], function (moment, textures) {
 		});
 
 		//tooltip
-		E.drawTooltip(svg, 'commonVenues', 2);
-		E.setTooltipText(getTooltipText(data[0]),
-			'commonVenues', dim.w,
-			(dim.w / 2 - 24 - $('.js-venues-common-name-0').width()), 0);
+		var sd = _.map(data, function (d) {
+			return d.commonDates.length;
+		});
+		var firstSd;
+		for (var i = 0 ; i < sd.length; i++) {
+			if (sd[i] > 0) {
+				firstSd = i;
+				break;
+			}
+		}
+		if (!_.isUndefined(firstSd)) {
+			E.drawTooltip(svg, 'commonVenues', 2);
+			E.setTooltipText(getTooltipText(data[0]),
+				'commonVenues', dim.w,
+				(dim.w / 2 - 24 - $('.js-venues-common-name-0').width()), 0);
+		}
 	};
 
 	return {
