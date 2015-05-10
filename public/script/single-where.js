@@ -10,7 +10,7 @@ define(['textures'], function (textures) {
         return '<div class="selected"><div class="name">' +
             '<img src="' + d.icon + '"> ' + d.name + '</div>' +
             '<div class="location"><span class="type">' + d.type + '</span> ' +
-            '/ <span class="city">' + d.city + '</span></div>' +
+            (d.city ? '/ <span class="city">' + d.city + '</span></div>' : '') +
             '<div class="count">' + d.count + ' check-ins / visited ' +
             d.dates.length + ' day' + (d.dates.length > 1 ? 's' : '') +
             '</div></div>';

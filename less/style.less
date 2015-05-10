@@ -9,23 +9,24 @@
 @small: 0.875em;
 @tiny: 0.75em;
 
-@font-size: 16;
-
 /* colors */
-@black: #000;
 @dark: #25282A;
 @light: #e5e5e5;
+
 @yellow: #FFC61E;
 @red: #7B2429;
 @orange: #D86018;
 @lightBlue: #D3E7F2;
-@darkGrey: #666666;
-@lightGrey: #e5e5e5;
-@grey: #999999;
-@white: #fff;
-@lightest: #efefef;
 
-@style: #ffc61e; /* refer vis-element.js */
+@black: #000;
+@darkGrey: #666666;
+@grey: #999999;
+@lightGrey: #e5e5e5;
+@lightest: #efefef;
+@white: #fff;
+
+/* refer vis-element.js */
+@style: #ffc61e;
 @abv: #d86018;
 @brewery: #7c2529;
 @country: #3f2021;
@@ -36,7 +37,6 @@
 @vis-day: #ffc61e;
 @user0: #e55d5d;
 @user1: #8cc33c;
-@whiteTrans: rgba(255, 255, 255, 0.8);
 
 /*icons*/
 #view-icon-intro {
@@ -45,20 +45,20 @@
 	color: @dark;
 }
 #view-icon-vis {
-	background: url('../images/view_dark.png') no-repeat @light;
+	background: url('../images/view_dark.png') no-repeat @white;
 	color: @dark;
 }
 #view-icon {
 	background-size: 2.250em;
 	background-position-x: 1em;
-	border-radius: 1.125em;
-	margin: 0.5em 0.2em 0 0.2em;
+	border-radius: 1em;
+	margin: 0.5em 0.1em 0 0.1em;
 	text-decoration: none;
 	font-weight: 700;
 }
 #view-icon-single {
 	padding: 0.375em 1em 0.5em 2.375em;
-	background-position-y: 0.625em;
+	background-position-y: 0.62em;
 }
 #view-icon-match {
 	padding: 0.375em 1em 0.5em 3.5em;
@@ -97,14 +97,11 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Open Sans', Helvetica, arial, sans-serif;
-	/*letter-spacing: 0.04em;*/
 }
-
 ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-	/*display: inline;*/
 }
 
 @import 'mapbox';

@@ -320,8 +320,9 @@ define(['moment', 'textures'], function (moment, textures) {
 
 	var drawCommonVenues = function (vis, data) {
 
-		$('.js-commonVenues-title').html('You both drank these ' +
-			_.size(data) + ' place' + (_.size(data) > 1 ? 's' : ''));
+		$('.js-commonVenues-title').html('You both drank ' +
+			(_.size(data) === 1 ? 'this place' :
+				'these ' + _.size(data) + ' places'));
 
 		var margin = vis.margin;
 		var dim = { w: vis.w - margin.left - margin.right };
@@ -331,7 +332,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
 		var maxVal = _.max(_.flatten(_.pluck(data, 'counts')));
 		var x = d3.scale.linear().range([0, dim.w / 2])
-			.domain([0, E.getAxisTicks(maxVal).endPoint]);
+			.domain([0, E.getAxisTicks(maxVal, dim.w / 2).endPoint]);
 		var xAxis =	d3.svg.axis().scale(x).orient('top')
 					.tickPadding(E.noTicks.padding).tickSize(-dim.h);
 		svg.append('g')

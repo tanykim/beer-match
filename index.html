@@ -349,10 +349,10 @@
 	<div class="home js-goHome link"></div>
 	<div class="wrapper js-vis-header"></div>
 	<div class="goSingles js-goSingles hide">
-		See the single view of
-		<span class="goSingle js-goSingle js-goSingle-0 link" data-value="0">user0</span>
-		or
-		<span class="goSingle js-goSingle js-goSingle-1 link" data-value="1">user0</span>
+		<!-- See the single view of -->
+		<span class="goSingle goSingle0 js-goSingle js-goSingle-0 link" data-value="0">user0</span>
+		<!-- or -->
+		<span class="goSingle goSingle1 js-goSingle js-goSingle-1 link" data-value="1">user0</span>
 	</div>
 	<div class="goMatch js-goMatch link hide">See Match</div>
 </div>
@@ -525,18 +525,18 @@
 		<li class="item">
 			<span class="name"><%= name %></span>
 			<% if (address) { %>
-				<span class="location"><%= address %></span>
+				<span class="location"> <%= address %></span>
 			<% } %>
 		</li>
-		<li class="item">Drinking since <span class="emph"><%= since %></span></li>
-		<li class="item"><span class="emph"><%= checkinCount %></span> Check-ins</li>
+		<li class="item">Since <span class="emph"><%= since %></span></li>
+		<li class="item"><i class="fa fa-check-square-o fa-lg"></i> <span class="emph"><%= checkinCount %></span> Check-ins</li>
 	</ul>
 </script>
 
 <script type="text/template" id="header-match">
-	<div class="pic" style="background-image: url(<%= avatar1 %>)"></div>
-	<div class="x"> X </div>
-	<div class="pic" style="background-image: url(<%= avatar2 %>)"></div>
+	<div class="pic pic0" style="background-image: url(<%= avatar1 %>)"></div>
+	<div class="x"><i class="fa fa-times fa-lg"></i></div>
+	<div class="pic pic1" style="background-image: url(<%= avatar2 %>)"></div>
 </script>
 
 <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js'></script>

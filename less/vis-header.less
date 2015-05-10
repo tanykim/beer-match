@@ -1,0 +1,115 @@
+.vis-header {
+    z-index: 1000;
+    position: fixed;
+    background-color: @dark;
+    width: 100%;
+    color: @grey;
+    .home {
+        float: left;
+        width: @visHeaderH/4;
+        height: @visHeaderH/2;
+        margin: @visHeaderH/4 + @visHeaderP @visHeaderH/4 0 @visHeaderH/4;
+        background: url('../images/go_home.png') no-repeat;
+        background-size: @visHeaderH/4;
+        background-position-y: 0px;
+    }
+    .home-over {
+        background-position-y: -20px !important;
+    }
+    .wrapper {
+        padding: @visHeaderP;
+        float: left;
+        .pic {
+            width: @visHeaderH;
+            height: @visHeaderH;
+            border-radius: @visHeaderH/2;
+            -webkit-border-radius: @visHeaderH/2;
+            -moz-border-radius: @visHeaderH/2;
+            background-size: @visHeaderH;
+            float: left;
+        }
+        .pic0 {
+            border: 2px solid @user0;
+        }
+        .pic1 {
+            border: 2px solid @user1;
+        }
+        .x {
+            float: left;
+            width: @visHeaderH/4 * 3;
+            text-align: center;
+            padding-top: 0.4em;
+        }
+        .profile {
+            font-size: @small;
+            display: table;
+            padding-top: @visHeaderH/8 + @visHeaderP;
+            li {
+                display: table-cell;
+                vertical-align: middle;
+            }
+            .emph {
+                color: @white;
+                .bold();
+            }
+            .userid {
+                padding-right: @visHeaderH/4;
+                padding-left: @visHeaderH/4;
+            }
+            .item {
+                padding-right: @visHeaderH/4;
+                padding-left: @visHeaderH/4;
+                border-left: 1px solid @darkGrey;
+            }
+            .name {
+                .emph();
+                display: inline-block;
+            }
+            .location {
+                display: inline-block;
+                padding-left: 25px;
+                background: url('../images/location.png') 8px 0px no-repeat;
+                background-size: 13px 20px;
+            }
+        }
+    }
+    .goSingles {
+        float: right;
+        margin-right: @visHeaderH/2;
+        .goSingle {
+            #view-icon-vis;
+            #view-icon;
+            #view-icon-single;
+            display: inline-block;
+        }
+        .goSingle0 {
+            color: @user0;
+        }
+        .goSingle1 {
+            color: @user1;
+        }
+    }
+    .goMatch {
+        float: right;
+        #view-icon-vis;
+        #view-icon;
+        #view-icon-match;
+        margin-right: @visHeaderH/2;
+        color: @orange;
+    }
+}
+.vis-title-overlaid {
+    position: fixed;
+    width: 100%;
+    .shadow();
+    background: url('../images/stripe.png');
+    background-size: 1.4em;
+    text-align: center;
+    top: @visHeaderH + @visHeaderP * 2;
+    font-weight: 700;
+    line-height: @visHeaderH;
+    color: @dark;
+    font-size: @large;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+}

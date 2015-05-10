@@ -24,20 +24,20 @@ var E = {
         },
         titles: {
             single: [
-                '1. How much do I drink?',
-                '2. What matters?',
-                '3. love & hate',
-                '4. When do I drink?',
-                '5. Where do I drink?',
-                '6. When & Where'
+                'How much do I drink?',
+                'What matters?',
+                'love & hate',
+                'When do I drink?',
+                'Where do I drink?',
+                'When & Where'
             ],
             match: [
-                '1. Taste Match',
-                '2. Drinking Behavior',
-                '3. Beers (dis/)agreed',
-                '4. Shared styles',
-                '5. When do we drink?',
-                '6. Where do we drink?'
+                'Taste Match',
+                'Drinking Behavior',
+                'Beers (Dis/)Agreed',
+                'Shared styles',
+                'When do we drink?',
+                'Where do we drink?'
             ]
         }
     },

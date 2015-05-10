@@ -56,7 +56,7 @@ require([
         $('.js-vis-header').html(template({
             avatar: u.avatar,
             userId: u.userId,
-            name: u.name,
+            name: u.username,
             address: u.address,
             since: moment(u.since, 'ddd, DD MMM YYYY HH:mm:ssZ')
                     .format('MMM D, YYYY'),
