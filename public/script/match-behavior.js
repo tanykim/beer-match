@@ -15,7 +15,7 @@ define(['textures'], function (textures) {
 
 	function updateGraph(i) {
 
-		var title = ['', 'Distinctive Beers', 'Saturday & Sunday',
+		var title = ['', 'Distinctive Beers', 'Friday, Saturday & Sunday',
 			'With Location', 'Before 5PM'];
 
 		$('.js-detail-title').html(title[i]);

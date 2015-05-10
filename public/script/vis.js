@@ -136,14 +136,24 @@ define(['moment', 'vis-settings',
 			Both.drawDistinctive(vis, m.distinctive);
 		});
 		Both.putBoth(m.beersList);
-		*/
 
 		//3--style
 		Styles.drawChord(m.styles);
-		// S.setVisNoSVG('styles', function (vis) {
-		// 	Styles.drawChord(vis, m.styles);
-		// });
-		// Time.drawTimeline(m.byDay, m.byHour, m.byDayHour);
+		*/
+
+		//4--timeline
+		S.setVis('time', function (vis) {
+			Time.drawTimeline(vis, m.byDay, m.byHour, m.byDayHour, m.profile);
+		});
+		$('.js-time-switch').click(function() {
+			var changed = S.changeRadioSelection($(this));
+			if (changed) {
+				var type = $(this).data().type;
+				var selected = $(this).data().value;
+				Time.updateGraph(type, selected);
+			}
+		});
+
 		// Venues.init(m.publicCount, m.topVenueTypes);
 		// if (!_.isEmpty(m.venues)) {
 		// 	Venues.drawCommonVenues(m.venues);

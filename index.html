@@ -173,18 +173,22 @@
 		</div>
 
 		<!-- 4 when do we drink -->
-		<div class="vis-contents js-match-contents-4">
-			Day / Hour
-			<div id="vis-weekend" class="js-match-svg weekend"></div>
-			<span class="link underline bold js-timeline-switch js-timeline-value" data-type="value" data-value="absolute">Check-in Count</span>
-			<span class="link underline js-timeline-switch js-timeline-value" data-type="value" data-value="relative">Relative Ratio</span>
-			-----
-			<span class="link underline bold js-timeline-switch js-timeline-group" data-type="group" data-value="day">byDay</span>
-			<span class="link underline js-timeline-switch js-timeline-group" data-type="group" data-value="hour">byHour</span>
-			-----
-			<span class="link underline bold js-timeline-switch js-timeline-type" data-type="type" data-value="bars">Bars</span>
-			<span class="link underline js-timeline-switch js-timeline-type" data-type="type" data-value="bubble">Bubble</span>
-			<div id="vis-match-timeline" class="js-match-svg match-timeline"></div>
+		<div class="vis-contents match-time js-match-contents-4">
+			<div class="vis-radio radio">
+				<div>
+					<span class="link js-time-switch js-time-value" data-type="value" data-value="absolute"><i class="fa fa-dot-circle-o"></i> Check-in Count</span>
+					<span class="link js-time-switch js-time-value" data-type="value" data-value="relative"><i class="fa fa-circle-o"></i> Relative Ratio</span>
+				</div>
+				<div>
+					<span class="link js-time-switch js-time-group" data-type="group" data-value="day"><i class="fa fa-dot-circle-o"></i> by Day</span>
+					<span class="link js-time-switch js-time-group" data-type="group" data-value="hour"><i class="fa fa-circle-o"></i> by Hour</span>
+				</div>
+				<div>
+					<span class="link js-time-switch js-time-type" data-type="type" data-value="bars"><i class="fa fa-dot-circle-o"></i> Bars</span>
+					<span class="link js-time-switch js-time-type" data-type="type" data-value="bubble"><i class="fa fa-circle-o"></i> Bubble</span>
+				</div>
+			</div>
+			<div id="vis-time" class="js-match-svg time"></div>
 		</div>
 
 		<!-- 5 where do we drink -->

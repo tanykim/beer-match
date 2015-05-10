@@ -202,7 +202,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         this.profile = _.map(_.pluck(dataset, 'userinfo'), function (d) {
             return {
                 avatar: d.avatar,
-                firstname: d.username
+                username: d.username
             };
         });
         this.matchList = matchList;
@@ -230,7 +230,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         });
         var stWeekend = _.map(days, function (arr, i) {
             // 1: all weekend, -1: all 7 days
-            return (arr[0] + arr[6]) / dataset[i].userinfo.checkinCount;
+            return (arr[0] + arr[5] + arr[6]) / dataset[i].userinfo.checkinCount;
         });
         var stSocial = _.map(dataset, function (d) {
             // 1: all social, -1: all home

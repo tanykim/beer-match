@@ -16,7 +16,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		behavior: 6,
         detail: 3,
         distinctive: 6,
-        styles: 10
+        time: 12
 	};
 
 	var heights = {
@@ -33,7 +33,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		behavior: 350,
         detail: 280,
 		distinctive: 50,
-        style: null
+        time: 420
 	};
 	var margins = {
 		frequency: { top: 80, right: 30, bottom: 50, left: 70 },
@@ -48,12 +48,13 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		timeline: { top: 140, right: 40, bottom: 0, left: 240 },
 		behavior: { top: 20, right: 170, bottom: 20, left: 150 },
 		detail: { top: 20, right: 20, bottom: 40, left: 40 },
-        distinctive: { top: 10, right: 60, bottom: 10, left: 60 }
+        distinctive: { top: 10, right: 60, bottom: 10, left: 60 },
+        time: { top: 65, right: 20, bottom: 20, left: 60, middle: 40 }
 	};
 
    	var getWidth = function(div) {
         var w = parseInt($('body').width() * 0.9 / 12 * widths[div]);
-        if (div !== 'beers' && div !== 'styles') {
+        if (div !== 'beers') {
             return Math.min(Math.max(w, 200), 4000);
         } else {
             return Math.min($(window).height() - 100, w);
@@ -63,7 +64,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
    	function drawSVG(vis, div) {
    		var svg = d3.select('#vis-' + div).append('svg')
 			.attr('width', vis.dim.w + vis.margin.left + vis.margin.right)
-			.attr('height', vis.dim.h + vis.margin.top + vis.margin.bottom)
+			.attr('height', vis.dim.h + vis.margin.top + vis.margin.bottom +
+                (div === 'time' ? vis.margin.middle : 0))
 			.append('g')
 			.attr('transform',
                 'translate(' + vis.margin.left + ', ' + vis.margin.top + ')');
