@@ -1,6 +1,7 @@
 path, line{
-  shape-rendering: crispEdges; /* geometricPrecision */
+  shape-rendering: geometricPrecision;
 }
+
 @line-light: fade(@black, 10%);
 
 .axis .tick line {
@@ -21,6 +22,9 @@ path, line{
 .pos-end {
 	text-anchor: end;
 }
+.v-middle {
+	alignment-baseline: middle;
+}
 .size-tiny {
 	font-size: @tiny;
 }
@@ -35,6 +39,12 @@ path, line{
 }
 .size-huge {
 	font-size: @huge;
+}
+.weight-700 {
+	font-weight: 700;
+}
+.link-text {
+	cursor: default;
 }
 .axis-lable {
 	.size-tiny();
@@ -101,29 +111,4 @@ path, line{
 .fill-tooltip {
 	fill: @black;
 	opacity: 0.85;
-}
-
-
-/* text */
-.weight-700 {
-	font-weight: 700;
-}
-
-.link-text {
-	cursor: default;
-}
-
-.v-middle {
-	alignment-baseline: middle;
-}
-/* lines rendering */
-.ratings, .categories, .score, .beers, .where, .day, .behavior, .styles {
-	path, line {
-		shape-rendering: geometricPrecision;
-	}
-}
-.day {
-	.axis line, .axis path {
-		.stroke-darkGrey();
-	}
 }

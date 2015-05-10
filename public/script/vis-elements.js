@@ -118,7 +118,12 @@ var E = {
 
         $('.js-' + name + '-tooltip').show();
 
-        var dir = name === 'timeline' ? -1 : (x < dimW / 2 ? 1 : -1);
+        var dir = x < dimW / 2 ? 1 : -1;
+        if (name === 'timeline') {
+            dir = -1;
+        } else if (name === 'venues') {
+            dir = x < dimW / 2 ? -1 : 1;
+        }
 
         _.each(strArray, function (d, i) {
             d3.select('.js-' + name + '-tooltip-text-' + i)
@@ -132,7 +137,7 @@ var E = {
             .attr('d',
                 E.getTooltipPath(dir,
                     $('.js-' + name + '-tooltip-text').width() +
-                    E.ttP * 2, (E.ttL * 2 + E.ttP - 4) ));
+                    E.ttP * strArray.length, (E.ttL * strArray.length + E.ttP - 4) ));
         $('.js-' + name + '-tooltip').attr('transform',
             'translate(' + (x + (offset ? offset : 0)) + ', ' + y + ')');
     },

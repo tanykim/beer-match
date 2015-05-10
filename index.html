@@ -192,12 +192,17 @@
 		</div>
 
 		<!-- 5 where do we drink -->
-		<div class="vis-contents js-match-contents-5">
-			<span class="link underline bold js-venues-switch" data-value="absolute">Check-in Count</span>
-			<span class="link underline js-venues-switch" data-value="relative">Relative Ratio</span>
-			<div id="vis-publicRatio" class="js-match-svg publicRatio"></div>
-			<div id="vis-topTypes" class="js-match-svg topTypes"></div>
-			<div id="vis-commonVenues" class="js-match-svg commonVenues"></div>
+		<div class="vis-contents match-venues js-match-contents-5">
+			<div class="vis-radio">
+				<span class="link js-venues-switch" data-value="abs"><i class="fa fa-dot-circle-o"></i> Check-in Count</span>
+				<span class="link js-venues-switch" data-value="rel"><i class="fa fa-circle-o"></i> Relative Ratio</span>
+			</div>
+			<div class="vis-wrapper venues-wrapper">
+				<div class="title">Check-ins with Location</div>
+				<div id="vis-publicRatio" class="js-match-svg publicRatio"></div>
+				<div id="vis-topTypes" class="js-match-svg topTypes"></div>
+				<div id="vis-commonVenues" class="js-match-svg commonVenues"></div>
+			</div>
 		</div>
 
 		<!-- footer -->

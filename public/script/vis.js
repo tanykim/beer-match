@@ -38,10 +38,8 @@ define(['moment', 'vis-settings',
 		});
 
 		//1--ratings
-		S.setVisNoSVG('categories', function (vis) {
-			Ratings.drawCategories(vis, 'style', b.userinfo.checkinCount,
+		Ratings.drawCategories(S.setVisNoSVG('categories'), 'style', b.userinfo.checkinCount,
 				b.ratingsList);
-		});
 		Ratings.drawRatings(S.setVisNoSVG('ratings'), b.scoreAvg);
 
 		//select category
@@ -139,7 +137,6 @@ define(['moment', 'vis-settings',
 
 		//3--style
 		Styles.drawChord(m.styles);
-		*/
 
 		//4--timeline
 		S.setVis('time', function (vis) {
@@ -153,7 +150,19 @@ define(['moment', 'vis-settings',
 				Time.updateGraph(type, selected);
 			}
 		});
+		*/
 
+		//5-venues
+		S.setVis('publicRatio', function (vis) {
+			Venues.drawPublicRatio(vis, m.publicCount, m.profile);
+		});
+		Venues.drawTopTypes(S.setVisNoSVG('topTypes'), m.topVenueTypes);
+		$('.js-venues-switch').click(function() {
+			var changed = S.changeRadioSelection($(this));
+			if (changed) {
+				Venues.updateGraph($(this).data().value);
+			}
+		});
 		// Venues.init(m.publicCount, m.topVenueTypes);
 		// if (!_.isEmpty(m.venues)) {
 		// 	Venues.drawCommonVenues(m.venues);
