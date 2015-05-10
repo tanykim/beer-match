@@ -521,15 +521,13 @@
 <script type="text/template" id="header-single">
 	<div class="pic" style="background-image: url(<%= avatar %>)"></div>
 	<ul class="profile hidden-xs">
-		<li class="userid"><%= userId %></li>
 		<li class="item">
 			<span class="name"><%= name %></span>
 			<% if (address) { %>
 				<span class="location"> <%= address %></span>
 			<% } %>
 		</li>
-		<li class="item">Since <span class="emph"><%= since %></span></li>
-		<li class="item"><i class="fa fa-check-square-o fa-lg"></i> <span class="emph"><%= checkinCount %></span> Check-ins</li>
+		<li class="item checkin"><i class="fa fa-check-square-o fa-lg"></i> <span class="emph"><%= checkinCount %></span> Check-ins</li>
 	</ul>
 </script>
 
