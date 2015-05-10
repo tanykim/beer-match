@@ -16,10 +16,17 @@ define(['textures'], function (textures) {
 
     function highlightSelected(opacity, i) {
 
-        $('.js-styles-name').html(names[i]);
-        $('.js-styles-user0').html(checkins[i][0]);
-        $('.js-styles-user1').html(checkins[i][1]);
-
+        if (opacity === 1) {
+            $('.js-styles-name').html(names[i]);
+            $('.js-styles-user0').html(checkins[i][0]);
+            $('.js-styles-user1').html(checkins[i][1]);
+            $('.js-styles-checkins').show();
+        } else {
+            $('.js-styles-name').html('See which styles you share!');
+            $('.js-styles-user0').html('');
+            $('.js-styles-user1').html('');
+            $('.js-styles-checkins').hide();
+        }
         d3.select('.js-styles-arc-' + i).style('fill',
             opacity === 1 ?
             tx[i < divide ? 1 : 0].url() :
@@ -131,7 +138,7 @@ define(['textures'], function (textures) {
             .attr('x', 0)
             .attr('y', 16)
             .text('check-ins')
-            .attr('class', 'pos-middle');
+            .attr('class', 'pos-middle js-styles-checkins');
         svg.append('text')
             .attr('x', -40)
             .attr('y', 16)

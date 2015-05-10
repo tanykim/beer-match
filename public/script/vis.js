@@ -117,7 +117,6 @@ define(['moment', 'vis-settings',
 
 		console.log('---match view');
 
-		/*
 		//0--match scores
 		Score.putScore(m.profile, m.matchScore, m.matchList);
 
@@ -150,7 +149,6 @@ define(['moment', 'vis-settings',
 				Time.updateGraph(type, selected);
 			}
 		});
-		*/
 
 		//5-venues
 		S.setVis('publicRatio', function (vis) {
