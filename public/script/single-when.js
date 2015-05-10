@@ -262,6 +262,14 @@ define(['moment', 'textures'], function (moment, textures) {
 		$('.js-matrix-lable-x').hide();
 		$('.js-matrix-lable-y').hide();
 
+		//white bg
+		svg.append('rect')
+			.attr('x', 0)
+			.attr('y', 0)
+			.attr('width', dim.w)
+			.attr('height', dim.h)
+			.attr('class', 'fill-white');
+
 		//matrix dataset
 		var dataset = createMatrixDataset(byHour, byDay, maxVals.matrix);
 		drawBlocks(svg, dim, dataset, maxVals.matrix);
