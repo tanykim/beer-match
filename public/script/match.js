@@ -49,8 +49,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
                 name: u1.name,
                 city: u1.city,
                 counts: [u1.count, u2.count],
-                lat: u1.lat,
-                lng: u1.lng,
+                location: location,
                 commonDates: commonDates,
             };
         }), function (d) {
@@ -168,8 +167,6 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 
 	var match = function (dataset) {
 
-        console.log(dataset);
-
         /* match by taste by
         - common beer similarity
         - styles similarity
@@ -230,7 +227,8 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         });
         var stWeekend = _.map(days, function (arr, i) {
             // 1: all weekend, -1: all 7 days
-            return (arr[0] + arr[5] + arr[6]) / dataset[i].userinfo.checkinCount;
+            return (arr[0] + arr[5] + arr[6]) /
+                dataset[i].userinfo.checkinCount;
         });
         var stSocial = _.map(dataset, function (d) {
             // 1: all social, -1: all home
@@ -270,7 +268,8 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         - by day, by hour
         - top venues, common venues, venue match
         */
-        this.url = dataset[0].userinfo.userId + '+' + dataset[1].userinfo.userId;
+        this.url = dataset[0].userinfo.userId + '+' +
+                dataset[1].userinfo.userId;
         this.userinfo = _.pluck(dataset, 'userinfo');
 
         this.distinctive = _.map(dataset, function (d) {
@@ -278,10 +277,12 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         });
         this.beersList = [];
         if (commonBeers) {
-            this.beersList = getBeersList(_.pluck(dataset, 'allBeers'), commonBeers);
+            this.beersList = getBeersList(_.pluck(dataset, 'allBeers'),
+                commonBeers);
         }
 
         this.styles = getStyles(dataset);
+
         this.byDay = days;
         this.byHour = hours;
         this.byDayHour = _.map(dataset, function (d) {
@@ -293,31 +294,33 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         });
 
         this.publicCount = _.map(dataset, function (d) {
-            var venueCount = _.reduce(_.pluck(d.byDay, 'venue'), function (memo, num) {
-                return memo + num;
-            }, 0);
+            var venueCount = _.reduce(_.pluck(d.byDay, 'venue'),
+                function (memo, num) {
+                    return memo + num;
+                }, 0);
             return [venueCount, d.userinfo.checkinCount];
         });
-
         this.topVenueTypes = _.map(dataset, function (d) {
-                return _.sortBy(_.map(d.venues.type, function (t) {
-                    return { type: t.name, icon: t.icon, count: t.count, venueIds: t.venueIds };
-                }), function (v) {
-                    return v.count;
-                }).reverse();
-            });
-        var commonVenues = _.intersection(_.pluck(dataset[0].allVenues, 'id'), _.pluck(dataset[1].allVenues, 'id'));
+            return _.sortBy(_.map(d.venues.type, function (t) {
+                return {
+                    type: t.name,
+                    icon: t.icon,
+                    count: t.count,
+                    venueIds: t.venueIds
+                };
+            }), function (v) {
+                return v.count;
+            }).reverse();
+        });
+        var commonVenues = _.intersection(
+            _.pluck(dataset[0].locationList, 'id'),
+            _.pluck(dataset[1].locationList, 'id')
+        );
         this.venues = [];
         if (!_.isEmpty(commonVenues)) {
-            this.venues = getVenues(_.pluck(dataset, 'allVenues'), commonVenues);
+            this.venues = getVenues(_.pluck(dataset, 'locationList'),
+                commonVenues);
         }
-
-        // console.log('common beers list--', this.beersList);
-        // console.log('by day and hour--', this.byDay, this.byHour);
-        // console.log('public venue count--', this.publicCount);
-        // console.log('top venues--', this.topVenueTypes);
-        // console.log('common venues--', this.venues);
-        // console.log('match by venues--', this.matchByVenue);
 	};
 
 	return match;

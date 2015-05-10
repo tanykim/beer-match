@@ -161,10 +161,9 @@ define(['moment', 'vis-settings',
 				Venues.updateGraph($(this).data().value);
 			}
 		});
-		// Venues.init(m.publicCount, m.topVenueTypes);
-		// if (!_.isEmpty(m.venues)) {
-		// 	Venues.drawCommonVenues(m.venues);
-		// }
+		if (!_.isEmpty(m.venues)) {
+			Venues.drawCommonVenues(S.setVisNoSVG('commonVenues'), m.venues);
+		}
 
 	};
 

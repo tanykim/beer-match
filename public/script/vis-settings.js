@@ -18,7 +18,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
         distinctive: 6,
         time: 12,
         publicRatio: 6,
-        topTypes: 12
+        topTypes: 12,
+        commonVenues: 8
 	};
 
 	var heights = {
@@ -37,7 +38,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 		distinctive: 50,
         time: 420,
         publicRatio: 260,
-        topTypes: null
+        topTypes: null,
+        commonVenues: null
 	};
 	var margins = {
 		frequency: { top: 80, right: 30, bottom: 50, left: 70 },
@@ -55,7 +57,8 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
         distinctive: { top: 10, right: 60, bottom: 10, left: 60 },
         time: { top: 65, right: 20, bottom: 20, left: 60, middle: 40 },
         publicRatio: { top: 20, right: 0, bottom: 20, left: 0, gap: 60, center: 40 },
-        topTypes: { top: 70, right: 40, bottom: 20, left: 40, center: 60 }
+        topTypes: { top: 70, right: 40, bottom: 20, left: 40, center: 60 },
+        commonVenues: { top: 70, right: 20, bottom: 20, left: 20 }
 	};
 
    	var getWidth = function(div) {

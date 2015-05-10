@@ -265,10 +265,8 @@ define(['moment', 'textures'], function (moment, textures) {
 		var maxRatio = _.map(data, function (d, i) {
 			return Math.ceil(_.max(_.pluck(d, 'count')) / counts[i][1] * 100);
 		});
-		console.log(maxRatio);
 		var absMax = E.getAxisTicks(_.max(maxCount)).endPoint;
 		var relMax = E.getAxisTicks(_.max(maxRatio)).endPoint;
-		console.log(relMax);
 		x.abs = d3.scale.linear().range([0, dim.w / 2 - margin.center * 2])
 			.domain([0, absMax]);
 		x.rel = d3.scale.linear().range([0, dim.w / 2 - margin.center * 2])
@@ -303,7 +301,6 @@ define(['moment', 'textures'], function (moment, textures) {
 		E.putAxisLable(svg, dim.w / 4 * 3, -80, 'check-ins', 'x', 'js-venues-lable');
 
 		//show texture
-		console.log(dim.w);
 		firstMatch = getCommonType(data[0][0].type, types[1], 1, barH);
 		showMouseOver(svg, data[0][0], 0, 0,
 			dim.w / 2 - margin.center, barH / 2, firstMatch);
@@ -315,77 +312,98 @@ define(['moment', 'textures'], function (moment, textures) {
 			(dim.w / 2 - margin.center - x.abs(data[0][0].count) / 2), barH / 2);
 	}
 
-	var drawCommonVenues = function (data) {
-		$('#vis-commonVenues').append('<div class="vis-svg-title">You both drank these ' +
-			_.size(data) + ' place' + (_.size(data) > 1 ? 's' : '') + '.</div>' +
-			'<ul class="js-venues-common"></ul>');
-		// _.each(data, function (d) {
-		// 	$('.js-venues-common').append('<li><span class="commonVenues-name">' + d.name + '</span>' +
-		// 		'<span class="commonVenues-city"> / ' + d.city + '</span>' +
-		// 		(_.size(d.commonDates) > 0 ? '<span class="commonVenues-count"> / on ' + d.commonDates + ' same dates</span>' : '') +
-		// 		'</li>');
-		// });
-		var barH = 80;
+	function getTooltipText(d) {
+		return [ moment(d.commonDates[0], 'YYYYMMDD').format('MMM D, YYYY') +
+				(_.size(d.commonDates) > 1 ? ' ...' : ''),
+				_.size(d.commonDates) + ' same dates'];
+	}
 
-		var dim = {
-			w: $('.commonVenues').width(),
-			h: barH * _.size(data)
-		};
-		var svg = d3.select('#vis-commonVenues').append('svg')
-			.attr('width', dim.w)
-			.attr('height', dim.h)
-			.append('g');
+	var drawCommonVenues = function (vis, data) {
+
+		$('.js-commonVenues-title').html('You both drank these ' +
+			_.size(data) + ' place' + (_.size(data) > 1 ? 's' : ''));
+
+		var margin = vis.margin;
+		var dim = { w: vis.w - margin.left - margin.right };
+		var barH = 60;
+		dim.h = barH * _.size(data);
+		var svg = vis.draw({dim: dim, margin: margin}, 'commonVenues');
 
 		var maxVal = _.max(_.flatten(_.pluck(data, 'counts')));
+		var x = d3.scale.linear().range([0, dim.w / 2])
+			.domain([0, E.getAxisTicks(maxVal).endPoint]);
+		var xAxis =	d3.svg.axis().scale(x).orient('top')
+					.tickPadding(E.noTicks.padding).tickSize(-dim.h);
+		svg.append('g')
+			.attr('class', 'x axis')
+			.call(xAxis)
+			.attr('transform', 'translate(' + dim.w / 2 + ', 0)');
+		E.putAxisLable(svg, dim.w / 4 * 3, -80, 'check-ins', 'x');
+
 		_.each(data, function (d, i) {
 			svg.append('text')
-				.attr('x', dim.w / 2)
-				.attr('y', barH * i + 20)
+				.attr('x', dim.w / 2 - E.noTicks.padding)
+				.attr('y', barH * i + barH / 3)
 				.text(d.name)
-				.style('font-weight', '700')
-				.style('font-size', '1.2em')
-				.style('text-anchor', 'end');
+				.attr('class', 'size-middle pos-end ' +
+					'js-venues-common-name-' + i);
 			svg.append('text')
-				.attr('x', dim.w / 2)
-				.attr('y', barH * i + 42)
+				.attr('x', dim.w / 2 - E.noTicks.padding)
+				.attr('y', barH * i + barH / 3 + 16)
 				.text(d.city)
-				.style('text-anchor', 'end');
-			svg.append('line')
-				.attr('x1', dim.w / 2)
-				.attr('y1', barH * i)
-				.attr('x2', dim.w / 2)
-				.attr('y2', barH * (i + 1) - 4)
-				.style('stroke', '#999');
+				.attr('class', 'size-small pos-end fill-grey ' +
+					'js-venues-common-city-' + i);
+
+			if (_.size(d.commonDates) > 0) {
+
+				var xPos = dim.w / 2 - 24 -
+					$('.js-venues-common-name-' + i).width();
+				var sameDate = svg.append('g')
+					.attr('transform', 'translate(' + xPos + ', ' +
+						(barH * i + 6) + ')')
+					.on('mouseover', function() {
+						E.setTooltipText(getTooltipText(d), 'commonVenues',
+							dim.w,
+							(dim.w / 2 - 24 -
+							$('.js-venues-common-name-' + i).width()),
+							barH * i);
+					})
+					.on('mouseout', function() {
+						$('.js-commonVenues-tooltip').hide();
+					});
+				sameDate.append('circle')
+					.attr('cx', 0)
+					.attr('cy', 0)
+					.attr('r', 10)
+					.attr('class', 'fill-grey stroke-dashed');
+				sameDate.append('text')
+					.attr('x', 0)
+					.attr('y', 0)
+					.text(_.size(d.commonDates))
+					.attr('class', 'v-middle pos-middle size-tiny fill-white ' +
+						'unselectable');
+			}
+
 			_.each(d.counts, function (c, j) {
 				svg.append('rect')
 					.attr('x', dim.w / 2)
-					.attr('y', barH * i + 25 * j)
-					.attr('width', c * (dim.w / 2 - 40) / maxVal)
-					.attr('height', 25)
-					.style('fill', '#999');
+					.attr('y', barH * i + barH / 3 * j + 4)
+					.attr('width', x(c))
+					.attr('height', barH / 3 - 2)
+					.style('fill', E.users[j]);
 				svg.append('text')
-					.attr('x', dim.w / 2 + c * (dim.w / 2 - 40) / maxVal)
-					.attr('y', barH * i + 25 * j + 25)
-					.text(c);
+					.attr('x', dim.w / 2 + x(c) + E.noTicks.padding)
+					.attr('y', barH * i + barH / 3 * j + 4 + barH / 6)
+					.text(c)
+					.attr('class', 'size-small v-middle fill-grey');
 			});
-			if (_.size(d.commonDates) > 0) {
-				svg.append('text')
-					.attr('x', dim.w / 2)
-					.attr('y', barH * i + 60)
-					.text('same dates: ' + _.size(d.commonDates))
-					.on('mouseover', function () {
-						svg.append('text')
-							.attr('x', dim.w / 2)
-							.attr('y', barH * i + 80)
-							.text(d.commonDates)
-							.attr('class', 'js-commonVenues-dates');
-					})
-					.on('mouseout', function() {
-						$('.js-commonVenues-dates').remove();
-					})
-			}
-
 		});
+
+		//tooltip
+		E.drawTooltip(svg, 'commonVenues', 2);
+		E.setTooltipText(getTooltipText(data[0]),
+			'commonVenues', dim.w,
+			(dim.w / 2 - 24 - $('.js-venues-common-name-0').width()), 0);
 	};
 
 	return {

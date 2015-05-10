@@ -137,7 +137,7 @@ var E = {
             .attr('d',
                 E.getTooltipPath(dir,
                     $('.js-' + name + '-tooltip-text').width() +
-                    E.ttP * strArray.length, (E.ttL * strArray.length + E.ttP - 4) ));
+                    E.ttP * 2, (E.ttL * strArray.length + E.ttP - 4) ));
         $('.js-' + name + '-tooltip').attr('transform',
             'translate(' + (x + (offset ? offset : 0)) + ', ' + y + ')');
     },
