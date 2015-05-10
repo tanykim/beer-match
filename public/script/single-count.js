@@ -58,8 +58,14 @@ define(['moment', 'textures'], function (moment, textures) {
 	function updateSoberCount(data) {
 		var sober = data.sober[unit];
 		var unitCount = data.unitCounts[unit];
-		$('.js-count-sober').html(sober + ' ' + unit + (sober > 1 ? 's' : ''));
-		$('.js-count-total').html(unitCount + ' ' + unit + (sober > 1 ? 's' : ''));
+		$('.js-count-sober').html(
+			sober === 0 ?
+			'<strong>You are never sober!</strong>' :
+			'You were sober for <strong>' +
+			(sober + ' ' + unit + (sober > 1 ? 's' : '')) +
+			'</strong> out of total <strong>' +
+			(unitCount + ' ' + unit + (sober > 1 ? 's' : ''))
+		);
 	}
 
 	var transformCount = function (u, c, data, avgCount) {

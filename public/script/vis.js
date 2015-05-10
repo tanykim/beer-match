@@ -20,6 +20,7 @@ define(['moment', 'vis-settings',
 				E.colors.calendar, length);
 		}
 		S.changeRadioSelection($('.js-count-period-' + b.avgUnit));
+
 		Count.setUnit(b.avgUnit,
 			countScale(b.countByPeriod.frequency[b.avgUnit].counts.length));
 		S.setVis('frequency', function (vis) {
