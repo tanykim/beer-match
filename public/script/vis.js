@@ -9,6 +9,13 @@ define(['moment', 'vis-settings',
 
 	'use strict';
 
+    function setDummyHeight(sort) {
+	    var hDiff = $(window).height() -
+	    	$('.js-' + sort + '-contents-5').outerHeight();
+        $('.js-' + sort + '-contents-dummy')
+        	.css('height', Math.max(hDiff, E.footerHeight) + 'px');
+    }
+
 	var startVis = function(b) {
 
 		//view change
@@ -110,6 +117,9 @@ define(['moment', 'vis-settings',
 			WhenWhere.drawDayStats(vis, b.byDay);
 		});
 		WhenWhere.drawTimeline(b.venueByTime, b.venueByTimeUnit, b.timeRange, S.setVisNoSVG('timeline'));
+
+		//add dummy height
+		setDummyHeight('single');
 	};
 
 	var startVisMatch = function (m) {
@@ -165,6 +175,9 @@ define(['moment', 'vis-settings',
 		if (!_.isEmpty(m.venues)) {
 			Venues.drawCommonVenues(S.setVisNoSVG('commonVenues'), m.venues);
 		}
+
+		//add dummy height
+		setDummyHeight('match');
 
 	};
 

@@ -42,6 +42,8 @@ var E = {
         }
     },
 
+    footerHeight: 240,
+
     //colors
     colors: {
         count: '#f99b0c',

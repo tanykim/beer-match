@@ -332,9 +332,8 @@ require([
 
     //add intro footer height
     var hDiff = $(window).height() - $('.js-intro-last').outerHeight();
-    if (hDiff > 0) {
-        $('.js-intro-dummy').css('height', hDiff + 'px');
-    }
+    $('.js-intro-dummy').css('height', Math.max(hDiff, E.footerHeight) + 'px');
+
     function getHeightSum (num, view, offset) {
         return _.reduce(_.map(_.range(0, num), function(i) {
                     return $('.js-' + view +
