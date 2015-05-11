@@ -9,7 +9,7 @@ define(['textures'], function (textures) {
 	var category;
 
 	//for bars
-	var dim, margin, x, xAxis, y;
+	var dim, margin, x, xAxis, y, pieR;
 	var unitH = 20;
 
 	//texture

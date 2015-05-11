@@ -94,8 +94,10 @@ require([
             $('.js-goSingle-0').html(userData[0].userinfo.userId.toUpperCase());
             $('.js-goSingle-1').html(userData[1].userinfo.userId.toUpperCase());
             $('.js-vis-header').html(template({
-                avatar1: userData[0].userinfo.avatar,
-                avatar2: data.userinfo.avatar
+                avatar0: userData[0].userinfo.avatar,
+                avatar1: data.userinfo.avatar,
+                name0: userData[0].userinfo.username,
+                name1: data.userinfo.username,
             }));﻿
 
             $('.js-title-overlaid').html(E.msgs.titles.match[0]);
