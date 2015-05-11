@@ -1,5 +1,7 @@
 define(['textures'], function (textures) {
 
+    'use strict';
+
     var map, cluster, m; //marker for the selected location
     var locations;
 

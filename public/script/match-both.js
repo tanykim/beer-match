@@ -1,5 +1,7 @@
 define(function () {
 
+    'use strict';
+
     var drawDistinctive = function (vis, data) {
 
         var margin = vis.margin;

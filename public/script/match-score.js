@@ -1,5 +1,7 @@
 define(['moment'], function (moment) {
 
+    'use strict';
+
 	var putScore = function (profile, score, list) {
 
 		_.each(profile, function (d, i) {

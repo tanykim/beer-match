@@ -1,5 +1,7 @@
 define(['textures'], function (textures) {
 
+    'use strict';
+
     var matrix, divide, names, checkins, tx;
     var init = false;
 

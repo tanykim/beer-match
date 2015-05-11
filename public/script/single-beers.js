@@ -1,5 +1,7 @@
 define(['moment'], function (moment) {
 
+    'use strict';
+
     var colors = E.colors.ratings;
     var dim, margin, svg, r;
 

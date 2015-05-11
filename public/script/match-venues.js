@@ -348,9 +348,9 @@ define(['moment', 'textures'], function (moment, textures) {
 		_.each(data, function (d, i) {
 			svg.append('text')
 				.attr('x', dim.w / 2 - E.noTicks.padding)
-				.attr('y', barH * i + barH / 3 - 2)
+				.attr('y', barH * i + barH / 3)
 				.text(d.name)
-				.attr('class', 'size-middle pos-end ' +
+				.attr('class', 'pos-end ' +
 					'js-venues-common-name-' + i);
 			svg.append('text')
 				.attr('x', dim.w / 2 - E.noTicks.padding)

@@ -1,5 +1,7 @@
 define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
 
+    'use strict';
+
     function getSum(arr) {
         return _.reduce(arr, function (memo, num) {
             return memo + num;

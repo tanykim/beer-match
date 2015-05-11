@@ -1,5 +1,7 @@
 define(['textures'], function (textures) {
 
+    'use strict';
+
 	var colors = E.colors.ratings;
 	var canvas = {};
 	var checkinCount;

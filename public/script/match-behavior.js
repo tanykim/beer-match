@@ -1,5 +1,7 @@
 define(['textures'], function (textures) {
 
+    'use strict';
+
 	var selected = 0;
 	var data, count;
 	var unitH;

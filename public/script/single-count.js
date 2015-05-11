@@ -1,5 +1,7 @@
 define(['moment', 'textures'], function (moment, textures) {
 
+    'use strict';
+
 	var unit, colors;
 	var svg, dim, margin, xAxis, yAxis, x, y; //frequency
 	var block = 12; //calendar

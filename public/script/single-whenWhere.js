@@ -1,5 +1,7 @@
 define(['moment', 'textures'], function (moment, textures) {
 
+    'use strict';
+
     var drawDayStats = function (vis, data) {
 
         var dim = vis.dim;
