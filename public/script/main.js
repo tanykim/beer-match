@@ -361,7 +361,7 @@ require([
         $('.js-match').addClass('hide');
         $('.js-nav').addClass('hide');
         $('.js-nav-expand').addClass('hide');
-        $('.js-nav-open').removeClass('nav-toggle-open');
+        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-intro').removeClass('hide');
         window.history.pushState('object or string', 'Title', '/');
         userData = [null, null];
@@ -373,17 +373,12 @@ require([
 
     //vis menu show/hide
     $('.js-nav-open').click(function() {
-
-        if ($(this).hasClass('nav-toggle-open')) {
-            $(this).removeClass('nav-toggle-open');
-        } else {
-            $(this).addClass('nav-toggle-open');
-        }
-
         if ($('.js-nav-expand').hasClass('hide')) {
             $('.js-nav-expand').removeClass('hide');
+            $('.js-nav-open').html('<i class="fa fa-chevron-left"></i>');
         } else {
             $('.js-nav-expand').addClass('hide');
+            $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         }
     });
 
@@ -405,6 +400,8 @@ require([
                 isMatch ? 'match' : 'single',
                 0)
             });
+        $('.js-nav-expand').addClass('hide');
+        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
     });
     //scroll
     function positionVisTitle() {
