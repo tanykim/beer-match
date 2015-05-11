@@ -82,7 +82,7 @@ var E = {
         return {
         	endPoint: slicesCount * gap,
         	count: count
-       }
+       };
 	},
 
     ttP: 14, //tooltip Padding
@@ -209,5 +209,4 @@ var E = {
             .attr('transform', axis === 'y' ? 'rotate(-90)' : '')
             .attr('class', 'axis-lable ' + (jsc ? ' ' + jsc : ''));
     }
-
-}
+};

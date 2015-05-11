@@ -25,7 +25,7 @@ define(['moment', 'textures'], function (moment, textures) {
 				.attr('dy', -4)
 				.text(val)
 				.style('fill', colors[i])
-				.attr('class', 'pos-middle size-small js-freq-block')
+				.attr('class', 'pos-middle size-small js-freq-block');
 		});
 
 		//average line
@@ -227,8 +227,8 @@ define(['moment', 'textures'], function (moment, textures) {
 		var margin = vis.margin;
 		var dim = { w: vis.w - margin.left - margin.right };
 		var gap = 50;
-		var rowC = Math.ceil(Math.ceil((eT.diff(sT, 'days') + 1) / 7)
-			* 12 / dim.w);
+		var rowC = Math.ceil(Math.ceil((eT.diff(sT, 'days') + 1) / 7) *
+			12 / dim.w);
 		dim.h = rowC * (gap + block * 7);
 		var svg = vis.draw({dim: dim, margin: margin}, 'calendar');
 
@@ -321,5 +321,5 @@ define(['moment', 'textures'], function (moment, textures) {
 		drawFrequency: drawFrequency,
 		drawCalendar: drawCalendar,
 		transformCount: transformCount
-	}
+	};
 });

@@ -21,7 +21,7 @@ define(['textures'], function (textures) {
 		$('.js-detail-title').html(title[i]);
 		$('.js-detail-sub').removeClass('hide');
 
-		$('.js-behavior-y').attr('class', 'y axis js-behavior-y')
+		$('.js-behavior-y').attr('class', 'y axis js-behavior-y');
 
 		$('.js-detail-bg').attr('class', 'fill-lightGrey js-detail-bg');
 		_.each(_.range(2), function (user) {
@@ -122,7 +122,7 @@ define(['textures'], function (textures) {
 				.style('stroke-width', 10)
 				.style('stroke-linecap', 'round')
 				.style('stroke', (i === 0 ? '#999999' : '#e5e5e5'))
-				.attr('class', 'js-behavior-bar js-behavior-bar-' + i)
+				.attr('class', 'js-behavior-bar js-behavior-bar-' + i);
 			svg.append('text')
 				.attr('x', -20)
 				.attr('y', yPos)
@@ -194,7 +194,7 @@ define(['textures'], function (textures) {
 				.attr('y', 0)
 				.attr('width', dim.w / 4)
 				.attr('height', dim.h)
-				.attr('class', 'fill-lightGrey hide js-detail-bg')
+				.attr('class', 'fill-lightGrey hide js-detail-bg');
 		});
 
 		svg.append('g')
@@ -212,7 +212,7 @@ define(['textures'], function (textures) {
 				.attr('width', dim.w / 4)
 				.attr('height', dim.h - y0(d[avgUnit]))
 				.style('fill', E.users[i])
-				.attr('class', 'js-detail-bar-' + i)
+				.attr('class', 'js-detail-bar-' + i);
 			svg.append('text')
 				.attr('x', x(d.username) + dim.w / 4)
 				.attr('y', y0(d[avgUnit]) + 30)

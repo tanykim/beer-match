@@ -79,7 +79,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 			.attr('transform',
                 'translate(' + vis.margin.left + ', ' + vis.margin.top + ')');
 		return svg;
-   	};
+   	}
 
    	var setVisNoSVG = function (div, callback) {
    		var w = getWidth(div);
@@ -104,7 +104,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
                     heights[div])) - margins[div].top - margins[div].bottom
 			},
 			margin: margins[div]
-		}
+		};
 		vis.svg = drawSVG(vis, div);
 		callback(vis);
    	};
@@ -118,7 +118,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
             elm.find('i')
                 .removeClass('fa-circle-o').addClass('fa-dot-circle-o');
         }
-    }
+    };
 
     var changeRadioSelection = function (elm, tag) {
         if (!tag) {

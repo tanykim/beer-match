@@ -127,7 +127,7 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
             var row = [];
             var getValue = function (d, same) {
                 var isContains = _.contains(commonStyles, user.name);
-                var value = 0
+                var value = 0;
                 if ((isContains && !same || !isContains && same) && d.name === user.name) {
                     value = user.count;
                 }

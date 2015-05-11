@@ -225,7 +225,7 @@ define(['textures'], function (textures) {
 			canvas.bar.append('path')
 				.attr('d', E.drawStar(8))
 				.attr('transform', 'translate( ' + (dim.w / 2 - 18) + ', -34)')
-				.attr('class', 'fill-grey stroke-none')
+				.attr('class', 'fill-grey stroke-none');
 		}
 
 		//average line
@@ -247,7 +247,7 @@ define(['textures'], function (textures) {
 				category === 'brewery' || category === 'country' ?
 				'#777' : '#343434'
 			).background(colors[category]);
-		canvas.bar.call(tx)
+		canvas.bar.call(tx);
 		showTextures(data[0], 0);
 	};
 
@@ -276,7 +276,7 @@ define(['textures'], function (textures) {
 					}
 				});
 		});
-	}
+	};
 
 	var drawScoresStats = function (vis, avg, data) {
 
@@ -319,7 +319,7 @@ define(['textures'], function (textures) {
 				.attr('dy', dim.h/11/4)
 				.style('fill', E.beerColors[4])
 				.text(val)
-				.attr('class', 'size-tiny')
+				.attr('class', 'size-tiny');
 		});
 
 		E.putAxisLable(svg, dim.w / 2, dim.h,
@@ -330,7 +330,7 @@ define(['textures'], function (textures) {
 			.attr('d', E.drawStar(8))
 			.attr('transform', 'translate( ' + ( -margin.left + 11) + ', ' +
 				(dim.h / 2 + 16)+ ')')
-			.attr('class', 'fill-grey stroke-none')
+			.attr('class', 'fill-grey stroke-none');
 	};
 
 	return {
@@ -339,5 +339,5 @@ define(['textures'], function (textures) {
 		updateVis: updateVis,
 		transformRatingsBar: transformRatingsBar,
 		drawScoresStats: drawScoresStats
-	}
+	};
 });

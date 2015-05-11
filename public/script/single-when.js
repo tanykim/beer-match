@@ -176,7 +176,7 @@ define(['moment', 'textures'], function (moment, textures) {
 			.text(function (d) { return d; })
 			.style('fill', E.colors.when)
 			.attr('class', 'size-middle pos-middle ' +
-				'js-matrix-vals-hour')
+				'js-matrix-vals-hour');
 		svg.selectAll('.js-matrix-vals-day')
 			.data(_.pluck(byDay, 'total'))
 				.enter().append('text')
@@ -184,7 +184,7 @@ define(['moment', 'textures'], function (moment, textures) {
 			.attr('y', function (d, i) { return dim.h / 14 * (i * 2 + 1); })
 			.text(function (d) { return d; })
 			.style('fill', E.colors.when)
-			.attr('class', 'size-middle v-middle js-matrix-vals-day')
+			.attr('class', 'size-middle v-middle js-matrix-vals-day');
 		$('.js-matrix-vals-hour').hide();
 		$('.js-matrix-vals-day').hide();
 	}
@@ -203,7 +203,7 @@ define(['moment', 'textures'], function (moment, textures) {
 				})),
 			day : _.max(_.pluck(byDay, 'total')),
 			hour: _.max(_.pluck(byHour, 'total'))
-		}
+		};
 
 		var dayTicks = E.getAxisTicks(maxVals.day, dim.w);
 		var xBase = d3.scale.linear().range([0, dim.w]).domain([0, 24]);
@@ -297,5 +297,5 @@ define(['moment', 'textures'], function (moment, textures) {
 	return {
 		drawMatrix: drawMatrix,
 		updateGraph: updateGraph
-	}
+	};
 });

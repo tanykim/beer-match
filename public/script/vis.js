@@ -25,7 +25,7 @@ define(['moment', 'vis-settings',
 		var countScale = function (length) {
 			return S.getChroma(
 				E.colors.calendar, length);
-		}
+		};
 		S.changeRadioSelection($('.js-count-period-' + b.avgUnit));
 
 		Count.setUnit(b.avgUnit,
@@ -100,7 +100,7 @@ define(['moment', 'vis-settings',
 		//3--when
 		var whenScale = function (length) {
 			return S.getChroma(['#fff', '#7c2529'], length);
-		}
+		};
 		S.setVis('when', function (vis) {
 			When.drawMatrix(vis, b.byDay, b.byHour, whenScale(10));
 		});

@@ -79,13 +79,13 @@ define(['textures'], function (textures) {
         });
 
         var chord = d3.layout.chord()
-            .padding(.01)
+            .padding(0.01)
             .sortSubgroups(d3.descending)
             .matrix(matrix);
 
         var width = $('.styles').width(),
             height = 500;
-        var innerRadius = Math.min(width, height) * .40;
+        var innerRadius = Math.min(width, height) * 0.40;
         var outerRadius = innerRadius * 1.2;
 
         var svg = d3.select('#vis-styles').append('svg')

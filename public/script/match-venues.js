@@ -61,11 +61,11 @@ define(['moment', 'textures'], function (moment, textures) {
 		d3.selectAll('.js-venues-bar')
 			.transition()
 			.attr('x', function (d) { return d.x[selected]; })
-			.attr('width', function (d) { return d.width[selected]; })
+			.attr('width', function (d) { return d.width[selected]; });
 		d3.selectAll('.js-venues-count')
 			.transition()
 			.attr('x', function (d) { return d.textX[selected]; })
-			.text(function (d) { return d.val[selected]; })
+			.text(function (d) { return d.val[selected]; });
 	};
 
 	var drawPublicRatio = function (vis, data, profile) {
@@ -182,7 +182,7 @@ define(['moment', 'textures'], function (moment, textures) {
 				},
 				places: d.venueIds.length + ' place' +
 					(d.venueIds.length > 1 ? 's' : '')
-			}
+			};
 		});
 
 		svg.selectAll('.js-venues-bar-' + i)
@@ -244,7 +244,7 @@ define(['moment', 'textures'], function (moment, textures) {
 				.attr('y', barH * j)
 				.attr('xlink:href', d.icon)
 				.attr('width', barH - 10)
-				.attr('height', barH) - 10;
+				.attr('height', barH - 10);
 		});
 	}
 
@@ -314,7 +314,7 @@ define(['moment', 'textures'], function (moment, textures) {
 			firstData.count + ' check-ins', firstData.type], 'venues', dim.w,
 			(dim.w / 2 + x.abs(firstData.count) / 2 *
 			(_.isEmpty(data[0]) ? 1 : -1)), barH / 2);
-	}
+	};
 
 	function getTooltipText(d) {
 		return [ moment(d.commonDates[0], 'YYYYMMDD').format('MMM D, YYYY') +

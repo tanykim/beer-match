@@ -59,8 +59,7 @@ define(['textures'], function (textures) {
         });
         m.bindPopup(getMapTooltip(locations[0])).addTo(map);
         m.openPopup();
-
-    }
+    };
 
     function drawBubbles(data, sort) {
 
@@ -285,7 +284,7 @@ define(['textures'], function (textures) {
         drawBubbles(data.city, 'city');
 
         var x = d3.scale.linear().range([0, dim.w / 2])
-            .domain([0, _.max(_.pluck(data.name, 'count'))])
+            .domain([0, _.max(_.pluck(data.name, 'count'))]);
 
         //get linked ids
         var lids = _.map(data.name, function (place) {
@@ -332,5 +331,5 @@ define(['textures'], function (textures) {
     return {
         createHeatmap: createHeatmap,
         drawVenueConnection: drawVenueConnection
-    }
+    };
 });

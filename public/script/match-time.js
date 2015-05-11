@@ -25,7 +25,7 @@ define(['moment', 'textures'], function (moment, textures) {
 				return _.map(day, function (d, hour) {
 					return {
 						x: {
-							day: x((24 * j) + +hour),
+							day: x((24 * j) + (+hour)),
 							hour: x((7 * +hour) + j)
 						},
 						y: {
@@ -114,7 +114,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		        }
 		    }).attr('transform', function(d) {
 		    	if (status.group === 'day' && status.type === 'bubble' &&
-		    		d % 24 == 0) {
+		    		d % 24 === 0) {
 		    		return 'translate(' + dim.w/14 + ', 0)';
 		    	} else {
 		    		return '';
@@ -160,8 +160,8 @@ define(['moment', 'textures'], function (moment, textures) {
 			d3.selectAll('.js-time-bar-bg').transition().attr('x', function() {
 				var vals = $(this).data().value.split('-');
 				return (selected === 'day') ?
-						x(+vals[0] * 24 + +vals[1]) :
-						x(+vals[1] * 7 + +vals[0]);
+						x(+vals[0] * 24 + (+vals[1])) :
+						x(+vals[1] * 7 + (+vals[0]));
 			});
 
 			switchTicks(selected);
@@ -220,7 +220,7 @@ define(['moment', 'textures'], function (moment, textures) {
 							.attr('data-value', j + '-' + hour)
 							.attr('class', 'js-time-bar-bg');
 					}
-				})
+				});
 			});
 		});
 	}
@@ -300,7 +300,6 @@ define(['moment', 'textures'], function (moment, textures) {
 							f = moment(d % 24, 'hh').format('ha');
 						}
 					} else {
-						var f = '';
 						if (d % 7 === 0) {
 							f = moment(d / 7, 'hh').format('ha');
 						}
@@ -330,7 +329,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		yAxis = _.map(_.range(2), function (d) {
 			return d3.svg.axis().scale(y[d].absolute).orient('left')
 					.tickSize(-dim.w);
-		})
+		});
 
 		//weekend
 		drawWeekends(svg);

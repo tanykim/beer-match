@@ -16,7 +16,7 @@ define(['moment'], function (moment) {
             anchor: 'pos-middle',
             size: 'size-small',
             fill: 'fill-grey'
-        }
+        };
 
         if (!_.isNull(order)) {
             var dot = d3.select('.js-beers-' + category + '-' + order);
@@ -53,9 +53,8 @@ define(['moment'], function (moment) {
                 fill: ''
             };
         }
-
         return positions;
-    };
+    }
 
     function updateCenterBeer(b, maxCount) {
 
@@ -93,8 +92,8 @@ define(['moment'], function (moment) {
                     .transition()
                 .attr('cx', p.xPos)
                 .attr('cy', p.yPos)
-                .attr('r', Math.sqrt(d.count/ maxCount[category])
-                    * (margin.oR + margin.top));
+                .attr('r', Math.sqrt(d.count/ maxCount[category]) *
+                    (margin.oR + margin.top));
             d3.select('.js-beers-beer-line-' + category)
                     .transition()
                 .attr('x2', p.xPos).attr('y2', p.yPos);
@@ -298,5 +297,5 @@ define(['moment'], function (moment) {
         drawBeers: drawBeers,
         updateCenterBeer: updateCenterBeer,
         drawCenterBeer: drawCenterBeer
-    }
+    };
 });

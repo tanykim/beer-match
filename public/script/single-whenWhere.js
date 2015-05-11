@@ -32,7 +32,7 @@ define(['moment', 'textures'], function (moment, textures) {
                 Math.cos((i + 0.5) * baseA - Math.PI / 2) * r(dis) + cX,
                 Math.sin((i + 0.5)* baseA - Math.PI / 2) * r(dis) + cY
             ];
-        }
+        };
         _.each(data, function (d, i) {
             svg.append('path') //arc of total checkins
                 .attr('d', arc(d.total, i))
@@ -56,7 +56,7 @@ define(['moment', 'textures'], function (moment, textures) {
                 .on('mouseout', function () {
                     d3.select(this).style('fill', E.colors.day);
                     $('.js-day-tooltip').hide();
-                })
+                });
             svg.append('line') //day divide line
                 .attr('x1', cX)
                 .attr('x2', Math.cos((i + 1) * baseA - Math.PI / 2) * maxR + cX)
@@ -285,5 +285,5 @@ define(['moment', 'textures'], function (moment, textures) {
     return {
         drawDayStats: drawDayStats,
         drawTimeline: drawTimeline
-    }
+    };
 });

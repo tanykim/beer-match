@@ -162,7 +162,7 @@ require([
     //download
     function startDownload(d, tz) {
         $('.js-start').click(function() {
-            console.log('2---. downloading feeds')
+            console.log('2---. downloading feeds');
             socket.emit('timezone', {
                 userinfo: d.userinfo,
                 name: tz ? tz : d.timezone.name
@@ -341,7 +341,7 @@ require([
                 }), function (memo, num) {
                     return memo + num;
                 }, 0) - offset;
-    };
+    }
     $('.js-intro-slide').click(function() {
         $('html body').animate({
             scrollTop: getHeightSum(+$(this).data().value, 'intro', 42)
@@ -388,7 +388,7 @@ require([
             $('.js-nav-' + i).addClass('selected');
             prevTitle = i;
         }
-    };
+    }
     //vis slide
     $('.js-slide').click(function() {
         $('html body').animate({
