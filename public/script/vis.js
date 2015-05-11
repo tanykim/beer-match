@@ -21,6 +21,7 @@ define(['moment', 'vis-settings',
 		//view change
 		$('.js-single-svg').empty();
 
+		/*
 		//0--count
 		var countScale = function (length) {
 			return S.getChroma(
@@ -107,10 +108,11 @@ define(['moment', 'vis-settings',
 				When.updateGraph($(this).data().value);
 			}
 		});
+		*/
 
 		//4-where
 		Where.createHeatmap(b.locationList);
-		Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
+		// Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
 
 		//5-when and where
 		S.setVis('day', function (vis) {

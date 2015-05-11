@@ -41,7 +41,7 @@
 	<div class="intro-untappd js-intro-contents-1">
 		<a href="https://untappd.com/" target="_blank"><img src="images/untappd.png" width="105" height="28" border="0"></a>
 	</div>
-	<div class="intro-about js-intro-contents-2">
+	<div class="intro-content js-intro-contents-2">
 		<div class="container">
 			<p>
 				BEERxMATCH is a web application that visualizes <strong>personal beer check-in data</strong> from an iPhone/Android app <a href="https://untappd.com/" target="_blank">Untappd.</a>
@@ -51,7 +51,7 @@
 			</p>
 		</div>
 	</div>
-	<div class="intro-vis js-intro-contents-3">
+	<div class="intro-content even js-intro-contents-3">
 		<div class="container">
 			<p>
 				Beer Match utilizes these fantastic data and <strong>visualizes your beer taste and drinking behaviors and patterns</strong>. You'll see how much and often you drink, what styles or breweries you like, your favorite beers, and when and where you drink. With these visualizations.
@@ -61,7 +61,7 @@
 			</p>
 		</div>
 	</div>
-	<div class="intro-credit js-intro-contents-4 js-intro-last">
+	<div class="intro-content js-intro-contents-4 js-intro-last">
 		<div class="container">
 			<p>Beer Match is not affiliated with or endorsed by <a href="https://untappd.com/" target="_blank">Untappd.</a></p>
 			<p>If you think this project is cool, please <a href="https://untappd.com/supporter" target="_blank">become a Untappd supporter.</a></p>
@@ -282,7 +282,7 @@
 							<span class="country js-beers-country"></span>
 						</div>
 					</div>
-					<div id="vis-beers" class="beers"></div>
+					<div id="vis-beers" class="beers js-single-svg"></div>
 				</div>
  				<div class="wrapper-right list-wrapper js-beers-images">
  					<div class="list">
@@ -314,7 +314,7 @@
 		<!-- 4 where -->
 		<div class="vis-contents single-where js-single-contents-4">
 			<div class="vis-wrapper">
-				<div id="vis-map" class="map js-single-svg"></div>
+				<div id="vis-map" class="map"></div>
 				<div id="vis-where" class="where js-single-svg"></div>
 			</div>
 		</div>
@@ -357,7 +357,7 @@
 
 <!--vis menu -->
 <div class="vis-title-overlaid js-nav js-title-overlaid hide">title</div>
-<div class="vis-nav-wrapper js-nav hide">
+<div class="vis-nav-wrapper js-nav" style="display:none;">
 	<ul class="nav-dots">
 		<li class="item selected js-slide js-nav-0" data-value="0"></li>
 		<li class="item js-slide js-nav-1" data-value="1"></li>

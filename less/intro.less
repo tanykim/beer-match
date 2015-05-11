@@ -98,10 +98,17 @@ body {
 	padding-bottom: 1em;
 	text-align: center;
 }
-.intro-about, .intro-credit, .intro-vis {
+.intro-content, .intro-header {
+	.container {
+		.90p();
+	}
+}
+.intro-content {
+	background: @white;
 	font-size: @large;
 	padding-top: @padding;
 	padding-bottom: @padding;
+	border-bottom: 1px solid fade(@lightGrey, 50%);
 	strong {
 		.bold();
 		color: @red;
@@ -111,11 +118,8 @@ body {
 		color: @orange;
 	}
 }
-.intro-about, .intro-credit {
-	background-color: @light;
-}
-.intro-vis {
-	background-color: #fff;
+.even {
+	background-color: @lightestGrey;
 }
 .intro-header {
 	position: fixed;

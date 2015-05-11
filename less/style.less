@@ -37,6 +37,17 @@
 @user0: #e55d5d;
 @user1: #8cc33c;
 
+body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Open Sans', Helvetica, arial, sans-serif;
+}
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
 /*icons*/
 #view-icon-intro {
 	background: url('../images/view_dark.png') no-repeat @light;
@@ -91,16 +102,13 @@
 .shadow {
     box-shadow: 0 0 6px fade(@dark, 50%);
 }
-
-body {
-	margin: 0;
-	padding: 0;
-	font-family: 'Open Sans', Helvetica, arial, sans-serif;
+.90p {
+    width: 90%;
+    margin: 0 auto;
 }
-ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
+.60p {
+    width: 60%;
+    margin: 0 auto;
 }
 
 @import 'mapbox';

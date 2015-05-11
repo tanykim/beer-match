@@ -48,7 +48,7 @@ require([
         $('.js-intro').addClass('hide');
         $('.js-match').addClass('hide');
         $('.js-single').removeClass('hide');
-        $('.js-nav').removeClass('hide');
+        $('.js-nav').show();
         $('.js-goMatch').removeClass('hide');
         $('.js-goSingles').addClass('hide');
 
@@ -86,7 +86,7 @@ require([
             $('.js-intro').addClass('hide');
             $('.js-single').addClass('hide');
             $('.js-match').removeClass('hide');
-            $('.js-nav').removeClass('hide');
+            $('.js-nav').show();
             $('.js-goSingles').removeClass('hide');
             $('.js-goMatch').addClass('hide');
 
@@ -358,7 +358,7 @@ require([
         console.log('---go home');
         $('.js-single').addClass('hide');
         $('.js-match').addClass('hide');
-        $('.js-nav').addClass('hide');
+        $('.js-nav').hide();
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-intro').removeClass('hide');
@@ -420,9 +420,9 @@ require([
     $('.js-goMatch').click(function() {
         console.log('---go match');
         $('.js-single').addClass('hide');
-        $('.js-nav').addClass('hide');
+        $('.js-nav').hide();
         $('.js-nav-expand').addClass('hide');
-        $('.js-nav-open').removeClass('nav-toggle-open');
+        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-goMatch').addClass('hide');
         $('.js-intro').removeClass('hide');
         renderFriends(userData[0].userinfo.userId, userData[0].userinfo.friendCount);

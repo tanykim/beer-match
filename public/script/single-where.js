@@ -1,6 +1,6 @@
 define(['textures'], function (textures) {
 
-    var map, m; //marker for the selected location
+    var map, cluster, m; //marker for the selected location
     var locations;
 
     var unitH, dim, svg, maxR, maxRVal, txb;
@@ -22,11 +22,19 @@ define(['textures'], function (textures) {
         var center = locations[0].location;
 
         //FIXME: the token should be hidden
-        L.mapbox.accessToken = 'pk.eyJ1IjoidGFueWtpbSIsImEiOiJXNEJUOGhNIn0.pnUsTT-Zhecb67vCemuMSQ';
-        map = L.mapbox.map('vis-map', 'examples.map-20v6611k')
-            .setView(center, 12);
+        if (_.isUndefined(map)) {
+            L.mapbox.accessToken = 'pk.eyJ1IjoidGFueWtpbSIsImEiOiJXNEJUOGhNIn0.pnUsTT-Zhecb67vCemuMSQ';
+            map = L.mapbox.map('vis-map', 'examples.map-20v6611k')
+                .setView(center, 12);
+        } else {
+            map.setView(center, 12);
+            map.removeLayer(m);
+            map.removeLayer(cluster);
+            m = undefined;
+            cluster = undefined;
+        }
 
-        var cluster = new L.MarkerClusterGroup();
+        cluster = new L.MarkerClusterGroup();
         _.each(locations, function (d, i) {
             var marker = L.marker(new L.LatLng(d.location[0], d.location[1]), {
                 icon: L.mapbox.marker.icon(
