@@ -73,7 +73,7 @@ function getTimezone(user) {
 			        } else {
 			            console.log(data);
 			            emitProfile(userinfo, {
-			            	name: data.timeZoneName,
+			            	name: data.timeZoneId,
 			            	offset: data.rawOffset
 			            });
 			        }
@@ -101,6 +101,7 @@ function writeJSON(data) {
 
 function getUserFeed(id, data) {
 
+	console.log(data);
 	var userinfo = data.userinfo;
 	var userId = userinfo.userId;
 	console.log('userid----', userId);

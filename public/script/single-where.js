@@ -72,8 +72,7 @@ define(['textures'], function (textures) {
             .attr('y', -6)
             .text(sort === 'type' ? 'Venue Type' : 'City')
             .style('fill', E.colors.where[sort])
-            .attr('class', 'size-small ' +
-                (sort === 'type' ? 'pos-end' : 'pos-start'));
+            .attr('class', 'size-small pos-middle');
 
         //bubbles
         svg.selectAll('.js-where-' + sort)
@@ -236,7 +235,7 @@ define(['textures'], function (textures) {
                 .on('mouseout', function () {
                     callMouseIx($('.js-where-bar-' + d.id),d, lids[i], false);
                 });
-            if (d.type) {
+            if (lids[i].type > -1) {
                 svg.append('line')
                     .attr('x1', dim.w / 2 - x(d.count) / 2)
                     .attr('y1', maxR + i * unitH)
@@ -246,7 +245,7 @@ define(['textures'], function (textures) {
                     .attr('class', 'stroke-grey js-where-elm js-where-line-' +
                         d.id + ' js-where-line-type-' + d.id);
             }
-            if (d.city) {
+            if (lids[i].city > -1) {
                 svg.append('line')
                     .attr('x1', dim.w / 2 + x(d.count) / 2)
                     .attr('y1', maxR + i * unitH)
