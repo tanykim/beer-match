@@ -44,7 +44,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 	var margins = {
 		frequency: { top: 80, right: 30, bottom: 50, left: 70 },
 		calendar: { top: 50, right: 40, bottom: 20, left: 50 },
-		score: { top: 0, right: 20, bottom: 40, left: 54 },
+		score: { top: 0, right: 30, bottom: 40, left: 54 },
 		categories: { top: 60, right: 20, bottom: 10, left: 20 },
 		ratings: { top: 60, right: 20, bottom: 20, left: 240 },
 		beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 30 },
@@ -58,7 +58,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
         time: { top: 65, right: 20, bottom: 20, left: 60, middle: 40 },
         publicRatio: { top: 20, right: 0, bottom: 20, left: 0, gap: 60, center: 40 },
         topTypes: { top: 70, right: 40, bottom: 20, left: 40, center: 60 },
-        commonVenues: { top: 70, right: 20, bottom: 20, left: 20 }
+        commonVenues: { top: 70, right: 40, bottom: 20, left: 20 }
 	};
 
    	var getWidth = function(div) {

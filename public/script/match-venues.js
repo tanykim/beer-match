@@ -212,7 +212,6 @@ define(['moment', 'textures'], function (moment, textures) {
 
 				showMouseOver(svg, d, i, j, xPos, yPos, match);
 
-				console.log(dimW);
 				E.setTooltipText([d.places, d.val.abs + ' check-ins', d.type],
 					'venues', dimW,
 					xPos + (i === 0 ? -d.width.abs : d.width.abs) / 2, yPos);
@@ -297,19 +296,24 @@ define(['moment', 'textures'], function (moment, textures) {
 		});
 
 		//lable
-		E.putAxisLable(svg, dim.w / 4, -80, 'check-ins', 'x', 'js-venues-lable');
-		E.putAxisLable(svg, dim.w / 4 * 3, -80, 'check-ins', 'x', 'js-venues-lable');
+		E.putAxisLable(svg, dim.w / 4, -80, 'check-ins', 'x',
+			'js-venues-lable');
+		E.putAxisLable(svg, dim.w / 4 * 3, -80, 'check-ins', 'x',
+			'js-venues-lable');
 
 		//show texture
-		firstMatch = getCommonType(data[0][0].type, types[1], 1, barH);
-		showMouseOver(svg, data[0][0], 0, 0,
-			dim.w / 2 - margin.center, barH / 2, firstMatch);
+		var firstData = !_.isEmpty(data[0]) ? data[0][0] : data[1][0];
+		firstMatch = getCommonType(firstData.type, types[1], 1, barH);
+		showMouseOver(svg, firstData, 0, 0,
+			dim.w / 2 + (_.isEmpty(data[0]) ? margin.center : -margin.center),
+			barH / 2, firstMatch);
 
 		//tooltip
 		E.drawTooltip(svg, 'venues', 3);
-		E.setTooltipText([data[0][0].venueIds.length + ' places',
-			data[0][0].count + ' check-ins', data[0][0].type], 'venues', dim.w,
-			(dim.w / 2 - margin.center - x.abs(data[0][0].count) / 2), barH / 2);
+		E.setTooltipText([firstData.venueIds.length + ' places',
+			firstData.count + ' check-ins', firstData.type], 'venues', dim.w,
+			(dim.w / 2 + x.abs(firstData.count) / 2 *
+			(_.isEmpty(data[0]) ? 1 : -1)), barH / 2);
 	}
 
 	function getTooltipText(d) {

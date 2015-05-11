@@ -327,7 +327,7 @@ require([
         $(this).css('cursor', 'pointer');
     }).click(function() {
         var val = $(this).data().value;
-        window.open(S.share[val]);
+        window.open(E.msgs.share[val]);
     });
 
     //add intro footer height
@@ -344,10 +344,7 @@ require([
     };
     $('.js-intro-slide').click(function() {
         $('html body').animate({
-            scrollTop: getHeightSum(+$(this).data().value,
-                    'intro',
-                    $('.js-intro-header').outerHeight()
-                )
+            scrollTop: getHeightSum(+$(this).data().value, 'intro', 42)
         });
     });
 
@@ -413,7 +410,18 @@ require([
             }
         }
     }
-    var scrolled = _.debounce(positionVisTitle, 100);
+    function checkView() {
+        if (!$('.js-intro').hasClass('hide')) {
+            if ($(window).scrollTop() > 72) {
+                $('.js-intro-header').addClass('header-scrolled');
+            } else {
+                $('.js-intro-header').removeClass('header-scrolled');
+            }
+        } else {
+            positionVisTitle();
+        }
+    }
+    var scrolled = _.debounce(checkView, 100);
     $(window).scroll(scrolled);
 
     //go to match view

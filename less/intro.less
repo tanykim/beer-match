@@ -1,6 +1,5 @@
 body {
-	background: url('../images/bg.png') @dark;
-	background-size: 150px 150px;
+	background-color: @dark;
 }
 
 @padding: 2em;
@@ -14,19 +13,27 @@ body {
 	padding-top: @headerH + @padding * 2 ;
 	padding-bottom: @padding * 2;
 	text-align: center;
-	background-color: @dark;
+	background: url('../images/wooden.jpg') center 0 no-repeat;
+	background-size: 100% 100%;
 	.intro-main {
 		padding: @padding;
 		font-size: @large;
 		display: inline-block;
 		background-color: #fff;
 		border-radius: 1em;
+		box-shadow: 6px 6px 4px fade(@dark, 50%);
 		.status {
-			font-weight: 700;
+			.bold();
 			font-size: @normal;
 			color: @orange;
 		}
 		.name {
+			.tagline {
+				.bold();
+				border-bottom: 2px solid @yellow;
+				margin-bottom: 1em;
+				display: inline-block;
+			}
 			margin-top: 0.5em;
 			margin-bottom: 0.5em;
 			line-height: 1.5em;
@@ -36,9 +43,8 @@ body {
 			background-color: @light;
 			padding: 0.6em;
 			font-family:inherit;
-			font-weight: 700;
 			color: @dark;
-		    border: 1px solid @dark;
+		    border: 1px solid fade(@dark, 50%);
 		}
 		.msg {
 			margin-top: 3em;
@@ -55,7 +61,6 @@ body {
 			#view-icon;
 			#view-icon-match;
 		}
-
 		@picSize: 80px;
 		.user {
 			.pic {
@@ -78,8 +83,8 @@ body {
 			}
 		}
 		.list {
-		    background-color: @lightBlue;
-		    border: 1px solid @dark;
+		    background-color: @light;
+		    border: 1px solid fade(@dark, 50%);
 			font-family:inherit;
 			font-size: @normal;
 			margin-top: 1em;
@@ -92,11 +97,11 @@ body {
 			margin-top: 1em;
 		}
 	}
-}
-.intro-untappd {
-	background-color: @dark;
-	padding-bottom: 1em;
-	text-align: center;
+	.untappd {
+		padding-top: 1em;
+		text-align: center;
+	}
+
 }
 .intro-content, .intro-header {
 	.container {
@@ -108,7 +113,6 @@ body {
 	font-size: @large;
 	padding-top: @padding;
 	padding-bottom: @padding;
-	border-bottom: 1px solid fade(@lightGrey, 50%);
 	strong {
 		.bold();
 		color: @red;
@@ -119,69 +123,83 @@ body {
 	}
 }
 .even {
-	background-color: @lightestGrey;
+	background-color: @light;
 }
 .intro-header {
-	position: fixed;
+	position: absolute;
 	top: 0;
 	width: 100%;
-	height: @headerH * 3/4;
-	color: #fff;
-	background-color: @dark;
 	text-align: center;
 	font-size: @small;
-	.container {
-		position: relative;
-	}
 	.logo {
+		text-align: center;
+		margin: 0 auto;
+		margin-top: -5em;
 		font-size: large;
 		width: @headerH * 2;
-		margin: 0 auto;
 		background: url('../images/logo_big.png') center @headerH * -1 no-repeat;
 		height: @headerH;
 		background-size: @headerH * 2 @headerH * 2;
 	}
-	.links {
-		font-size: @normal;
-		position: absolute;
-		/*left: 0;*/
-		top: @normal;
-		/*margin-left: @padding;*/
-		/*margin-top: @headerH / 2 - @large/4;*/
-		span {
-			margin-right: 1em;
+	.header {
+		width: 90%;
+		padding: 1.25em 5%;
+		margin-top: 1.25em;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		color: @dark;
+		background-color: @light;
+	    -webkit-transition-property: background-color;
+		-webkit-transition-duration: 600ms;
+		-webkit-transition-timing-function: linear;
+		box-shadow: 0 0 6px @dark;
+		.links {
 			font-size: @normal;
-			letter-spacing: 0.1em;
-			line-height: @large;
+			span {
+				margin-right: 1em;
+				font-size: @normal;
+				letter-spacing: 0.1em;
+				line-height: @large;
+			}
+			span:hover {
+				color: @grey;
+			}
+		}
+		.icons {
+			span {
+				color: @light;
+				width: 2em;
+				height: 2em;
+				display: inline-block;
+				background-color: @dark;
+				border-radius: 1em;
+				margin-left: 0.2em;
+				i {
+					padding-top: 0.5em;
+				}
+			}
+			.facebook i {
+				margin-left: 0.3em;
+			}
+			span:hover {
+				background-color: @dark;
+				color: @grey;
+			}
 		}
 	}
-	@icon: 2.5em;
-	.icons {
-		position: absolute;
-		right: 0;
-		/*left: 100%;*/
+	.header-scrolled {
+		position: fixed;
 		top: 0;
-		padding-right: 15px;
-		/*margin-left: -1 * (@icon * 3 + 1.5em + @padding);*/
-		margin-top: (@headerH * 3/4 - @icon) / 2;
-		span {
-			text-indent: 1000px;
-			margin-left: 0.5em;
-			width: @icon;
-			height: @icon;
-			display: inline-block;
-		}
-		.facebook {
-			background: url('../images/social.png') 0 0 no-repeat;
-			background-size: @icon * 3 @icon;
-		}
-		.twitter {
-			background: url('../images/social.png') -1 * @icon 0 no-repeat;
-			background-size: @icon * 3 @icon;
-		}
-		.google {
-			background: url('../images/social.png') -2 * @icon 0 no-repeat;
-			background-size: @icon * 3 @icon;
+	    background-color: @dark;
+	    color: @white;
+	    padding: 0.5em 5%;
+	    margin-top: 0;
+	    -webkit-transition-property:color;
+		-webkit-transition-duration: 400ms;
+		-webkit-transition-timing-function: linear;
+		.icons span {
+			background-color: @dark;
 		}
 	}
 }

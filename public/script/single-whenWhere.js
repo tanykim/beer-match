@@ -94,7 +94,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
     function drawLegends(svg, w, top, maxR, count, maxVal) {
 
-        //FIXME: make max
+        //FIXME: make max 5, check rlyn
         var yPos = -(top - maxR * 2);
 
         //get diameter of the cicle in a reverse order

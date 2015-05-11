@@ -258,7 +258,7 @@ define(['moment', 'textures'], function (moment, textures) {
 			.enter().append('rect')
 			.attr('x', function (d, i) { return getX(i); })
 			.attr('y', function (d, i) { return getY(i); })
-			.attr('width', (unit === 'year') ? block : block - 1)
+			.attr('width', (unit === 'month') ? block : block - 1)
 			.attr('height', (unit === 'day') ? block - 1 : block)
 			.style('fill', function (d) { return getColor(data, d); })
 			.on('mouseover', function (d, i) {

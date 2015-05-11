@@ -3,8 +3,8 @@ var E = {
     //text for UI
     msgs: {
         intro: {
-            init: 'Explore your beers and see a match with a friend!' +
-                '<br/> Enter your UNTAPPD user name',
+            init: '<span class="tagline">Explore your beers and see a match with a friend!</span>' +
+                '<br/> Enter your <strong>UNTAPPD</strong> user name',
             diffName: 'Try a different user name',
             userIdCheck: 'Checking user name...',
             tooShort: 'Should be at least 3 characters',
@@ -16,7 +16,7 @@ var E = {
             facebook: 'https://www.facebook.com/sharer/' +
                 'sharer.php?u=http%3A%2F%2Fbeer.tany.kim',
             twitter: 'https://twitter.com/intent/tweet?' +
-                'text=Check this cool visualization of beer! ' +
+                'text=Check this cool visualization of beers from @untappd ! ' +
                 'See your beer taste and the match with your friends at ' +
                 'http%3A%2F%2Fbeer.tany.kim',
             google: 'https://plus.google.com/share?' +

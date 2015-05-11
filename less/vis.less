@@ -130,6 +130,7 @@
 
 .single-where {
 	.map {
+		z-index: 0;
 		display: inline-block;
 		vertical-align: top;
 		width: 35%;
@@ -137,12 +138,14 @@
 		.leaflet-popup-content-wrapper {
 			background: @black;
 			color: @grey;
-			font-size:16px;
 			line-height:24px;
+			font-family: 'Open Sans';
+			font-size: 14px;
 		}
 		.leaflet-popup-content-wrapper{
 			.selected {
 				text-align: center;
+				font-size: 16px;
 				font-family: 'Open Sans';
 				padding: 0 0.5em;
 				.name {
@@ -151,10 +154,11 @@
 						width: @huge;
 						height: @huge;
 						margin-right: 4px;
+						vertical-align: top;
 					}
 				}
 				.location {
-					font-size: @small;
+					font-size: 14px;
 					.type {
 						color: @vis-where-type;
 					}
@@ -163,7 +167,7 @@
 					}
 				}
 				.count {
-					font-size: small;
+					font-size: 14px;
 				}
 			}
 
@@ -353,7 +357,7 @@
 .match-styles {
 	text-align: center;
 	.title {
-		font-size: @huge;
+		font-size: @large;
 		.bold();
 		margin-bottom: 0.5em;
 	}

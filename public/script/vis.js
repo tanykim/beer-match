@@ -21,7 +21,6 @@ define(['moment', 'vis-settings',
 		//view change
 		$('.js-single-svg').empty();
 
-		/*
 		//0--count
 		var countScale = function (length) {
 			return S.getChroma(
@@ -87,7 +86,10 @@ define(['moment', 'vis-settings',
 		Beers.putBeers(b.beerList);
 		S.setVis('beers', function (vis) {
 			Beers.drawBeers(vis, b.ratingsList);
-			Beers.updateCenterBeer(b.beerList.loves[0].list[0], b.maxCount);
+			Beers.updateCenterBeer(
+				(!_.isEmpty(b.beerList.loves) ?
+				 b.beerList.loves[0].list[0] :
+				 b.beerList.mosts[0].list[0]), b.maxCount);
 		});
 		$('.js-beers-images').find('img').click(function (e) {
 			S.updateSelection($(this), 'img');
@@ -108,17 +110,19 @@ define(['moment', 'vis-settings',
 				When.updateGraph($(this).data().value);
 			}
 		});
-		*/
 
 		//4-where
-		Where.createHeatmap(b.locationList);
-		// Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
+		if (!_.isEmpty(b.locationList)) {
+			Where.createHeatmap(b.locationList);
+			Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
+			WhenWhere.drawTimeline(b.venueByTime, b.venueByTimeUnit,
+				b.timeRange, S.setVisNoSVG('timeline'));
+		}
 
 		//5-when and where
 		S.setVis('day', function (vis) {
 			WhenWhere.drawDayStats(vis, b.byDay);
 		});
-		WhenWhere.drawTimeline(b.venueByTime, b.venueByTimeUnit, b.timeRange, S.setVisNoSVG('timeline'));
 
 		//add dummy height
 		setDummyHeight('single');
@@ -167,7 +171,9 @@ define(['moment', 'vis-settings',
 		S.setVis('publicRatio', function (vis) {
 			Venues.drawPublicRatio(vis, m.publicCount, m.profile);
 		});
-		Venues.drawTopTypes(S.setVisNoSVG('topTypes'), m.topVenueTypes);
+		if (m.topVenueTypes[0].length + m.topVenueTypes[1].length > 1) {
+			Venues.drawTopTypes(S.setVisNoSVG('topTypes'), m.topVenueTypes);
+		}
 		$('.js-venues-switch').click(function() {
 			var changed = S.changeRadioSelection($(this));
 			if (changed) {
