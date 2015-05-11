@@ -13,7 +13,7 @@ define(['moment', 'vis-settings',
 	    var hDiff = $(window).height() -
 	    	$('.js-' + sort + '-contents-5').outerHeight();
         $('.js-' + sort + '-contents-dummy')
-        	.css('height', Math.max(hDiff, E.footerHeight) + 'px');
+        	.css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
     }
 
 	var startVis = function(b) {
