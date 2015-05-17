@@ -12,7 +12,7 @@ define(['moment', 'vis-settings',
     function setDummyHeight(sort) {
 	    var hDiff = $(window).height() -
 	    	$('.js-' + sort + '-contents-5').outerHeight();
-        $('.js-' + sort + '-contents-dummy')
+        $('.js-' + sort + '-wrapper')
         	.css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
     }
 

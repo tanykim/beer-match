@@ -211,8 +211,27 @@ body {
 	font-size: @small;
 	padding: 40px 5%;
     text-align: left;
+    display: flex;
     a {
         color: @yellow;
         text-decoration: none;
+    }
+    a:hover {
+    	text-decoration: underline;
+    }
+    .slide {
+    	letter-spacing: 0.1em;
+    	padding-right: 2em;
+    	border-right: 1px solid @darkGrey;
+    	div {
+    		margin-top: 1em;
+    		margin-bottom: 0.5em;
+    	}
+    	div:hover {
+    		color: @white;
+    	}
+    }
+    .credit {
+    	padding-left: 2em;
     }
 }

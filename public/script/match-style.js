@@ -73,7 +73,9 @@ define(['textures'], function (textures) {
         names = data.names;
         divide = data.divide;
 
-        $('.js-styles-count').html(data.common);
+        $('.js-styles-count').html('You two share ' +
+            (data.common === 0 ? 'no' : data.common) +
+            ' style' + (data.common !== 1 ? 's!' : '!'));
 
         checkins = _.map(matrix, function (d, i) {
             var c = getConnected(d);

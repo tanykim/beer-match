@@ -23,10 +23,20 @@
 
 <!-- footer -->
 <div class="footer">
-	<p>Powered by <a href="https://untappd.com/" target="_blank">Untappd.</a> Beer Match is not affiliated with or endorsed by Untappd.</p>
-	<p>View source on <a href="https://github.com/tanykim/beer-match" target="_.blank">GitHub.</a>
-	<p>© 2015. <a href="http://tany.kim" target="_blank">Tanyoung Kim.</a>&nbsp;&nbsp;<a href="http://www.twitter.com/tanykim" target="_blank">@tanykim</a>
-	</p>
+	<div class="slide">
+		<div> BEER MATCH </div>
+		<div class="js-intro-slide link" data-value="2">PROJECT</div>
+		<div class="js-intro-slide link" data-value="3">VISUALIZATIONS</div>
+		<div class="js-intro-slide link" data-value="4">PRIVACY</div>
+	</div>
+	<div class="credit">
+		<p>Powered by <a href="https://untappd.com/" target="_blank">Untappd.</a> Beer Match is not affiliated with or endorsed by Untappd.<br/>
+		If you think this project is cool, please <a href="https://untappd.com/supporter" target="_blank">become a Untappd supporter.</a></p>
+		<p>The color pallete used in Beer Match is inspired by <a href="http://txaber.net/beer-colors/" target="_blank">this.</a></p>
+		<p>View source on <a href="https://github.com/tanykim/beer-match" target="_.blank">GitHub.</a>
+		<p>© 2015. <a href="http://tany.kim" target="_blank">Tanyoung Kim.</a>&nbsp;&nbsp;<a href="http://www.twitter.com/tanykim" target="_blank">@tanykim</a>&nbsp;&nbsp;<a href="mailto:tanykim@gmail.com">tanykim@gmail.com</a>
+		</p>
+	</div>
 </div>
 
 <!-- intro -->
@@ -61,12 +71,9 @@
 	</div>
 	<div class="intro-content js-intro-contents-4 js-intro-last">
 		<div class="container">
-			<p>Beer Match is not affiliated with or endorsed by <a href="https://untappd.com/" target="_blank">Untappd.</a></p>
-			<p>If you think this project is cool, please <a href="https://untappd.com/supporter" target="_blank">become a Untappd supporter.</a></p>
-			<p>The color pallete used in Beer Match is inspired by <a href="http://txaber.net/beer-colors/" target="_blank">this.</a></p>
+			<p>Privacy</p>
 		</div>
 	</div>
-	<div class="js-intro-dummy"></div>
 
 	<!--overlay-->
 	<div class="intro-header">
@@ -74,7 +81,7 @@
 			<div class="links">
 				<span class="js-intro-slide link" data-value="2">PROJECT</span>
 				<span class="js-intro-slide link" data-value="3">VISUALIZATIONS</span>
-				<span class="js-intro-slide link" data-value="4">CREDIT</span>
+				<span class="js-intro-slide link" data-value="4">PRIVACY</span>
 			</div>
 			<div class="icons">
 		        <span class="facebook js-social" data-value="facebook"><i class="fa fa-facebook fa-lg"></i></span>
@@ -88,7 +95,7 @@
 
 <!-- match -->
 <div class="vis js-match hide">
-	<div class="vis-contents-wrapper">
+	<div class="vis-contents-wrapper js-match-wrapper">
 
 		<!-- 0 match score & behavior-->
 		<div class="vis-contents match-score js-match-contents-0">
@@ -169,7 +176,7 @@
 
 		<!-- 3 share styles -->
 		<div class="vis-contents even match-styles js-match-contents-3">
-			<div class="title">You two share <span class="js-styles-count">xx</span> styles!</div>
+			<div class="title js-styles-count"></div>
 			<div id="vis-styles" class="js-match-svg styles"></div>
 		</div>
 
@@ -206,9 +213,6 @@
 				<div id="vis-commonVenues" class="js-match-svg commonVenues"></div>
 			</div>
 		</div>
-
-		<!-- footer -->
-		<div class="vis-contents-dummy js-single-contents-dummy"></div>
 	</div>
 </div>
 
@@ -216,7 +220,7 @@
 <div class="vis js-single hide">
 
 	<!-- vis contents -->
-	<div class="vis-contents-wrapper">
+	<div class="vis-contents-wrapper js-single-wrapper">
 
 		<!-- 0 basic stats -->
 		<div class="vis-contents single-count js-single-contents-0">
@@ -331,10 +335,6 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- footer -->
-		<div class="vis-contents-dummy js-single-contents-dummy"></div>
-
 	</div> <!-- vis contents -->
 </div> <!-- vis -->
 

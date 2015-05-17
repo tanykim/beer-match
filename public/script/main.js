@@ -136,8 +136,6 @@ require([
     // default text input
     function renderSettings(desc, warning, userId, friends) {
 
-        // window.history.pushState('object or string', 'Title', '/');
-
         var template = _.template($('#intro-start').html());
         var prevUser = userData[0] ?
                 userData[0].userinfo.userId.toUpperCase() :
@@ -153,6 +151,7 @@ require([
         if (!userId) {
             $('.js-intro-input').focus();
         }
+
         //select a single user, not the match
         if (prevUser) {
             $('.js-start-single').click(function() {
@@ -172,7 +171,7 @@ require([
         });
     }
 
-    // after fouding a user
+    // after finding a user
     function renderUserInfo(data) {
 
         var userinfo = data.userinfo;
@@ -324,17 +323,9 @@ require([
         }
     });
 
-    //social media
-    $('.js-social').mouseover(function() {
-        $(this).css('cursor', 'pointer');
-    }).click(function() {
-        var val = $(this).data().value;
-        window.open(E.msgs.share[val]);
-    });
-
     //add intro footer height
     var hDiff = $(window).height() - $('.js-intro-last').outerHeight();
-    $('.js-intro-dummy').css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
+    $('.js-intro-last').css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
 
     function getHeightSum (num, view, offset) {
         return _.reduce(_.map(_.range(0, num), function(i) {
@@ -344,17 +335,8 @@ require([
                     return memo + num;
                 }, 0) - offset;
     }
-    $('.js-intro-slide').click(function() {
-        $('html body').animate({
-            scrollTop: getHeightSum(+$(this).data().value, 'intro', 42)
-        });
-    });
 
-    //go home
-    $('.js-goHome').mouseover(function() {
-        $(this).addClass('home-over');
-    }).click(function() {
-        console.log('---go home');
+    function resetToIntro() {
         $('.js-single').addClass('hide');
         $('.js-match').addClass('hide');
         $('.js-nav').hide();
@@ -365,19 +347,16 @@ require([
         userData = [null, null];
         isMatch = false;
         renderSettings(E.msgs.intro.init, '');
+    }
+
+    //go home
+    $('.js-goHome').mouseover(function() {
+        $(this).addClass('home-over');
+    }).click(function() {
+        console.log('---go home');
+        resetToIntro();
     }).mouseout(function() {
         $(this).removeClass('home-over');
-    });
-
-    //vis menu show/hide
-    $('.js-nav-open').click(function() {
-        if ($('.js-nav-expand').hasClass('hide')) {
-            $('.js-nav-expand').removeClass('hide');
-            $('.js-nav-open').html('<i class="fa fa-chevron-left"></i>');
-        } else {
-            $('.js-nav-expand').addClass('hide');
-            $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
-        }
     });
 
     //get vis position
@@ -391,16 +370,7 @@ require([
             prevTitle = i;
         }
     }
-    //vis slide
-    $('.js-slide').click(function() {
-        $('html body').animate({
-            scrollTop: getHeightSum(+$(this).data().value,
-                isMatch ? 'match' : 'single',
-                0)
-            });
-        $('.js-nav-expand').addClass('hide');
-        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
-    });
+
     //scroll
     function positionVisTitle() {
         for (var i = 1; i < 7; i++) {
@@ -437,11 +407,51 @@ require([
         $('.js-intro').removeClass('hide');
         renderFriends(userData[0].userinfo.userId, userData[0].userinfo.friendCount);
     });
+
     //go to single view
     $('.js-goSingle').click(function() {
         console.log('--go single');
         $('.js-goSingles').addClass('hide');
         isMatch = false;
         initVisSingle(userData[$(this).data().value]);
+    });
+
+    //header/footer slide
+    $('.js-intro-slide').click(function() {
+        if ($('.js-intro').hasClass('hide')) {
+            resetToIntro();
+        }
+        $('html body').animate({
+            scrollTop: getHeightSum(+$(this).data().value, 'intro', 42)
+        });
+    });
+
+    //vis slide
+    $('.js-slide').click(function() {
+        $('html body').animate({
+            scrollTop: getHeightSum(+$(this).data().value,
+                isMatch ? 'match' : 'single',
+                0)
+            });
+        $('.js-nav-expand').addClass('hide');
+        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
+    });
+    //vis menu show/hide
+    $('.js-nav-open').click(function() {
+        if ($('.js-nav-expand').hasClass('hide')) {
+            $('.js-nav-expand').removeClass('hide');
+            $('.js-nav-open').html('<i class="fa fa-chevron-left"></i>');
+        } else {
+            $('.js-nav-expand').addClass('hide');
+            $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
+        }
+    });
+
+    //social media
+    $('.js-social').mouseover(function() {
+        $(this).css('cursor', 'pointer');
+    }).click(function() {
+        var val = $(this).data().value;
+        window.open(E.msgs.share[val]);
     });
 });

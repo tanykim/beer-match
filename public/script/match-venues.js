@@ -312,7 +312,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		E.drawTooltip(svg, 'venues', 3);
 		E.setTooltipText([firstData.venueIds.length + ' places',
 			firstData.count + ' check-ins', firstData.type], 'venues', dim.w,
-			(dim.w / 2 + x.abs(firstData.count) / 2 *
+			(dim.w / 2 + (x.abs(firstData.count) / 2 + margin.center) *
 			(_.isEmpty(data[0]) ? 1 : -1)), barH / 2);
 	};
 
