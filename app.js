@@ -36,6 +36,7 @@ untappd.setClientSecret(credentials.clientSecret);
 
 //data processing
 var User = require('./lib/BeerMatch-user.js');
+var Match = require('./lib/BeerMatch-match.js');
 
 function emitProfile(userinfo, timezone) {
 	io.emit('profile', {
@@ -59,7 +60,7 @@ function getTimezone(user) {
 
 	geocoder.geocode(userinfo.address, function (err, data) {
 		if (err) {
-			console.log('geocoding error');
+			//console.log('geocoding error');
 			emitProfile(userinfo, '');
 		} else {
 			console.log(data.results[0].geometry.location);
@@ -68,10 +69,10 @@ function getTimezone(user) {
 			    location.lat, location.lng,
 			    function (err, data) {
 			        if (err) {
-			            console.log(err);
+			            //console.log(err);
 			            emitProfile(userinfo, '');
 			        } else {
-			            console.log(data);
+			            //console.log(data);
 			            emitProfile(userinfo, {
 			            	name: data.timeZoneId,
 			            	offset: data.rawOffset
@@ -83,9 +84,9 @@ function getTimezone(user) {
 	});
 }
 
-function writeJSON(data) {
+function createSingleData(data) {
 
-	//temporarily save raw data
+	//FOR TEST: temporarily save raw data
 	fs.writeFileSync('public/users/raw/' + data.userinfo.userId + '.json', JSON.stringify(data));
 
     function createBeerData(data, callback) {
@@ -94,17 +95,31 @@ function writeJSON(data) {
     }
     createBeerData(data, function (u) {
 		fs.writeFileSync('public/users/' + data.userinfo.userId + '.json', JSON.stringify(u));
-		console.log('---file written');
+		//console.log('---file written');
 		io.emit('success', { data: u });
     });
 }
 
+function createMatchData(users) {
+
+    function createBeerMatchData(users, callback) {
+    	var dataset = _.map(users, function (user) {
+    		return JSON.parse(fs.readFileSync('public/users/' + user + '.json', 'utf8'));
+    	});
+        var match = new Match(dataset);
+        callback(match);
+    }
+
+	createBeerMatchData(users, function (m) {
+		io.emit('pair', { data: m });
+	});
+}
 function getUserFeed(id, data) {
 
-	console.log(data);
+	//console.log('userid----', data.userinfo.userId);
+
 	var userinfo = data.userinfo;
 	var userId = userinfo.userId;
-	console.log('userid----', userId);
 	var checkins = [];
 
 	//max 50 feeds per call
@@ -125,11 +140,11 @@ function getUserFeed(id, data) {
 					callUserFeedAPI(obj.response.pagination.max_id);
 				} else {
 					var all = { userinfo: userinfo, timezone: data.name, checkins: _.flatten(checkins) };
-					writeJSON(all);
+					createSingleData(all);
 				}
 			}
 			else {
-				console.log('-----error at feed api', err, obj, obj.meta.code);
+				//console.log('-----error at feed api', err, obj, obj.meta.code);
 				io.emit('error', { error_detail: obj.meta.error_detail });
 			}
 		}, userId, 50, id);
@@ -137,16 +152,23 @@ function getUserFeed(id, data) {
 	callUserFeedAPI();
 }
 
-function getUserInfo(userId) {
+function getUserInfo(userId, prevUser) {
 
 	//file check first
 	if (fs.existsSync('public/users/' + userId + '.json')) {
-    	console.log('---file exists');
-    	//FIXME: delete later
-    	io.emit('dataExist', { userId: userId });
+    	console.log('---file exists', userId);
 
-  // 		var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
-		// io.emit('success', { data: data });
+    	//FOR TEST: skip the friend selection
+    	//io.emit('dataExistTest', { userId: userId });
+
+    	//FOR REAL: uncomment later
+  		if (!prevUser) {
+			var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
+			io.emit('success', { data: data });
+  		} else {
+  			//FIXME
+  			createMatchData([prevUser, userId]);
+  		}
 
 	} else {
 		untappd.userInfo(function (err,obj) {
@@ -172,7 +194,7 @@ function getUserInfo(userId) {
 
 function getFriendsList(userId, count) {
 
-	console.log('----friends', userId, count);
+	//console.log('----friends', userId, count);
 
 	//max 25 feeds per call, upto 100 friends
 	var friendCallsNeeded = _.isUndefined(count) ? 100 : Math.min(count, 100);
@@ -180,7 +202,6 @@ function getFriendsList(userId, count) {
 
 	var friends = [];
 
-	//FIXME: save friends in the data, update the data
 	function callFriendsFeedAPI(offset) {
 	  	untappd.userFriends(function (err,obj) {
 	  		if (obj && obj.response && obj.response.items && obj.response.count > 0) {
@@ -190,11 +211,11 @@ function getFriendsList(userId, count) {
 				friends.push(fList);
 				friendCallCount = friendCallCount + 25;
 				if (friendCallCount < friendCallsNeeded) {
-					console.log('----', offset);
+					//console.log('----', offset);
 					callFriendsFeedAPI(friendCallCount);
 				}
 				else {
-					console.log('---friends loading done');
+					//console.log('---friends loading done');
 					io.emit('friends', { friends: _.flatten(friends).sort() });
 				}
 			}
@@ -207,30 +228,34 @@ function checkFileExists(users) {
 	var u0 = fs.existsSync('public/users/' + users[0] + '.json') ? true : false;
 	var u1 = fs.existsSync('public/users/' + users[1] + '.json') ? true : false;
 	if (u0 && u1) {
-		console.log('---both file exist');
-		io.emit('pairDataExist', { users: users });
+
+		//console.log('---both file exist');
+		createMatchData(users);
+
 	} else {
 		io.emit('error', { error_detail: 'No previous data exist. Please restart.' });
 	}
 }
 
 io.on('connection', function (socket) {
+
+	//TEST: data generating mode
 	socket.on('dataset', function (data) {
-		console.log('data generating mode---', data.userId);
+		//console.log('data generating mode---', data.userId);
 		var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId + '.json', 'utf8'));
-		console.log(d.userinfo.userId);
-		writeJSON(d);
+		//console.log(d.userinfo.userId);
+		createSingleData(d);
   	});
 	socket.on('userId', function (data) {
-		console.log('userId---', data);
-    	getUserInfo(data.userId.toLowerCase());
+		//console.log('userId---', data);
+    	getUserInfo(data.userId.toLowerCase(), data.prevUser);
   	});
   	socket.on('pair', function (data) {
   		console.log('pair---', data);
   		checkFileExists(data.users);
   	});
   	socket.on('timezone', function (data) {
-  		console.log('timezone---', data);
+  		//console.log('timezone---', data);
   		getUserFeed(undefined, data);
   	});
   	socket.on('friends', function (data) {
@@ -238,7 +263,7 @@ io.on('connection', function (socket) {
   		getFriendsList(data.userId.toLowerCase(), data.count);
   	});
   	socket.on('signout', function (data) {
-  		console.log('singout---', data);
+  		//console.log('singout---', data);
   		io.emit('signout', { userId: data.userId });
   	});
 });
