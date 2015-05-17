@@ -51,7 +51,6 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
                 name: u1.name,
                 city: u1.city,
                 counts: [u1.count, u2.count],
-                location: location,
                 commonDates: commonDates,
             };
         }), function (d) {

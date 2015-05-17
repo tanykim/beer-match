@@ -271,7 +271,6 @@ require([
         renderSettings(E.msgs.intro.diffName, data.error_detail);
     });
 
-    //FIXME: delete later
     socket.on('dataExist', function (data) {
         var userId = data.userId;
         console.log('---json exists');
@@ -281,14 +280,14 @@ require([
             if (isMatch) {
                 initVisMatch(d, true);
             } else {
-                //FIXME: temporarily
+                //FOR TEST
                 initVisSingle(d);
-                // renderSettingsOptions(E.msgs.intro.back, d);
+                //FOR REST
+                renderSettingsOptions(E.msgs.intro.back, d);
             }
         });
     });
 
-    //FIXME --> move to app. js later
     socket.on('pairDataExist', function (data) {
         var users = data.users;
         $.ajax({
@@ -319,7 +318,7 @@ require([
         if (isMatch) {
             initVisMatch(data.data, true);
         } else {
-            renderSettingsOptions('Download completed!', data.data);
+            renderSettingsOptions(E.msgs.intro.completed, data.data);
         }
     });
 

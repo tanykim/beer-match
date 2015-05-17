@@ -83,9 +83,9 @@ function getTimezone(user) {
 	});
 }
 
-function writeJSON(data) {
+function createSingleData(data) {
 
-	//temporarily save raw data
+	//FOR TEST: temporarily save raw data
 	fs.writeFileSync('public/users/raw/' + data.userinfo.userId + '.json', JSON.stringify(data));
 
     function createBeerData(data, callback) {
@@ -94,17 +94,16 @@ function writeJSON(data) {
     }
     createBeerData(data, function (u) {
 		fs.writeFileSync('public/users/' + data.userinfo.userId + '.json', JSON.stringify(u));
-		console.log('---file written');
+		//console.log('---file written');
 		io.emit('success', { data: u });
     });
 }
 
 function getUserFeed(id, data) {
 
-	console.log(data);
 	var userinfo = data.userinfo;
 	var userId = userinfo.userId;
-	console.log('userid----', userId);
+	//console.log('userid----', userId);
 	var checkins = [];
 
 	//max 50 feeds per call
@@ -119,17 +118,17 @@ function getUserFeed(id, data) {
 				checkins.push(obj.response.checkins.items);
 				if (obj.response.pagination.max_id) {
 					//FIXME: often called twice
-					console.log('feed api call---', id);
+					//console.log('feed api call---', id);
 					feedCallCount = feedCallCount + 1;
 					io.emit('progress', { total: feedCallsNeeded, count: feedCallCount });
 					callUserFeedAPI(obj.response.pagination.max_id);
 				} else {
 					var all = { userinfo: userinfo, timezone: data.name, checkins: _.flatten(checkins) };
-					writeJSON(all);
+					createSingleData(all);
 				}
 			}
 			else {
-				console.log('-----error at feed api', err, obj, obj.meta.code);
+				//console.log('-----error at feed api', err, obj, obj.meta.code);
 				io.emit('error', { error_detail: obj.meta.error_detail });
 			}
 		}, userId, 50, id);
@@ -142,10 +141,12 @@ function getUserInfo(userId) {
 	//file check first
 	if (fs.existsSync('public/users/' + userId + '.json')) {
     	console.log('---file exists');
-    	//FIXME: delete later
+
+    	//FOR TEST
     	io.emit('dataExist', { userId: userId });
 
-  // 		var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
+    	//FOR REAL
+  		//var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
 		// io.emit('success', { data: data });
 
 	} else {
@@ -158,12 +159,12 @@ function getUserInfo(userId) {
 					io.emit('error', { error_detail: 'No check-in data available.' });
 				} else {
 					//get timezone infromation & emit
-					console.log ('--id found, get timezone info now');
+					//console.log ('--id found, get timezone info now');
 					getTimezone(obj.response.user);
 				}
 			}
 			else {
-				console.log('--------error at userinfo api', err, obj.meta.code);
+				//console.log('--------error at userinfo api', err, obj.meta.code);
 				io.emit('error', { error_detail: obj.meta.error_detail });
 			}
 		}, userId);
@@ -172,7 +173,7 @@ function getUserInfo(userId) {
 
 function getFriendsList(userId, count) {
 
-	console.log('----friends', userId, count);
+	//console.log('----friends', userId, count);
 
 	//max 25 feeds per call, upto 100 friends
 	var friendCallsNeeded = _.isUndefined(count) ? 100 : Math.min(count, 100);
@@ -190,11 +191,11 @@ function getFriendsList(userId, count) {
 				friends.push(fList);
 				friendCallCount = friendCallCount + 25;
 				if (friendCallCount < friendCallsNeeded) {
-					console.log('----', offset);
+					//console.log('----', offset);
 					callFriendsFeedAPI(friendCallCount);
 				}
 				else {
-					console.log('---friends loading done');
+					//console.log('---friends loading done');
 					io.emit('friends', { friends: _.flatten(friends).sort() });
 				}
 			}
@@ -207,7 +208,7 @@ function checkFileExists(users) {
 	var u0 = fs.existsSync('public/users/' + users[0] + '.json') ? true : false;
 	var u1 = fs.existsSync('public/users/' + users[1] + '.json') ? true : false;
 	if (u0 && u1) {
-		console.log('---both file exist');
+		//console.log('---both file exist');
 		io.emit('pairDataExist', { users: users });
 	} else {
 		io.emit('error', { error_detail: 'No previous data exist. Please restart.' });
@@ -215,30 +216,33 @@ function checkFileExists(users) {
 }
 
 io.on('connection', function (socket) {
+
+	//FOR TEST
 	socket.on('dataset', function (data) {
-		console.log('data generating mode---', data.userId);
+		//console.log('data generating mode---', data.userId);
 		var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId + '.json', 'utf8'));
-		console.log(d.userinfo.userId);
-		writeJSON(d);
+		//console.log(d.userinfo.userId);
+		createSingleData(d);
   	});
+
 	socket.on('userId', function (data) {
-		console.log('userId---', data);
+		//console.log('userId---', data);
     	getUserInfo(data.userId.toLowerCase());
   	});
   	socket.on('pair', function (data) {
-  		console.log('pair---', data);
+  		//console.log('pair---', data);
   		checkFileExists(data.users);
   	});
   	socket.on('timezone', function (data) {
-  		console.log('timezone---', data);
+  		//console.log('timezone---', data);
   		getUserFeed(undefined, data);
   	});
   	socket.on('friends', function (data) {
-  		console.log('friends---', data);
+  		//console.log('friends---', data);
   		getFriendsList(data.userId.toLowerCase(), data.count);
   	});
   	socket.on('signout', function (data) {
-  		console.log('singout---', data);
+  		//console.log('singout---', data);
   		io.emit('signout', { userId: data.userId });
   	});
 });

@@ -10,7 +10,8 @@ var E = {
             tooShort: 'Should be at least 3 characters',
             friends: 'Or enter an Untapped user name',
             noFriends: 'No friends found, enter an UNTAPPD user name',
-            back: 'Welcome back!'
+            back: 'Welcome back!',
+            completed: 'Download completed!'
         },
         share: {
             facebook: 'https://www.facebook.com/sharer/' +
