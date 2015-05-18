@@ -342,13 +342,13 @@
 <div class="js-single js-match vis-header hide">
 	<div class="home js-goHome link"></div>
 	<div class="wrapper js-vis-header"></div>
-	<div class="goSingles js-goSingles hide">
+	<div class="goSingles js-go-single hide">
 		<!-- See the single view of -->
 		<span class="goSingle goSingle0 js-goSingle js-goSingle-0 link" data-value="0">user0</span>
 		<!-- or -->
 		<span class="goSingle goSingle1 js-goSingle js-goSingle-1 link" data-value="1">user0</span>
 	</div>
-	<div class="goMatch js-goMatch link hide">See Match</div>
+	<div class="goMatch js-go-match link hide">See Match</div>
 </div>
 
 <!--vis menu -->
@@ -384,7 +384,7 @@
   	<% }); %>
   	</select>
   	<% } %>
-	<div class="name"><%= desc %></div>
+	<div class="desc"><%= desc %></div>
 	<input type="text" class="input js-intro-input" value="<%= userId %>" <%= userId ? ' disabled' : '' %> >
 	<% if (prevUser) { %>
 	<div class="start-single"><span class="view-single js-start-single link underline">See <%= prevUser %> only</span></span>
@@ -494,8 +494,8 @@
                 <option value="Pacific/Tongatapu">(UTC+13:00) Nukualofa</option>
                 <option value="Pacific/Kiritimati">(UTC+14:00) Kiritimati</option>
 			</select>
-		</div>
-		<div class="start js-start <%= address ? 'link underline' : 'disabled' %>">Download Data</div>
+	</div>
+	<div class="start js-start <%= address ? 'link underline' : 'disabled' %>">Download Data</div>
 </script>
 
 <script type="text/template" id="intro-option">

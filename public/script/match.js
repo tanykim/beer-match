@@ -173,6 +173,8 @@ define(['jquery', 'momentTZ', 'underscore'], function ($, moment, _) {
         - styles similarity
         - abv similarity
         */
+        console.log(dataset);
+
         var scoreAvgs = _.pluck(dataset, 'scoreAvg');
         var commonBeers = _.intersection(_.pluck(dataset[0].allBeers, 'bid'),
                 _.pluck(dataset[1].allBeers, 'bid'));
