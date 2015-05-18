@@ -33,7 +33,8 @@ require([
     // later: communication with server
     // FIXME: URL
     var socket = io.connect('http://localhost:8080');
-    var isMatch = false;
+
+    var firstUserId;
 
     function initVisCommon(sel, other, html, url) {
 
@@ -73,14 +74,14 @@ require([
     }
 
     //match
-    function initVisMatch(d) {
+    function initVfirstUserId(d) {
 
         var data = d.data;
 
         $('.js-goSingle-0').html(data.userinfo[0].userId.toUpperCase())
             .attr('data-value', data.userinfo[0].userId);
         $('.js-goSingle-1').html(data.userinfo[1].userId.toUpperCase())
-            .attr('data-value', data.userinfo[0].userId);
+            .attr('data-value', data.userinfo[1].userId);
 
         var html = {
             avatar0: data.userinfo[0].avatar,
@@ -88,8 +89,25 @@ require([
             name0: data.userinfo[0].username,
             name1: data.userinfo[1].username,
         };﻿
-        initVisCommon('single', 'match', html, data.url);
-        Vis.startVisMatch(data);
+        initVisCommon('match', 'single', html, data.url);
+        Vis.startVfirstUserId(data);
+    }
+
+    // default text input
+    function renderIntro(desc, warning, userId, friends) {
+
+        var template = _.template($('#intro-start').html());
+        $('.js-intro-main').html(template({
+            desc: desc,
+            warning: warning,
+            userId: userId,
+            friends: friends,
+            firstUserId: firstUserId? firstUserId.toUpperCase() : ''
+        }));﻿
+
+        if (!userId) {
+            $('.js-intro-input').focus();
+        }
     }
 
     //intro id input check
@@ -108,38 +126,14 @@ require([
             //at least five haracters
             var userId = $('.js-intro-input').val();
             if (userId.length < 3) {
-                renderSettings(E.msgs.intro.diffName, E.msgs.intro.tooShort);
+                renderIntro(E.msgs.intro.diffName, E.msgs.intro.tooShort);
             } else {
                 console.log('---entered');
-                renderSettings(E.msgs.intro.init, E.msgs.intro.userIdCheck, userId);
-                socket.emit('userId', { userId: userId });
+                renderIntro('', E.msgs.intro.userIdCheck, userId);
+                socket.emit('userId', { userId: userId, firstUserId: firstUserId });
             }
         }
     });
-
-    // default text input
-    function renderSettings(desc, warning, userId, friends, prevUserId, prevUserData) {
-
-        var template = _.template($('#intro-start').html());
-        $('.js-intro-main').html(template({
-            desc: desc,
-            warning: warning,
-            userId: userId,
-            friends: friends,
-            prevUser: prevUserId? prevUserId.toUpperCase() : ''
-        }));﻿
-
-        if (!userId) {
-            $('.js-intro-input').focus();
-        }
-
-        //select a single user, not the match
-        if (prevUserData) {
-            $('.js-start-single').click(function() {
-                initVisSingle(prevUserData);
-            });
-        }
-    }
 
     //download
     function startDownload(d, tz) {
@@ -152,7 +146,7 @@ require([
         });
     }
 
-    // after finding a user
+    //after finding a user
     function renderUserInfo(data) {
 
         var userinfo = data.userinfo;
@@ -190,22 +184,25 @@ require([
     //render friends list after the first user is loaded
     function renderFriends(userId, friendCount, data) {
 
-        isMatch = true;
+        firstUserId = userId;
         //console.log('3--. two users match', userId, friendCount);
         socket.emit('friends', { userId: userId, count: friendCount });
         socket.on('friends', function (d) {
             var friends = d.friends;
             var msg = friends ? E.msgs.intro.friends : E.msgs.intro.noFriends;
-            renderSettings(msg, '', '', friends, userId, data);
+            renderIntro(msg, '', '', friends);
             $('.js-friend-select').change(function() {
                 var friend = $(this).val();
-                socket.emit('userId', { userId: friend, prevUser: userId });
+                socket.emit('userId', { userId: friend, firstUserId: userId });
+            });
+            $('.js-start-single').click(function() {
+                initVisSingle(data);
             });
         });
     }
 
-    // after loading the first user
-    function renderSettingsOptions(msg, data) {
+    //after loading the first user
+    function renderVisOptions(msg, data) {
 
         var userId = data.userinfo.userId;
         var template = _.template($('#intro-option').html());
@@ -221,7 +218,7 @@ require([
         });
 
         $('.js-start-match').click(function() {
-             console.log('3--. match vis');
+            console.log('3--. match vis');
             renderFriends(userId, data.userinfo.friendCount, data);
         });
     }
@@ -240,14 +237,15 @@ require([
     } else if (userId.indexOf('+') > -1) {
         //console.log('1---two users');
         //FIXME: loading needed
+        firstUserId = userId.split('+')[0];
         socket.emit('pair', { users: userId.split('+') });
     } else if (userId) {
         //console.log('1---single user');
-        renderSettings(E.msgs.intro.init, E.msgs.intro.userIdCheck, userId);
+        renderIntro('', E.msgs.intro.userIdCheck, userId);
         socket.emit('userId', { userId: userId });
     } else {
         //console.log('1---no url');
-        renderSettings(E.msgs.intro.init, '', '');
+        renderIntro(E.msgs.intro.init, '', '');
     }
 
     //FOR TEST: directly go to single view
@@ -257,19 +255,19 @@ require([
         $.ajax({
             url: '/users/' + userId + '.json'
         }).done(function (d) {
-           if (isMatch) {
+           if (firstUserId) {
                socket.emit('pair', { users: [$('.js-go-match').data().value, userId] });
            } else {
                 //show directly vis
                 //initVisSingle(d);
                 //show option
-                renderSettingsOptions(E.msgs.intro.back, d);
+                renderVisOptions(E.msgs.intro.back, d);
            }
         });
     });
 
     socket.on('error', function (data) {
-        renderSettings(E.msgs.intro.diffName, data.error_detail);
+        renderIntro(E.msgs.intro.diffName, data.error_detail);
     });
 
     socket.on('profile', function (data) {
@@ -284,14 +282,17 @@ require([
     });
 
     socket.on('success', function (data) {
-        renderSettingsOptions('Download completed!', data.data);
+        if (firstUserId) {
+            firstUserId = undefined;
+            initVisSingle(data.data);
+        } else {
+            renderVisOptions(E.msgs.intro.completed, data.data);
+        }
     });
 
     socket.on('pair', function (data) {
-        isMatch = true;
-        initVisMatch(data);
+        initVfirstUserId(data);
     });
-
     /* socket communication ends */
 
     //add intro footer height
@@ -315,8 +316,8 @@ require([
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-intro').removeClass('hide');
         window.history.pushState('object or string', 'Title', '/');
-        isMatch = false;
-        renderSettings(E.msgs.intro.init, '');
+        firstUserId = undefined;
+        renderIntro(E.msgs.intro.init, '');
     }
 
     //go home
@@ -334,7 +335,7 @@ require([
     function changeVisTitle(i) {
         if (i !== prevTitle) {
             $('.js-title-overlaid')
-                .html(isMatch ? E.msgs.titles.match[i] : E.msgs.titles.single[i]);
+                .html(firstUserId ? E.msgs.titles.match[i] : E.msgs.titles.single[i]);
             $('.js-slide').removeClass('selected');
             $('.js-nav-' + i).addClass('selected');
             prevTitle = i;
@@ -345,7 +346,7 @@ require([
     function positionVisTitle() {
         for (var i = 1; i < 7; i++) {
             var diff = $(window).scrollTop() -
-                getHeightSum(i, isMatch ? 'match' : 'single', 0);
+                getHeightSum(i, firstUserId ? 'match' : 'single', 0);
             if (diff < -60) {
                 changeVisTitle(i-1);
                 break;
@@ -375,14 +376,14 @@ require([
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-go-match').addClass('hide');
         $('.js-intro').removeClass('hide');
+        $('.js-intro-main').html('LOADING...');
         renderFriends($(this).data().value, undefined);
     });
 
     //go to single view
     $('.js-goSingle').click(function() {
         console.log('--go single');
-        isMatch = false;
-        socket.emit('userId', { userId: $(this).data().value });
+        socket.emit('userId', { userId: $(this).data().value, firstUserId: undefined });
     });
 
     //header/footer slide
@@ -399,7 +400,7 @@ require([
     $('.js-slide').click(function() {
         $('html body').animate({
             scrollTop: getHeightSum(+$(this).data().value,
-                isMatch ? 'match' : 'single',
+                firstUserId ? 'match' : 'single',
                 0)
             });
         $('.js-nav-expand').addClass('hide');

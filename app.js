@@ -63,7 +63,7 @@ function getTimezone(user) {
 			//console.log('geocoding error');
 			emitProfile(userinfo, '');
 		} else {
-			console.log(data.results[0].geometry.location);
+			//console.log(data.results[0].geometry.location);
 			location = data.results[0].geometry.location;
 			timezoner.getTimeZone(
 			    location.lat, location.lng,
@@ -152,7 +152,7 @@ function getUserFeed(id, data) {
 	callUserFeedAPI();
 }
 
-function getUserInfo(userId, prevUser) {
+function getUserInfo(userId, firstUserId) {
 
 	//file check first
 	if (fs.existsSync('public/users/' + userId + '.json')) {
@@ -162,12 +162,11 @@ function getUserInfo(userId, prevUser) {
     	//io.emit('dataExistTest', { userId: userId });
 
     	//FOR REAL: uncomment later
-  		if (!prevUser) {
+    	if (_.isUndefined(firstUserId)) {
 			var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
 			io.emit('success', { data: data });
   		} else {
-  			//FIXME
-  			createMatchData([prevUser, userId]);
+			createMatchData([firstUserId, userId]);
   		}
 
 	} else {
@@ -179,7 +178,7 @@ function getUserInfo(userId, prevUser) {
 				} else if (obj.response.user.stats.total_checkins === 0) {
 					io.emit('error', { error_detail: 'No check-in data available.' });
 				} else {
-					//get timezone infromation & emit
+					//get timezone info & emit
 					console.log ('--id found, get timezone info now');
 					getTimezone(obj.response.user);
 				}
@@ -247,8 +246,8 @@ io.on('connection', function (socket) {
 		createSingleData(d);
   	});
 	socket.on('userId', function (data) {
-		//console.log('userId---', data);
-    	getUserInfo(data.userId.toLowerCase(), data.prevUser);
+		console.log('userId---', data);
+    	getUserInfo(data.userId.toLowerCase(), data.firstUserId);
   	});
   	socket.on('pair', function (data) {
   		console.log('pair---', data);

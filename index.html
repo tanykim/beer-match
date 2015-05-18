@@ -378,16 +378,16 @@
 	<div class="status"><%= warning %></div>
 	<% if (friends) { %>
 	<select class="list js-friend-select">
-		<option>Select a user name from <%= prevUser + '\'' %>s friends</option>
+		<option>Select a user name from <%= firstUserId + '\'' %>s friends</option>
 	<%  _.each(friends, function (f) { %>
         <option value="<%= f %>"><%= f %></option>
   	<% }); %>
   	</select>
   	<% } %>
-	<div class="name"><%= desc %></div>
+	<div class="desc"><%= desc %></div>
 	<input type="text" class="input js-intro-input" value="<%= userId %>" <%= userId ? ' disabled' : '' %> >
-	<% if (prevUser) { %>
-	<div class="start-single"><span class="view-single js-start-single link underline">See <%= prevUser %> only</span></span>
+	<% if (firstUserId) { %>
+	<div class="start-single"><span class="view-single js-start-single link underline">See <%= firstUserId %> only</span></span>
   	<% } else { %>
   	<div class="msg"> Not an UNTAPPD user? <br/>See examples of <span class="view-single">single user</span> or <span class="view-match">match</span> visualization</div>
   	<% } %>
