@@ -87,14 +87,16 @@ function getTimezone(user) {
 function createSingleData(data) {
 
 	//FOR TEST: temporarily save raw data
-	fs.writeFileSync('public/users/raw/' + data.userinfo.userId + '.json', JSON.stringify(data));
+	fs.writeFileSync('public/users/raw/' + data.userinfo.userId + '.json',
+        JSON.stringify(data));
 
     function createBeerData(data, callback) {
         var user = new User(data.userinfo, data.timezone, data.checkins);
         callback(user);
     }
     createBeerData(data, function (u) {
-		fs.writeFileSync('public/users/' + data.userinfo.userId + '.json', JSON.stringify(u));
+		fs.writeFileSync('public/users/' + data.userinfo.userId + '.json',
+            JSON.stringify(u));
 		//console.log('---file written');
 		io.emit('success', { data: u });
     });
@@ -104,7 +106,8 @@ function createMatchData(users) {
 
     function createBeerMatchData(users, callback) {
     	var dataset = _.map(users, function (user) {
-    		return JSON.parse(fs.readFileSync('public/users/' + user + '.json', 'utf8'));
+    		return JSON.parse(fs.readFileSync('public/users/' + user + '.json',
+                'utf8'));
     	});
         var match = new Match(dataset);
         callback(match);
@@ -129,17 +132,24 @@ function getUserFeed(id, data) {
 
 		untappd.userFeed(function (err,obj){
 			if (debug) console.log(err,obj);
-			if (obj && obj.response && obj.response.checkins && obj.response.checkins.items) {
+			if (obj && obj.response && obj.response.checkins &&
+                obj.response.checkins.items) {
 				checkins.push(obj.response.checkins.items);
 				if (obj.response.pagination.max_id) {
 					//FIXME: often called twice
 					//console.log('feed api call---', id);
 					feedCallCount = feedCallCount + 1;
-					io.emit('progress', { total: feedCallsNeeded, count: feedCallCount });
+					io.emit('progress', {
+                        total: feedCallsNeeded,
+                        count: feedCallCount
+                    });
 					callUserFeedAPI(obj.response.pagination.max_id);
 				} else {
-					var all = { userinfo: userinfo, timezone: data.name, checkins: _.flatten(checkins) };
-					createSingleData(all);
+					createSingleData({
+                        userinfo: userinfo,
+                        timezone: data.name,
+                        checkins: _.flatten(checkins)
+                    };);
 				}
 			}
 			else {
@@ -161,20 +171,26 @@ function getUserInfo(userId, firstUserId) {
     	io.emit('dataExistTest', { userId: userId });
 
     	//FOR REAL: uncomment later
-   //  	if (_.isUndefined(firstUserId)) {
-			// var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
-			// io.emit('success', { data: data });
-  	// 	} else {
-			// createMatchData([firstUserId, userId]);
-  	// 	}
+    	if (_.isUndefined(firstUserId)) {
+			var data = JSON.parse(
+                fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
+			io.emit('success', { data: data });
+  		} else {
+			createMatchData([firstUserId, userId]);
+  		}
 	} else {
 		untappd.userInfo(function (err,obj) {
 			if (obj && obj.response && obj.response.user) {
 				if (obj.response.user.is_private) {
 					console.log('--private id');
-					io.emit('error', { error_detail: userId.toUpperCase() + ' is a private account.' });
+					io.emit('error', {
+                        error_detail:
+                            userId.toUpperCase() + ' is a private account.'
+                    });
 				} else if (obj.response.user.stats.total_checkins === 0) {
-					io.emit('error', { error_detail: 'No check-in data available.' });
+					io.emit('error', {
+                        error_detail: 'No check-in data available.'
+                    });
 				} else {
 					//get timezone info & emit
 					console.log ('--id found, get timezone info now');
@@ -201,7 +217,8 @@ function getFriendsList(userId, count) {
 
 	function callFriendsFeedAPI(offset) {
 	  	untappd.userFriends(function (err,obj) {
-	  		if (obj && obj.response && obj.response.items && obj.response.count > 0) {
+	  		if (obj && obj.response && obj.response.items &&
+                obj.response.count > 0) {
 				var fList = _.map(obj.response.items, function (d) {
 					return d.user.user_name.toLowerCase();
 				});
@@ -228,7 +245,9 @@ function checkFileExists(users) {
 		//console.log('---both file exist');
 		createMatchData(users);
 	} else {
-		io.emit('error', { error_detail: 'No previous data exist. Please restart.' });
+		io.emit('error', {
+            error_detail: 'No previous data exist. Please restart.'
+        });
 	}
 }
 
@@ -237,7 +256,8 @@ io.on('connection', function (socket) {
 	//TEST: data generating mode
 	socket.on('dataset', function (data) {
 		//console.log('data generating mode---', data.userId);
-		var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId + '.json', 'utf8'));
+		var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId +
+            '.json', 'utf8'));
 		//console.log(d.userinfo.userId);
 		createSingleData(d);
   	});
