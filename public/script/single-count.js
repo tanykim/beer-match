@@ -222,7 +222,8 @@ define(['moment', 'textures'], function (moment, textures) {
 		updateSoberCount(data);
 
 		//number of days - start with the first day of the month
-		var sT = moment(rangeStr[0]);
+		var sT = moment(rangeStr[0], 'YYYYMMDD');
+		console.log(moment(sT).format('YYYY MM DD'));
 		var eT = moment();
 
 		//draw svg
@@ -244,6 +245,7 @@ define(['moment', 'textures'], function (moment, textures) {
 		var colC = Math.floor(dim.w / block);
 		var colL = gap + 7 * block;
 		var offset = sT.day();
+		console.log(sT.format('YYYY MM DD ddd'), sT.day());
 
 		function getX(i) {
 			return Math.floor((i + offset) / 7) % colC * block;
