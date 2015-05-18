@@ -30,9 +30,8 @@ require([
 
     'use strict';
 
-    // later: communication with server
-    // FIXME: URL
-    var socket = io.connect('http://localhost:8080');
+    var urlParts = window.location.href.split('/');
+    var socket = io.connect('http://' + urlParts[2]);
 
     var firstUserId;
     var prevTitle = 0;
@@ -257,7 +256,6 @@ require([
     /* socket communication */
     /************************/
 
-    var urlParts = window.location.href.split('/');
     var uIdURL = urlParts[urlParts.length-1];
 
     //FOR TEST : delete later, data generating mode
