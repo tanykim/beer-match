@@ -24,18 +24,17 @@ require([
     'chroma',
     'textures',
     'socketio',
-    'match',
     'vis',
     'elements'
-], function ($, _, d3, moment, chroma, textures, io, Match, Vis, E) {
+], function ($, _, d3, moment, chroma, textures, io, Vis, E) {
 
     'use strict';
 
     // later: communication with server
     // FIXME: URL
     var socket = io.connect('http://localhost:8080');
-    var userData = [];
-    var isMatch = false;
+
+    var firstUserId;
 
     function initVisCommon(sel, other, html, url) {
 
@@ -60,7 +59,6 @@ require([
     //initiate single vis
     function initVisSingle(data) {
 
-        userData = [data, null];
         var u = data.userinfo;
 
         $('.js-go-match').attr('data-value', u.userId);
@@ -76,73 +74,39 @@ require([
     }
 
     //match
-    function initVisMatch(data) {
+    function initVisMatch(d) {
 
-        userData[1] = data;
-        $('.js-goSingle-0').html(userData[0].userinfo.userId.toUpperCase());
-        $('.js-goSingle-1').html(userData[1].userinfo.userId.toUpperCase());
+        var data = d.data;
+
+        $('.js-goSingle-0').html(data.userinfo[0].userId.toUpperCase())
+            .attr('data-value', data.userinfo[0].userId);
+        $('.js-goSingle-1').html(data.userinfo[1].userId.toUpperCase())
+            .attr('data-value', data.userinfo[1].userId);
 
         var html = {
-            avatar0: userData[0].userinfo.avatar,
-            avatar1: userData[1].userinfo.avatar,
-            name0: userData[0].userinfo.username,
-            name1: userData[1].userinfo.username,
+            avatar0: data.userinfo[0].avatar,
+            avatar1: data.userinfo[1].avatar,
+            name0: data.userinfo[0].username,
+            name1: data.userinfo[1].username,
         };﻿
         initVisCommon('match', 'single', html, data.url);
-
-        var match = new Match(userData);
-        Vis.startVisMatch(match);
+        Vis.startVisMatch(data);
     }
 
-    //intro id input check
-    $('.js-intro-main').keypress(function(event){
-        //allow only alpha-numeric characters
-        var ew = event.which;
-        if (48 <= ew && ew <= 57)
-            return true;
-        if (65 <= ew && ew <= 90)
-            return true;
-        if (97 <= ew && ew <= 122)
-            return true;
-        return false;
-    }).keydown(function(event) {
-        if (event.keyCode == 13) {
-            //at least five haracters
-            var userId = $('.js-intro-input').val();
-            if (userId.length < 3) {
-                renderSettings(E.msgs.intro.diffName, E.msgs.intro.tooShort);
-            } else {
-                console.log('---entered');
-                renderSettings('', E.msgs.intro.userIdCheck, userId);
-                socket.emit('userId', { userId: userId });
-            }
-        }
-    });
-
     // default text input
-    function renderSettings(desc, warning, userId, friends) {
+    function renderIntro(desc, warning, userId, friends) {
 
         var template = _.template($('#intro-start').html());
-        var prevUser = userData[0] ?
-                userData[0].userinfo.userId.toUpperCase() :
-                '';
         $('.js-intro-main').html(template({
             desc: desc,
             warning: warning,
             userId: userId,
             friends: friends,
-            prevUser: prevUser
+            firstUserId: firstUserId? firstUserId.toUpperCase() : ''
         }));﻿
 
         if (!userId) {
             $('.js-intro-input').focus();
-        }
-
-        //select a single user, not the match
-        if (prevUser) {
-            $('.js-start-single').click(function() {
-                initVisSingle(userData[0]);
-            });
         }
     }
 
@@ -157,7 +121,7 @@ require([
         });
     }
 
-    // after finding a user
+    //after finding a user
     function renderUserInfo(data) {
 
         var userinfo = data.userinfo;
@@ -193,23 +157,27 @@ require([
     }
 
     //render friends list after the first user is loaded
-    function renderFriends(userId, friendCount) {
-        isMatch = true;
-        console.log('3--. two users match', userId, friendCount);
+    function renderFriends(userId, friendCount, data) {
+
+        firstUserId = userId;
+        //console.log('3--. two users match', userId, friendCount);
         socket.emit('friends', { userId: userId, count: friendCount });
         socket.on('friends', function (d) {
             var friends = d.friends;
             var msg = friends ? E.msgs.intro.friends : E.msgs.intro.noFriends;
-            renderSettings(msg, '', '', friends);
+            renderIntro(msg, '', '', friends);
             $('.js-friend-select').change(function() {
                 var friend = $(this).val();
-                socket.emit('userId', { userId: friend});
+                socket.emit('userId', { userId: friend, firstUserId: userId });
+            });
+            $('.js-start-single').click(function() {
+                initVisSingle(data);
             });
         });
     }
 
-    // after loading the first user
-    function renderSettingsOptions(msg, data) {
+    //after loading the first user
+    function renderVisOptions(msg, data) {
 
         var userId = data.userinfo.userId;
         var template = _.template($('#intro-option').html());
@@ -225,69 +193,56 @@ require([
         });
 
         $('.js-start-match').click(function() {
-            userData[0] = data;
-            renderFriends(userId, data.userinfo.friendCount);
+            console.log('3--. match vis');
+            renderFriends(userId, data.userinfo.friendCount, data);
         });
     }
 
-    //--1. check url
+    /************************/
+    /* socket communication */
+    /************************/
+
     var urlParts = window.location.href.split('/');
     var userId = urlParts[urlParts.length-1];
 
-    //FIXME : delete later, test mode
+    //FOR TEST : delete later, data generating mode
     if (userId.indexOf('---') > -1) {
-        console.log('---dataset generating mode');
+        //console.log('---dataset generating mode');
         socket.emit('dataset', { userId: userId.split('---')[1] });
     } else if (userId.indexOf('+') > -1) {
-        console.log('1---two users');
+        //console.log('1---two users');
         //FIXME: loading needed
+        firstUserId = userId.split('+')[0];
         socket.emit('pair', { users: userId.split('+') });
     } else if (userId) {
-        console.log('1---single user');
-        renderSettings('', E.msgs.intro.userIdCheck, userId);
+        //console.log('1---single user');
+        renderIntro('', E.msgs.intro.userIdCheck, userId);
         socket.emit('userId', { userId: userId });
     } else {
-        console.log('1---no url');
-        renderSettings(E.msgs.intro.init, '', '');
+        //console.log('1---no url');
+        renderIntro(E.msgs.intro.init, '', '');
     }
 
-    //receive data from the server
-    socket.on('error', function (data) {
-        console.log('---error', data);
-        renderSettings(E.msgs.intro.diffName, data.error_detail);
-    });
-
-    socket.on('dataExist', function (data) {
+    //FOR TEST: directly go to single view
+    socket.on('dataExistTest', function (data) {
         var userId = data.userId;
-        console.log('---json exists');
+        //console.log('---json exists');
         $.ajax({
             url: '/users/' + userId + '.json'
         }).done(function (d) {
-            if (isMatch) {
-                initVisMatch(d, true);
-            } else {
-                //FOR TEST
-                initVisSingle(d);
-                //FOR REST
-                renderSettingsOptions(E.msgs.intro.back, d);
-            }
+           if (firstUserId) {
+               socket.emit('pair', { users: [$('.js-go-match').data().value, userId] });
+           } else {
+                //show directly vis
+                //initVisSingle(d);
+                //show option
+                renderVisOptions(E.msgs.intro.back, d);
+           }
         });
     });
 
-    socket.on('pairDataExist', function (data) {
-        var users = data.users;
-        $.ajax({
-            url: '/users/' + users[0] + '.json'
-        }).done(function (d1) {
-            userData[0] = d1;
-            $.ajax({
-                url: '/users/' + users[1] + '.json'
-            }).done(function (d2) {
-                isMatch = true;
-                initVisMatch(d2);
-            });
-        });
-
+    socket.on('error', function (data) {
+        renderIntro(E.msgs.intro.diffName, data.error_detail);
     });
 
     socket.on('profile', function (data) {
@@ -296,15 +251,47 @@ require([
     });
 
     socket.on('progress', function (data) {
+        var progress = Math.round(data.count/data.total * 100);
         $('.js-start').removeClass('underline')
-            .html(Math.min(Math.round(data.count/data.total * 100), 100) + '%');
+            .html(progress <= 100 ? progress + '%' : 'Analyzing...');
     });
 
     socket.on('success', function (data) {
-        if (isMatch) {
-            initVisMatch(data.data, true);
+        if (firstUserId) {
+            firstUserId = undefined;
+            initVisSingle(data.data);
         } else {
-            renderSettingsOptions(E.msgs.intro.completed, data.data);
+            renderVisOptions(E.msgs.intro.completed, data.data);
+        }
+    });
+
+    socket.on('pair', function (data) {
+        initVisMatch(data);
+    });
+    /* socket communication ends */
+
+    //intro id input check
+    $('.js-intro-main').keypress(function(event){
+        //allow only alpha-numeric characters
+        var ew = event.which;
+        if (48 <= ew && ew <= 57)
+            return true;
+        if (65 <= ew && ew <= 90)
+            return true;
+        if (97 <= ew && ew <= 122)
+            return true;
+        return false;
+    }).keydown(function(event) {
+        if (event.keyCode == 13) {
+            //at least five haracters
+            var userId = $('.js-intro-input').val();
+            if (userId.length < 3) {
+                renderIntro(E.msgs.intro.diffName, E.msgs.intro.tooShort);
+            } else {
+                console.log('---entered');
+                renderIntro('', E.msgs.intro.userIdCheck, userId);
+                socket.emit('userId', { userId: userId, firstUserId: firstUserId });
+            }
         }
     });
 
@@ -329,9 +316,8 @@ require([
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-intro').removeClass('hide');
         window.history.pushState('object or string', 'Title', '/');
-        userData = [null, null];
-        isMatch = false;
-        renderSettings(E.msgs.intro.init, '');
+        firstUserId = undefined;
+        renderIntro(E.msgs.intro.init, '');
     }
 
     //go home
@@ -349,7 +335,7 @@ require([
     function changeVisTitle(i) {
         if (i !== prevTitle) {
             $('.js-title-overlaid')
-                .html(isMatch ? E.msgs.titles.match[i] : E.msgs.titles.single[i]);
+                .html(firstUserId ? E.msgs.titles.match[i] : E.msgs.titles.single[i]);
             $('.js-slide').removeClass('selected');
             $('.js-nav-' + i).addClass('selected');
             prevTitle = i;
@@ -360,7 +346,7 @@ require([
     function positionVisTitle() {
         for (var i = 1; i < 7; i++) {
             var diff = $(window).scrollTop() -
-                getHeightSum(i, isMatch ? 'match' : 'single', 0);
+                getHeightSum(i, firstUserId ? 'match' : 'single', 0);
             if (diff < -60) {
                 changeVisTitle(i-1);
                 break;
@@ -383,23 +369,21 @@ require([
 
     //go to match view
     $('.js-go-match').click(function() {
-        console.log('---go match');
-        $('.js-intro-main').html('LOADING...');
+        console.log('---go match', $(this).data().value);
         $('.js-single').addClass('hide');
         $('.js-nav').hide();
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-go-match').addClass('hide');
         $('.js-intro').removeClass('hide');
-        renderFriends(userData[0].userinfo.userId, userData[0].userinfo.friendCount);
+        $('.js-intro-main').html('LOADING...');
+        renderFriends($(this).data().value, undefined);
     });
 
     //go to single view
     $('.js-goSingle').click(function() {
         console.log('--go single');
-        $('.js-go-single').addClass('hide');
-        isMatch = false;
-        initVisSingle(userData[$(this).data().value]);
+        socket.emit('userId', { userId: $(this).data().value, firstUserId: undefined });
     });
 
     //header/footer slide
@@ -416,7 +400,7 @@ require([
     $('.js-slide').click(function() {
         $('html body').animate({
             scrollTop: getHeightSum(+$(this).data().value,
-                isMatch ? 'match' : 'single',
+                firstUserId ? 'match' : 'single',
                 0)
             });
         $('.js-nav-expand').addClass('hide');
@@ -440,4 +424,5 @@ require([
         var val = $(this).data().value;
         window.open(E.msgs.share[val]);
     });
+
 });

@@ -158,7 +158,7 @@ define(['moment', 'textures'], function (moment, textures) {
             'Week ' + moment(key, 'YYYY-W').format('W, YYYY');
         return [val + ' check-ins', timeStr];
     }
-    var drawTimeline = function (data, period, timeRange, vis) {
+    var drawTimeline = function (data, period, timeRangeStr, vis) {
 
         var unitH = 40;
         var margin = vis.margin;
@@ -167,6 +167,10 @@ define(['moment', 'textures'], function (moment, textures) {
             h: unitH * _.size(data)
         };
         var svg = vis.draw({ dim: dim, margin: margin }, 'timeline');
+
+        var timeRange = _.map(timeRangeStr, function (d) {
+            return moment(d, 'YYYYMMDD');
+        });
 
         var x = d3.time.scale().range([0, dim.w])
                 .domain([moment(timeRange[0]).startOf(period),

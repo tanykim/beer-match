@@ -36,6 +36,7 @@ untappd.setClientSecret(credentials.clientSecret);
 
 //data processing
 var User = require('./lib/BeerMatch-user.js');
+var Match = require('./lib/BeerMatch-match.js');
 
 function emitProfile(userinfo, timezone) {
 	io.emit('profile', {
@@ -59,19 +60,19 @@ function getTimezone(user) {
 
 	geocoder.geocode(userinfo.address, function (err, data) {
 		if (err) {
-			console.log('geocoding error');
+			//console.log('geocoding error');
 			emitProfile(userinfo, '');
 		} else {
-			console.log(data.results[0].geometry.location);
+			//console.log(data.results[0].geometry.location);
 			location = data.results[0].geometry.location;
 			timezoner.getTimeZone(
 			    location.lat, location.lng,
 			    function (err, data) {
 			        if (err) {
-			            console.log(err);
+			            //console.log(err);
 			            emitProfile(userinfo, '');
 			        } else {
-			            console.log(data);
+			            //console.log(data);
 			            emitProfile(userinfo, {
 			            	name: data.timeZoneId,
 			            	offset: data.rawOffset
@@ -99,11 +100,25 @@ function createSingleData(data) {
     });
 }
 
+function createMatchData(users) {
+
+    function createBeerMatchData(users, callback) {
+    	var dataset = _.map(users, function (user) {
+    		return JSON.parse(fs.readFileSync('public/users/' + user + '.json', 'utf8'));
+    	});
+        var match = new Match(dataset);
+        callback(match);
+    }
+
+	createBeerMatchData(users, function (m) {
+		io.emit('pair', { data: m });
+	});
+}
 function getUserFeed(id, data) {
 
+	//console.log('userid----', data.userinfo.userId);
 	var userinfo = data.userinfo;
 	var userId = userinfo.userId;
-	//console.log('userid----', userId);
 	var checkins = [];
 
 	//max 50 feeds per call
@@ -136,19 +151,22 @@ function getUserFeed(id, data) {
 	callUserFeedAPI();
 }
 
-function getUserInfo(userId) {
+function getUserInfo(userId, firstUserId) {
 
 	//file check first
 	if (fs.existsSync('public/users/' + userId + '.json')) {
-    	console.log('---file exists');
+    	console.log('---file exists', userId);
 
-    	//FOR TEST
-    	io.emit('dataExist', { userId: userId });
+    	//FOR TEST: skip the friend selection
+    	//io.emit('dataExistTest', { userId: userId });
 
-    	//FOR REAL
-  		//var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
-		// io.emit('success', { data: data });
-
+    	//FOR REAL: uncomment later
+    	if (_.isUndefined(firstUserId)) {
+			var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
+			io.emit('success', { data: data });
+  		} else {
+			createMatchData([firstUserId, userId]);
+  		}
 	} else {
 		untappd.userInfo(function (err,obj) {
 			if (obj && obj.response && obj.response.user) {
@@ -158,8 +176,8 @@ function getUserInfo(userId) {
 				} else if (obj.response.user.stats.total_checkins === 0) {
 					io.emit('error', { error_detail: 'No check-in data available.' });
 				} else {
-					//get timezone infromation & emit
-					//console.log ('--id found, get timezone info now');
+					//get timezone info & emit
+					console.log ('--id found, get timezone info now');
 					getTimezone(obj.response.user);
 				}
 			}
@@ -181,7 +199,6 @@ function getFriendsList(userId, count) {
 
 	var friends = [];
 
-	//FIXME: save friends in the data, update the data
 	function callFriendsFeedAPI(offset) {
 	  	untappd.userFriends(function (err,obj) {
 	  		if (obj && obj.response && obj.response.items && obj.response.count > 0) {
@@ -209,7 +226,7 @@ function checkFileExists(users) {
 	var u1 = fs.existsSync('public/users/' + users[1] + '.json') ? true : false;
 	if (u0 && u1) {
 		//console.log('---both file exist');
-		io.emit('pairDataExist', { users: users });
+		createMatchData(users);
 	} else {
 		io.emit('error', { error_detail: 'No previous data exist. Please restart.' });
 	}
@@ -217,7 +234,7 @@ function checkFileExists(users) {
 
 io.on('connection', function (socket) {
 
-	//FOR TEST
+	//TEST: data generating mode
 	socket.on('dataset', function (data) {
 		//console.log('data generating mode---', data.userId);
 		var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId + '.json', 'utf8'));
@@ -226,8 +243,8 @@ io.on('connection', function (socket) {
   	});
 
 	socket.on('userId', function (data) {
-		//console.log('userId---', data);
-    	getUserInfo(data.userId.toLowerCase());
+		console.log('userId---', data);
+    	getUserInfo(data.userId.toLowerCase(), data.firstUserId);
   	});
   	socket.on('pair', function (data) {
   		//console.log('pair---', data);
