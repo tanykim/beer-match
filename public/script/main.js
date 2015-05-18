@@ -35,6 +35,7 @@ require([
     var socket = io.connect('http://localhost:8080');
 
     var firstUserId;
+    var prevTitle = 0;
 
     function initVisCommon(sel, other, html, url) {
 
@@ -198,26 +199,80 @@ require([
         });
     }
 
+    function resetToIntro() {
+        $('.js-single').addClass('hide');
+        $('.js-match').addClass('hide');
+        $('.js-nav').hide();
+        $('.js-nav-expand').addClass('hide');
+        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
+        $('.js-intro').removeClass('hide');
+        window.history.pushState('object or string', 'Title', '/');
+        firstUserId = undefined;
+        renderIntro(E.msgs.intro.init, '');
+    }
+
+    function getHeightSum (num, view, offset) {
+        return _.reduce(_.map(_.range(0, num), function(i) {
+                    return $('.js-' + view +
+                        '-contents-' + i).outerHeight();
+                }), function (memo, num) {
+                    return memo + num;
+                }, 0) - offset;
+    }
+
+    function changeVisTitle(i) {
+        if (i !== prevTitle) {
+            $('.js-title-overlaid')
+                .html(firstUserId ? E.msgs.titles.match[i] : E.msgs.titles.single[i]);
+            $('.js-slide').removeClass('selected');
+            $('.js-nav-' + i).addClass('selected');
+            prevTitle = i;
+        }
+    }
+
+    function positionVisTitle() {
+        for (var i = 1; i < 7; i++) {
+            var diff = $(window).scrollTop() -
+                getHeightSum(i, firstUserId ? 'match' : 'single', 0);
+            if (diff < -60) {
+                changeVisTitle(i-1);
+                break;
+            }
+        }
+    }
+
+    function checkView() {
+        if (!$('.js-intro').hasClass('hide')) {
+            if ($(window).scrollTop() > 72) {
+                $('.js-intro-header').addClass('header-scrolled');
+            } else {
+                $('.js-intro-header').removeClass('header-scrolled');
+            }
+        } else {
+            positionVisTitle();
+        }
+    }
+
     /************************/
     /* socket communication */
     /************************/
 
     var urlParts = window.location.href.split('/');
-    var userId = urlParts[urlParts.length-1];
+    var uIdURL = urlParts[urlParts.length-1];
 
     //FOR TEST : delete later, data generating mode
-    if (userId.indexOf('---') > -1) {
+    if (uIdURL.indexOf('---') > -1) {
         //console.log('---dataset generating mode');
-        socket.emit('dataset', { userId: userId.split('---')[1] });
-    } else if (userId.indexOf('+') > -1) {
+        socket.emit('dataset', { userId: uIdURL.split('---')[1] });
+    } else if (uIdURL.indexOf('+') > -1) {
         //console.log('1---two users');
         //FIXME: loading needed
-        firstUserId = userId.split('+')[0];
-        socket.emit('pair', { users: userId.split('+') });
-    } else if (userId) {
+        firstUserId = uIdURL.split('+')[0];
+        socket.emit('pair', { users: uIdURL.split('+') });
+    } else if (uIdURL) {
         //console.log('1---single user');
-        renderIntro('', E.msgs.intro.userIdCheck, userId);
-        socket.emit('userId', { userId: userId });
+        renderIntro('', E.msgs.intro.userIdCheck, uIdURL);
+        socket.emit('userId', { userId: uIdURL });
     } else {
         //console.log('1---no url');
         renderIntro(E.msgs.intro.init, '', '');
@@ -234,9 +289,9 @@ require([
                socket.emit('pair', { users: [$('.js-go-match').data().value, userId] });
            } else {
                 //show directly vis
-                //initVisSingle(d);
+                initVisSingle(d);
                 //show option
-                renderVisOptions(E.msgs.intro.back, d);
+                //renderVisOptions(E.msgs.intro.back, d);
            }
         });
     });
@@ -268,7 +323,11 @@ require([
     socket.on('pair', function (data) {
         initVisMatch(data);
     });
-    /* socket communication ends */
+
+
+    /********************/
+    /* View interaction */
+    /********************/
 
     //intro id input check
     $('.js-intro-main').keypress(function(event){
@@ -299,27 +358,6 @@ require([
     var hDiff = $(window).height() - $('.js-intro-last').outerHeight();
     $('.js-intro-last').css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
 
-    function getHeightSum (num, view, offset) {
-        return _.reduce(_.map(_.range(0, num), function(i) {
-                    return $('.js-' + view +
-                        '-contents-' + i).outerHeight();
-                }), function (memo, num) {
-                    return memo + num;
-                }, 0) - offset;
-    }
-
-    function resetToIntro() {
-        $('.js-single').addClass('hide');
-        $('.js-match').addClass('hide');
-        $('.js-nav').hide();
-        $('.js-nav-expand').addClass('hide');
-        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
-        $('.js-intro').removeClass('hide');
-        window.history.pushState('object or string', 'Title', '/');
-        firstUserId = undefined;
-        renderIntro(E.msgs.intro.init, '');
-    }
-
     //go home
     $('.js-goHome').mouseover(function() {
         $(this).addClass('home-over');
@@ -330,40 +368,6 @@ require([
         $(this).removeClass('home-over');
     });
 
-    //get vis position
-    var prevTitle = 0;
-    function changeVisTitle(i) {
-        if (i !== prevTitle) {
-            $('.js-title-overlaid')
-                .html(firstUserId ? E.msgs.titles.match[i] : E.msgs.titles.single[i]);
-            $('.js-slide').removeClass('selected');
-            $('.js-nav-' + i).addClass('selected');
-            prevTitle = i;
-        }
-    }
-
-    //scroll
-    function positionVisTitle() {
-        for (var i = 1; i < 7; i++) {
-            var diff = $(window).scrollTop() -
-                getHeightSum(i, firstUserId ? 'match' : 'single', 0);
-            if (diff < -60) {
-                changeVisTitle(i-1);
-                break;
-            }
-        }
-    }
-    function checkView() {
-        if (!$('.js-intro').hasClass('hide')) {
-            if ($(window).scrollTop() > 72) {
-                $('.js-intro-header').addClass('header-scrolled');
-            } else {
-                $('.js-intro-header').removeClass('header-scrolled');
-            }
-        } else {
-            positionVisTitle();
-        }
-    }
     var scrolled = _.debounce(checkView, 100);
     $(window).scroll(scrolled);
 

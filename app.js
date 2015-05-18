@@ -158,15 +158,15 @@ function getUserInfo(userId, firstUserId) {
     	console.log('---file exists', userId);
 
     	//FOR TEST: skip the friend selection
-    	//io.emit('dataExistTest', { userId: userId });
+    	io.emit('dataExistTest', { userId: userId });
 
     	//FOR REAL: uncomment later
-    	if (_.isUndefined(firstUserId)) {
-			var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
-			io.emit('success', { data: data });
-  		} else {
-			createMatchData([firstUserId, userId]);
-  		}
+   //  	if (_.isUndefined(firstUserId)) {
+			// var data = JSON.parse(fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
+			// io.emit('success', { data: data });
+  	// 	} else {
+			// createMatchData([firstUserId, userId]);
+  	// 	}
 	} else {
 		untappd.userInfo(function (err,obj) {
 			if (obj && obj.response && obj.response.user) {
