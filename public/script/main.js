@@ -244,8 +244,10 @@ require([
         if (!$('.js-intro').hasClass('hide')) {
             if ($(window).scrollTop() > 72) {
                 $('.js-intro-header').addClass('header-scrolled');
+                $('.js-intro-logo').addClass('logo-scrolled');
             } else {
                 $('.js-intro-header').removeClass('header-scrolled');
+                $('.js-intro-logo').addClass('logo-scrolled');
             }
         } else {
             positionVisTitle();

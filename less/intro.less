@@ -137,9 +137,10 @@ body {
 		margin-top: -5em;
 		font-size: large;
 		width: @headerH * 2;
-		background: url('../images/logo_big.png') center @headerH * -1 no-repeat;
-		height: @headerH;
+		background: url('../images/logo.png') center @headerH * -0.5 no-repeat;
+		height: @headerH * 2;
 		background-size: @headerH * 2 @headerH * 2;
+		color: fade(@white, 0);
 	}
 	.header {
 		width: 90%;
@@ -191,7 +192,8 @@ body {
 	.header-scrolled {
 		position: fixed;
 		top: 0;
-	    background-color: @dark;
+	    background: url('../images/beer_match.png') center 0.5em no-repeat @dark;
+	    background-size: @headerH * 2 * 1.1 @headerH / 2.5 * 1.1;
 	    color: @white;
 	    padding: 0.5em 5%;
 	    margin-top: 0;
@@ -222,7 +224,7 @@ body {
     .slide {
     	letter-spacing: 0.1em;
     	padding-right: 2em;
-    	border-right: 1px solid @darkGrey;
+    	border-right: 1px solid fade(@darkGrey, 50);
     	div {
     		margin-top: 1em;
     		margin-bottom: 0.5em;
