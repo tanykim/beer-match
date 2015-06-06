@@ -252,6 +252,21 @@ require([
         }
     }
 
+    function updateSampleData(data) {
+
+        /*FIX later
+        data.userinfo.address = 'Santa Cruz, CA';
+        data.userinfo.userId = '_sample1';
+        data.userinfo.username = 'Larger B.';
+        */
+        var dCount = moment().diff(moment(data.timeRange[1], 'YYYYMMDD'), 'days');
+        var wCount = Math.floor(dCount/7);
+        var newEd = moment(data.timeRange[1], 'YYYYMMDD').add(wCount, 'weeks');
+        data.timeRange = _.map(data.timeRange, function (d) {
+            return moment(d, 'YYYYMMDD').add(wCount, 'weeks').format('YYYYMMDD');
+        });
+    }
+
     /************************/
     /* socket communication */
     /************************/
@@ -310,7 +325,11 @@ require([
     });
 
     socket.on('success', function (data) {
-        if (firstUserId) {
+        if (data.sample) {
+            firstUserId = '_example1';
+            var dataset = updateSampleData(data.data);
+            initVisSingle(data.data);
+        } else if (firstUserId) {
             firstUserId = undefined;
             initVisSingle(data.data);
         } else {
@@ -352,9 +371,21 @@ require([
         }
     });
 
+    //intro sample vis
+    $('.js-start-sample-single').click(function() {
+        socket.emit('userId', { userId: '_sample1', sample: true });
+    });
+    $('.js-start-sample-match').click(function() {
+        socket.emit('pair', { users: ['_sample1', '_sample2'], sample: true });
+    });
+
     //add intro footer height
     var hDiff = $(window).height() - $('.js-intro-last').outerHeight();
     $('.js-intro-last').css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
+
+    //scroll
+    var scrolled = _.debounce(checkView, 100);
+    $(window).scroll(scrolled);
 
     //go home
     $('.js-goHome').mouseover(function() {
@@ -365,9 +396,6 @@ require([
     }).mouseout(function() {
         $(this).removeClass('home-over');
     });
-
-    var scrolled = _.debounce(checkView, 100);
-    $(window).scroll(scrolled);
 
     //go to match view
     $('.js-go-match').click(function() {
@@ -408,6 +436,7 @@ require([
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
     });
+
     //vis menu show/hide
     $('.js-nav-open').click(function() {
         if ($('.js-nav-expand').hasClass('hide')) {

@@ -223,14 +223,13 @@ define(['moment', 'textures'], function (moment, textures) {
 
 		//number of days - start with the first day of the month
 		var sT = moment(rangeStr[0], 'YYYYMMDD');
-		console.log(moment(sT).format('YYYY MM DD'));
-		var eT = moment();
+		var eT = moment(rangeStr[1], 'YYYYMMDD');
 
 		//draw svg
 		var margin = vis.margin;
 		var dim = { w: vis.w - margin.left - margin.right };
 		var gap = 50;
-		var rowC = Math.ceil(Math.ceil((eT.diff(sT, 'days') + 1) / 7) *
+		var rowC = Math.ceil(Math.ceil((eT.clone().diff(sT, 'days') + 1) / 7) *
 			12 / dim.w);
 		dim.h = rowC * (gap + block * 7);
 		var svg = vis.draw({dim: dim, margin: margin}, 'calendar');
@@ -245,7 +244,6 @@ define(['moment', 'textures'], function (moment, textures) {
 		var colC = Math.floor(dim.w / block);
 		var colL = gap + 7 * block;
 		var offset = sT.day();
-		console.log(sT.format('YYYY MM DD ddd'), sT.day());
 
 		function getX(i) {
 			return Math.floor((i + offset) / 7) % colC * block;
@@ -268,7 +266,8 @@ define(['moment', 'textures'], function (moment, textures) {
 			.on('mouseover', function (d, i) {
 				showTextures(svg, data, d);
 				E.setTooltipText([d[unit] + ' check-ins',
-					getTooltipString(moment(d.date, 'YYYYMMDD'))],
+					getTooltipString(eT.clone().startOf('day')
+						.subtract(d.dateId.day, 'days'))],
 					'cal', dim.w, getX(i), getY(i), block / 2);
 			})
 			.on('mouseout', function (d) {
@@ -281,7 +280,8 @@ define(['moment', 'textures'], function (moment, textures) {
 
 		//month, year labels, and divide line
 		_.each(data.list, function (d, i) {
-			var date = moment(d.date, 'YYYYMMDD');
+			var date = sT.clone().add(i, 'days');
+
 			var x = getX(i) + (date.day() > 0 ? block : 0) + 4;
 			var y = getRow(i) * colL;
 			if (date.date() === 1) {
@@ -316,8 +316,10 @@ define(['moment', 'textures'], function (moment, textures) {
 
 		showTextures(svg, data, maxRange[0]);
 		E.setTooltipText([maxRange[0][unit] + ' check-ins',
-			getTooltipString(moment(maxRange[0].date, 'YYYYMMDD'))],
-			'cal', dim.w, getX(maxRangeIds[0]), getY(maxRangeIds[0]), block / 2);
+			getTooltipString(eT.clone().startOf('day')
+				.subtract(maxRange[0].dateId.day, 'days'))],
+			'cal', dim.w, getX(maxRangeIds[0]), getY(maxRangeIds[0]),
+			block / 2);
 	};
 
 	return {

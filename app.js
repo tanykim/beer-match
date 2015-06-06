@@ -149,7 +149,7 @@ function getUserFeed(id, data) {
                         userinfo: userinfo,
                         timezone: data.name,
                         checkins: _.flatten(checkins)
-                    };);
+                    });
 				}
 			}
 			else {
@@ -168,7 +168,7 @@ function getUserInfo(userId, firstUserId) {
     	console.log('---file exists', userId);
 
     	//FOR TEST: skip the friend selection
-    	io.emit('dataExistTest', { userId: userId });
+    	//io.emit('dataExistTest', { userId: userId });
 
     	//FOR REAL: uncomment later
     	if (_.isUndefined(firstUserId)) {
@@ -264,11 +264,21 @@ io.on('connection', function (socket) {
 
 	socket.on('userId', function (data) {
 		console.log('userId---', data);
-    	getUserInfo(data.userId.toLowerCase(), data.firstUserId);
+        if (data.sample) {
+            var data = JSON.parse(fs.readFileSync('public/users/_sample1.json',
+                'utf8'));
+            io.emit('success', { data: data, sample: true });
+        } else {
+            getUserInfo(data.userId.toLowerCase(), data.firstUserId);
+        }
   	});
   	socket.on('pair', function (data) {
   		//console.log('pair---', data);
-  		checkFileExists(data.users);
+        if (data.sample) {
+            createMatchData(data.users);
+        } else {
+            checkFileExists(data.users);
+        }
   	});
   	socket.on('timezone', function (data) {
   		//console.log('timezone---', data);
