@@ -57,6 +57,8 @@ define(function () {
                         '" class="label-image" alt="' + b.name +
                         '" title="' + b.name + '">');
                 });
+            } else {
+                $('.js-both-' + i).append('<span class="no-beer">No beers</span>');
             }
         });
     };
