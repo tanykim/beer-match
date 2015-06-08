@@ -179,6 +179,7 @@ require([
     //after loading the first user
     function renderVisOptions(msg, data) {
 
+        console.log(data);
         var userId = data.userinfo.userId;
         var template = _.template($('#intro-option').html());
         $('.js-intro-main').html(template({
@@ -194,7 +195,16 @@ require([
 
         $('.js-start-match').click(function() {
             console.log('3--. match vis');
-            renderFriends(userId, data.userinfo.friendCount, data);
+            if (data.userinfo.userId === '_sample1' ||
+                data.userinfo.userId === '_sample2') {
+                $.ajax({
+                    url: 'users/_match.json'
+                }).done(function (d) {
+                    initVisMatch(d);
+                });
+            } else {
+                renderFriends(userId, data.userinfo.friendCount, data);
+            }
         });
     }
 
@@ -411,11 +421,11 @@ require([
             $('.js-nav').hide();
             $('.js-intro').removeClass('hide');
             $('.js-intro-main').html('LOADING...');
+            renderFriends($(this).data().value, undefined);
         }
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-go-match').addClass('hide');
-        renderFriends($(this).data().value, undefined);
     });
 
     //go to single view
