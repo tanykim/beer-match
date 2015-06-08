@@ -255,17 +255,13 @@ require([
     }
 
     function updateSampleData(data) {
-
-        /*FIX later
-        data.userinfo.address = 'Santa Cruz, CA';
-        data.userinfo.userId = '_sample1';
-        data.userinfo.username = 'Larger B.';
-        */
-        var dCount = moment().diff(moment(data.timeRange[1], 'YYYYMMDD'), 'days');
+        var dCount = moment()
+            .diff(moment(data.timeRange[1], 'YYYYMMDD'), 'days');
         var wCount = Math.floor(dCount/7);
         var newEd = moment(data.timeRange[1], 'YYYYMMDD').add(wCount, 'weeks');
         data.timeRange = _.map(data.timeRange, function (d) {
-            return moment(d, 'YYYYMMDD').add(wCount, 'weeks').format('YYYYMMDD');
+            return moment(d, 'YYYYMMDD').add(wCount, 'weeks')
+                .format('YYYYMMDD');
         });
     }
 
@@ -383,7 +379,8 @@ require([
 
     //add intro footer height
     var hDiff = $(window).height() - $('.js-intro-last').outerHeight();
-    $('.js-intro-last').css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
+    $('.js-intro-last')
+        .css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
 
     //scroll
     var scrolled = _.debounce(checkView, 100);
@@ -402,13 +399,22 @@ require([
     //go to match view
     $('.js-go-match').click(function() {
         console.log('---go match', $(this).data().value);
-        $('.js-single').addClass('hide');
-        $('.js-nav').hide();
+        if ($(this).data().value === '_sample1' ||
+            $(this).data().value === '_sample2') {
+            $.ajax({
+                url: 'users/_match.json'
+            }).done(function (d) {
+                initVisMatch(d);
+            });
+        } else {
+            $('.js-single').addClass('hide');
+            $('.js-nav').hide();
+            $('.js-intro').removeClass('hide');
+            $('.js-intro-main').html('LOADING...');
+        }
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-go-match').addClass('hide');
-        $('.js-intro').removeClass('hide');
-        $('.js-intro-main').html('LOADING...');
         renderFriends($(this).data().value, undefined);
     });
 
