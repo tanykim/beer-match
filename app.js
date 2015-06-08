@@ -210,7 +210,7 @@ function getFriendsList(userId, count) {
 	//console.log('----friends', userId, count);
 
 	//max 25 feeds per call, upto 100 friends
-	var friendCallsNeeded = _.isUndefined(count) ? 100 : Math.min(count, 100);
+	var friendCallsNeeded = Math.min(count, 100);
 	var friendCallCount = 0;
 
 	var friends = [];

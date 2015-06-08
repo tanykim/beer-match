@@ -62,6 +62,7 @@ require([
         var u = data.userinfo;
 
         $('.js-go-match').attr('data-value', u.userId);
+        $('.js-go-match').attr('data-friends', u.friendCount);
 
         var html = {
             avatar: u.avatar,
@@ -157,10 +158,10 @@ require([
     }
 
     //render friends list after the first user is loaded
-    function renderFriends(userId, friendCount, data) {
+    function renderFriends(userId, friendCount, data, isTopMenu) {
 
         firstUserId = userId;
-        //console.log('3--. two users match', userId, friendCount);
+        console.log('3--. two users match', userId, friendCount);
         socket.emit('friends', { userId: userId, count: friendCount });
         socket.on('friends', function (d) {
             var friends = d.friends;
@@ -171,7 +172,11 @@ require([
                 socket.emit('userId', { userId: friend, firstUserId: userId });
             });
             $('.js-start-single').click(function() {
-                initVisSingle(data);
+                if (isTopMenu) {
+                    socket.emit('userId', { userId: uIdURL });
+                } else {
+                    initVisSingle(data);
+                }
             });
         });
     }
@@ -421,7 +426,7 @@ require([
             $('.js-nav').hide();
             $('.js-intro').removeClass('hide');
             $('.js-intro-main').html('LOADING...');
-            renderFriends($(this).data().value, undefined);
+            renderFriends($(this).data().value, $(this).data().friends, undefined, true);
         }
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
@@ -431,7 +436,8 @@ require([
     //go to single view
     $('.js-goSingle').click(function() {
         console.log('--go single');
-        socket.emit('userId', { userId: $(this).data().value, firstUserId: undefined });
+        socket.emit('userId',
+            { userId: $(this).data().value, firstUserId: undefined });
     });
 
     //header/footer slide
