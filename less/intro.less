@@ -40,11 +40,10 @@ body {
 		}
 		.input {
 			font-size: @large;
-			background-color: @light;
-			padding: 0.6em;
+			background-color: fade(@light, 50);
+			padding: 0.3em 0.6em;
 			font-family:inherit;
-			color: @dark;
-		    border: 1px solid fade(@dark, 50%);
+			border: 1px solid fade(@light, 50);
 		}
 		.msg {
 			margin-top: 2em;
