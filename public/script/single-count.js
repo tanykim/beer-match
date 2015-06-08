@@ -270,9 +270,11 @@ define(['moment', 'textures'], function (moment, textures) {
 						.subtract(d.dateId.day, 'days'))],
 					'cal', dim.w, getX(i), getY(i), block / 2);
 			})
-			.on('mouseout', function (d) {
+			.on('mouseout', function (d, i) {
 				d3.selectAll('.js-cal-block-over')
-					.style('fill', getColor(data, d))
+					.style('fill', function (d) {
+						return getColor(data, d)
+					})
 					.attr('class', 'js-cal-block');
 				$('.js-cal-tooltip').hide();
 			})
