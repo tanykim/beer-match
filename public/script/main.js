@@ -413,9 +413,12 @@ require([
 
     //go to match view
     $('.js-go-match').click(function() {
-        console.log('---go match', $(this).data().value);
-        if ($(this).data().value === '_sample1' ||
-            $(this).data().value === '_sample2') {
+
+        var id = $(this).data().value;
+        console.log('---go match', id);
+
+        if (id === '_sample1' || id === '_sample2') {
+            firstUserId = id;
             $.ajax({
                 url: 'users/_match.json'
             }).done(function (d) {
@@ -435,9 +438,23 @@ require([
 
     //go to single view
     $('.js-goSingle').click(function() {
-        console.log('--go single');
-        socket.emit('userId',
-            { userId: $(this).data().value, firstUserId: undefined });
+
+        var id = $(this).data().value;
+        console.log('--go single', id);
+
+        if (id === '_sample1' || id === '_sample2') {
+            firstUserId = undefined;
+            $.ajax({
+                url: 'users/' + id + '.json'
+            }).done(function (d) {
+                initVisSingle(d);
+            });
+        } else {
+            socket.emit('userId',
+                { userId: $(this).data().value, firstUserId: undefined });
+        }
+        $('.js-nav-expand').addClass('hide');
+        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
     });
 
     //header/footer slide

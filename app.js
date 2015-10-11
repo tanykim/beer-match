@@ -117,6 +117,7 @@ function createMatchData(users) {
 		io.emit('pair', { data: m });
 	});
 }
+
 function getUserFeed(id, data) {
 
 	//console.log('userid----', data.userinfo.userId);
@@ -165,7 +166,7 @@ function getUserInfo(userId, firstUserId) {
 
 	//file check first
 	if (fs.existsSync('public/users/' + userId + '.json')) {
-    	console.log('---file exists', userId);
+    	console.log('---file exists', userId, firstUserId);
 
     	//FOR TEST: skip the friend selection
     	//io.emit('dataExistTest', { userId: userId });
@@ -267,6 +268,7 @@ io.on('connection', function (socket) {
         if (data.sample) {
             var data = JSON.parse(fs.readFileSync('public/users/_sample1.json',
                 'utf8'));
+
             io.emit('success', { data: data, sample: true });
         } else {
             getUserInfo(data.userId.toLowerCase(), data.firstUserId);
