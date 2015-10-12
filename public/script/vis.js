@@ -55,13 +55,14 @@ define(['moment', 'vis-settings',
 			var changed = S.changeRadioSelection($(this));
 			if (changed) {
 				var category = $(this).data().value;
+
 				//revert to the first choice
 				_.each($('.js-ratings-sortBy'), function (d) {
 					if ($(d).data().value === 'count') {
-						$(d).addClass('slected');
+						$(d).addClass('selected');
 						$(d).find('i').removeClass('fa-circle-o').addClass('fa-dot-circle-o');
 					} else {
-						$(d).removeClass('slected');
+						$(d).removeClass('selected');
 						$(d).find('i').removeClass('fa-dot-circle-o').addClass('fa-circle-o');
 					}
 				});
