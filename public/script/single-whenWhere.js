@@ -96,8 +96,11 @@ define(['moment', 'textures'], function (moment, textures) {
 
     function drawLegends(svg, w, top, maxR, count, maxVal) {
 
-        //FIXME: make max 5, check rlyn
         var yPos = -(top - maxR * 2);
+
+        if (maxVal <= 5) {
+            count = maxVal;
+        }
 
         //get diameter of the cicle in a reverse order
         var dia = _.map(_.range(count), function (i) {
@@ -244,9 +247,10 @@ define(['moment', 'textures'], function (moment, textures) {
                 .attr('class', 'stroke-tick');
 
             var fill = E.beerColors[i % 4 * 2];
-            _.each(d.by, function (val, key) {
-                var cx = x(key) + bgW;
 
+            _.each(d.by, function (val, key) {
+
+                var cx = x(key) + bgW;
                 var cy = yPos + unitH / 2;
                 if (val === maxVal) {
                     maxCx = cx;
@@ -255,6 +259,7 @@ define(['moment', 'textures'], function (moment, textures) {
                     maxKey = key;
                 }
                 var r = Math.sqrt(maxR * maxR * val / maxRVal);
+
                 svg.append('circle')
                     .attr('cx', cx)
                     .attr('cy', cy)
