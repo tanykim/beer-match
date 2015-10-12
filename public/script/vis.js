@@ -22,6 +22,7 @@ define(['moment', 'vis-settings',
 		$('.js-single-svg').empty();
 
 		//0--count
+		/*
 		var countScale = function (length) {
 			return S.getChroma(
 				E.colors.calendar, length);
@@ -97,13 +98,15 @@ define(['moment', 'vis-settings',
 			var val = $(this).data().value.split('-');
 			Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 		});
-
+		*/
 		//3--when
 		var whenScale = function (length) {
-			return S.getChroma(['#fff', '#7c2529'], length);
+			return S.getChroma([E.colors.when, '#000'], length);
 		};
 		S.setVis('when', function (vis) {
-			When.drawMatrix(vis, b.byDay, b.byHour, whenScale(10));
+			var chromaVals = E.getAxisTicks(b.maxValsForWhen.matrix);
+			When.drawMatrix(vis, b.byDay, b.byHour, b.maxValsForWhen,
+				chromaVals.endPoint, chromaVals.count, whenScale(chromaVals.count));
 		});
 		$('.js-when-switch').click(function() {
 			var changed = S.changeRadioSelection($(this));
@@ -112,9 +115,10 @@ define(['moment', 'vis-settings',
 			}
 		});
 
+
 		//4-where
 		if (!_.isEmpty(b.locationList)) {
-			Where.createHeatmap(b.locationList);
+			//Where.createHeatmap(b.locationList);
 			Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
 			WhenWhere.drawTimeline(b.venueByTime, b.venueByTimeUnit,
 				b.timeRange, S.setVisNoSVG('timeline'));

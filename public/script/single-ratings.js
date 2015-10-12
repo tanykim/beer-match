@@ -150,13 +150,11 @@ define(['textures'], function (textures) {
                     'translate (' + xPos + ', ' + (dim.h/2) + ')')
                 .on('mouseover', function() {
                     if (i < 10 && d) {
-                        console.log(d, i, '-from pie');
                         showMouseOver(d, i, drawRatings.w);
                     }
                 })
                 .on('mouseout', function() {
                     if (i < 10 && d) {
-                        console.log('from pie', i);
                         showMouseOut(topDatum, i);
                     }
                 });
