@@ -7,397 +7,403 @@
 
 /* each element */
 .single-count {
-	text-align: center;
-	.radio {
-		.selected {
-			background-color: fade(@vis-count, 50%);
-		}
-	}
-	.frequency {
-		.60p();
-		padding-top: 1em;
-		padding-bottom: 0.5em;
-		.vis-shadow();
-	}
-	.calendar-wrapper {
-		.vis-shadow();
-		margin-top: 1em;
-	}
-	.sober {
-		padding-top: 1.2em;
-		padding-left: 1.5em;
-	}
+    text-align: center;
+    .radio {
+        .selected {
+            background-color: fade(@vis-count, 50%);
+        }
+    }
+    .frequency {
+        .60p();
+        padding-top: 1em;
+        padding-bottom: 0.5em;
+        .vis-shadow();
+    }
+    .calendar-wrapper {
+        .vis-shadow();
+        margin-top: 1em;
+    }
+    .sober {
+        padding-top: 1.2em;
+        padding-left: 1.5em;
+        .highlight {
+            background-color: @lightGrey;
+            padding: 0.3em 0.5em;
+            border-radius: 0.5em;
+            .bold();
+        }
+    }
 }
 
 .single-ratings {
-	text-align: center;
-	.radio {
-		.style.selected {
-			background-color: fade(@style, 50%);
-		}
-		.abv.selected {
-			background-color: fade(@abv, 50%);
-		}
-		.brewery.selected {
-			background-color: fade(@brewery, 50%);
-		}
-		.country.selected {
-			background-color: fade(@country, 50%);
-		}
-	}
-	.categories {
-		.vis-shadow();
-	}
-	.average {
-		.vis-sub-heading();
-	}
-	.ratings-wrapper {
-		.vis-shadow();
-		.radio-sortBy {
-			padding-top: 1em;
-			padding-right: 1em;
-			text-align: right;
-			.count {
-				margin-left: 0.2em;
-			}
-		}
-	}
+    text-align: center;
+    .radio {
+        .style.selected {
+            background-color: fade(@style, 50%);
+        }
+        .abv.selected {
+            background-color: fade(@abv, 50%);
+        }
+        .brewery.selected {
+            background-color: fade(@brewery, 50%);
+        }
+        .country.selected {
+            background-color: fade(@country, 50%);
+        }
+    }
+    .categories {
+        .vis-shadow();
+    }
+    .average {
+        .vis-sub-heading();
+    }
+    .ratings-wrapper {
+        .vis-shadow();
+        .radio-sortBy {
+            padding-top: 1em;
+            padding-right: 1em;
+            text-align: right;
+            .count {
+                margin-left: 0.2em;
+            }
+        }
+    }
 }
 
 .single-beers {
-	text-align: center;
-	.list-wrapper {
-		width: 30%;
-		.vis-beer-list-wrapper();
-	}
-	.title {
-		text-align: center;
-		.name {
-			.bold();
-			font-size: @large;
-		}
-		.numbers {
-			margin-bottom: 0.5em;
-			.score {
-				color: @darkGrey;
-				margin-right: 0.5em;
-			}
-			.count {
-				color: @darkGrey;
-				font-size: @small;
-			}
-			.count-number {
-				.bold();
-			}
-		}
-		.info {
-			margin-bottom: 1em;
-			font-size: @small;
-			color: @grey;
-			span {
-				color: @white;
-				padding: 0.15em 0.5em;
-			}
-			.style {
-				background-color: @style;
-				color: @black;
-			}
-			.abv {
-				background-color: @abv;
-			}
-			.brewery {
-				background-color: @brewery;
-			}
-			.country {
-				background-color: @country;
-			}
-		}
-	}
+    text-align: center;
+    .list-wrapper {
+        width: 30%;
+        .vis-beer-list-wrapper();
+    }
+    .title {
+        text-align: center;
+        .name {
+            .bold();
+            font-size: @large;
+        }
+        .numbers {
+            margin-bottom: 0.5em;
+            .score {
+                color: @darkGrey;
+                margin-right: 0.5em;
+            }
+            .count {
+                color: @darkGrey;
+                font-size: @small;
+            }
+            .count-number {
+                .bold();
+            }
+        }
+        .info {
+            margin-bottom: 1em;
+            font-size: @small;
+            color: @grey;
+            span {
+                color: @white;
+                padding: 0.15em 0.5em;
+            }
+            .style {
+                background-color: @style;
+                color: @black;
+            }
+            .abv {
+                background-color: @abv;
+            }
+            .brewery {
+                background-color: @brewery;
+            }
+            .country {
+                background-color: @country;
+            }
+        }
+    }
 }
 
 .single-when {
-	.radio {
-		margin-bottom: 0;
-		.selected {
-			background-color: fade(@vis-when, 50%);
-		}
-	}
-	.when {
-		text-align: center;
-		.90p();
-	}
+    .radio {
+        margin-bottom: 0;
+        .selected {
+            background-color: fade(@vis-when, 50%);
+        }
+    }
+    .when {
+        text-align: center;
+        .90p();
+    }
 }
 
 .single-where {
-	.map {
-		z-index: 0;
-		display: inline-block;
-		vertical-align: top;
-		width: 35%;
-		height: 400px;
-		.leaflet-popup-content-wrapper {
-			background: @black;
-			color: @grey;
-			line-height:24px;
-			font-family: 'Open Sans';
-			font-size: 14px;
-		}
-		.leaflet-popup-content-wrapper{
-			.selected {
-				text-align: center;
-				font-size: 16px;
-				font-family: 'Open Sans';
-				padding: 0 0.5em;
-				.name {
-					color: @white;
-					img {
-						width: @huge;
-						height: @huge;
-						margin-right: 4px;
-						vertical-align: top;
-					}
-				}
-				.location {
-					font-size: 14px;
-					.type {
-						color: @vis-where-type;
-					}
-					.city {
-						color: @vis-where-city;
-					}
-				}
-				.count {
-					font-size: 14px;
-				}
-			}
+    .map {
+        z-index: 0;
+        display: inline-block;
+        vertical-align: top;
+        width: 35%;
+        height: 400px;
+        .leaflet-popup-content-wrapper {
+            background: @black;
+            color: @grey;
+            line-height:24px;
+            font-family: 'Open Sans';
+            font-size: 14px;
+        }
+        .leaflet-popup-content-wrapper{
+            .selected {
+                text-align: center;
+                font-size: 16px;
+                font-family: 'Open Sans';
+                padding: 0 0.5em;
+                .name {
+                    color: @white;
+                    img {
+                        width: @huge;
+                        height: @huge;
+                        margin-right: 4px;
+                        vertical-align: top;
+                    }
+                }
+                .location {
+                    font-size: 14px;
+                    .type {
+                        color: @vis-where-type;
+                    }
+                    .city {
+                        color: @vis-where-city;
+                    }
+                }
+                .count {
+                    font-size: 14px;
+                }
+            }
 
-		}
-		.leaflet-popup-tip-container {
-			width: 20px;
-			height: 10px;
-		}
-		.leaflet-popup-tip {
-		  border-left: 10px solid transparent;
-		  border-right: 10px solid transparent;
-		  border-top: 15px solid @black;
-		}
-	}
-	.where {
-		.wrapper-right();
-		width: 60%;
-	}
+        }
+        .leaflet-popup-tip-container {
+            width: 20px;
+            height: 10px;
+        }
+        .leaflet-popup-tip {
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+          border-top: 15px solid @black;
+        }
+    }
+    .where {
+        .wrapper-right();
+        width: 60%;
+    }
 }
 
 .single-whenWhere {
-	.wrapper-day {
-		.vis-shadow();
-		text-align: center;
-		.day-legend {
-			.vis-legend();
-			.part {
-				color: @vis-day;
-			}
-		}
-	}
-	.wrapper-timeline {
-		.vis-shadow();
-		.title {
-			margin-top: 1em;
-			font-size: @large;
-			.bold();
-			/*text-align: center;*/
-		}
-	}
-	.timeline {
-	}
+    .wrapper-day {
+        .vis-shadow();
+        text-align: center;
+        .day-legend {
+            .vis-legend();
+            .part {
+                color: @vis-day;
+            }
+        }
+    }
+    .wrapper-timeline {
+        .vis-shadow();
+        .title {
+            margin-top: 1em;
+            font-size: @large;
+            .bold();
+            /*text-align: center;*/
+        }
+    }
+    .timeline {
+    }
 }
 
 .match-score {
-	.score {
-		text-align: center;
-		font-size: 0;
-		li {
-			font-size: 16px;
-			display: inline-block;
-			vertical-align: middle;
-			margin-left: 0;
-			margin-right: 0;
-		}
-		.name-left {
-			.bold();
-			text-align: right;
-			padding-right: 0.6em;
-			color: @user0;
-		}
-		.pic-left, .pic-right {
-			border-radius: 30px;
-			width: 60px;
-			height: 60px;
-			border: 3px solid;
-			background-size: 60px 60px;
-		}
-		.pic-left {
-			border-color: @user0;
-		}
-		.line-left {
-			border: 2px solid @user0;
-			width: 60px;
-		}
-		.percent {
-			border-radius: 60px;
-			width: 120px;
-			height: 120px;
-			border: 1px dashed @user1;
-			background: @lightGrey;
-			.percent-inner {
-				margin: 4px;
-				border: 1px dashed @user0;
-				background: @white;
-				border-radius: 55px;
-				width: 110px;
-				height: 110px;
-				line-height: 110px;
-			}
-			.number {
-				font-size: @large * 2;
-				.bold();
-			}
-		}
-		.line-right {
-			border: 2px solid @user1;
-			width: 60px;
-		}
-		.pic-right {
-			border-color: @user1;
-		}
-		.name-right {
-			.bold();
-			text-align: left;
-			padding-left: 0.5em;
-			color: @user1;
-		}
-	}
-	.by {
-		.60p();
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		margin-top: 1em;
-		.elm {
-			border: 1px solid @lightGrey;
-			text-align: center;
-			flex-grow: 2;
-			margin: 0 0.5em;
-			.title {
-				background: @lightGrey;
-				padding: 0.5em;
-			}
-			.number {
-				font-size: @huge;
-				padding: 0.5em;
-			}
-		}
-	}
+    .score {
+        text-align: center;
+        font-size: 0;
+        li {
+            font-size: 16px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .name-left {
+            .bold();
+            text-align: right;
+            padding-right: 0.6em;
+            color: @user0;
+        }
+        .pic-left, .pic-right {
+            border-radius: 30px;
+            width: 60px;
+            height: 60px;
+            border: 3px solid;
+            background-size: 60px 60px;
+        }
+        .pic-left {
+            border-color: @user0;
+        }
+        .line-left {
+            border: 2px solid @user0;
+            width: 60px;
+        }
+        .percent {
+            border-radius: 60px;
+            width: 120px;
+            height: 120px;
+            border: 1px dashed @user1;
+            background: @lightGrey;
+            .percent-inner {
+                margin: 4px;
+                border: 1px dashed @user0;
+                background: @white;
+                border-radius: 55px;
+                width: 110px;
+                height: 110px;
+                line-height: 110px;
+            }
+            .number {
+                font-size: @large * 2;
+                .bold();
+            }
+        }
+        .line-right {
+            border: 2px solid @user1;
+            width: 60px;
+        }
+        .pic-right {
+            border-color: @user1;
+        }
+        .name-right {
+            .bold();
+            text-align: left;
+            padding-left: 0.5em;
+            color: @user1;
+        }
+    }
+    .by {
+        .60p();
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 1em;
+        .elm {
+            border: 1px solid @lightGrey;
+            text-align: center;
+            flex-grow: 2;
+            margin: 0 0.5em;
+            .title {
+                background: @lightGrey;
+                padding: 0.5em;
+            }
+            .number {
+                font-size: @huge;
+                padding: 0.5em;
+            }
+        }
+    }
 }
 
 .match-behavior {
-	.behavior-wrapper {
-		text-align: center;
-	}
-	.detail-wrapper {
-		.vis-shadow();
-		text-align: center;
-		.detail-legend {
-			text-align: center;
-			margin-top: @large;
-			.bold();
-		}
-		.sub {
-			padding-bottom: 1em;
-			font-size: @small;
-			.total {
-				color: @lightGrey;
-				margin-right: 0.2em;
-			}
-		}
-	}
+    .behavior-wrapper {
+        text-align: center;
+    }
+    .detail-wrapper {
+        .vis-shadow();
+        text-align: center;
+        .detail-legend {
+            text-align: center;
+            margin-top: @large;
+            .bold();
+        }
+        .sub {
+            padding-bottom: 1em;
+            font-size: @small;
+            .total {
+                color: @lightGrey;
+                margin-right: 0.2em;
+            }
+        }
+    }
 }
 
 .match-both {
-	text-align: center;
-	.title {
-		.bold();
-	}
-	.list-wrapper {
-		margin-top: 1em !important;
-		.60p();
-		.vis-beer-list-wrapper();
-		.list-title, .list-beers {
-			text-align: center;
-		}
-		.list-title-sub {
-			text-align: center;
-			margin-top: 0.5em;
-			margin-bottom: 0.5em;
-		}
-		.list-beers-top {
-			padding-bottom: 1em;
-			margin-bottom: 1em;
-			border-bottom: 1px solid @lightGrey;
-		}
-		.user0 {
-			color: @user0;
-		}
-		.user1 {
-			color: @user1;
-		}
-		.no-beer {
-			color: @grey;
-		}
-	}
+    text-align: center;
+    .title {
+        .bold();
+    }
+    .list-wrapper {
+        margin-top: 1em !important;
+        .60p();
+        .vis-beer-list-wrapper();
+        .list-title, .list-beers {
+            text-align: center;
+        }
+        .list-title-sub {
+            text-align: center;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        .list-beers-top {
+            padding-bottom: 1em;
+            margin-bottom: 1em;
+            border-bottom: 1px solid @lightGrey;
+        }
+        .user0 {
+            color: @user0;
+        }
+        .user1 {
+            color: @user1;
+        }
+        .no-beer {
+            color: @grey;
+        }
+    }
 }
 
 .match-styles {
-	text-align: center;
-	.title {
-		font-size: @large;
-		.bold();
-		margin-bottom: 0.5em;
-	}
+    text-align: center;
+    .title {
+        font-size: @large;
+        .bold();
+        margin-bottom: 0.5em;
+    }
 }
 
 .match-time {
-	.radio {
-		margin-bottom: 0;
-		div {
-			display: inline-block;
-			margin-left: 0.5em;
-			margin-right: 0.5em;
-		}
-	}
-	.time {
-		text-align: center;
-	}
+    .radio {
+        margin-bottom: 0;
+        div {
+            display: inline-block;
+            margin-left: 0.5em;
+            margin-right: 0.5em;
+        }
+    }
+    .time {
+        text-align: center;
+    }
 }
 
 .match-venues {
-	.venues-wrapper {
-		text-align: center;
-		.title {
-			.bold();
-			font-size: @large;
-			margin-top: 1em;
-			margin-bottom: 1em;
-		}
-		.topTypes {
-			margin-top: 0.5em;
-			.vis-shadow();
-		}
-		.commonVenues-title {
-			.bold();
-			font-size: @large;
-			margin-bottom: 0;
-			margin-top: 2em;
-		}
-	}
+    .venues-wrapper {
+        text-align: center;
+        .title {
+            .bold();
+            font-size: @large;
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+        .topTypes {
+            margin-top: 0.5em;
+            .vis-shadow();
+        }
+        .commonVenues-title {
+            .bold();
+            font-size: @large;
+            margin-bottom: 0;
+            margin-top: 2em;
+        }
+    }
 }

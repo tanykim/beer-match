@@ -188,7 +188,7 @@ var E = {
         d3.select('.js-' + c + '-legend').append('text')
             .attr('x', 5)
             .attr('y', E.legendH / 2)
-            .text('0')
+            .text('1')
             .attr('class', 'size-tiny v-middle');
         d3.select('.js-' + c + '-legend').append('text')
             .attr('x', -5)

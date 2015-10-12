@@ -58,14 +58,16 @@ define(['moment', 'textures'], function (moment, textures) {
 	}
 
 	function updateSoberCount(data) {
+
+		//FIXME: _sample 1, week
 		var sober = data.sober[unit];
 		var unitCount = data.unitCounts[unit];
 		$('.js-count-sober').html(
 			sober === 0 ?
 			'<strong>You are never sober!</strong>' :
-			'You were sober for <strong>' +
+			'You were sober for <span class="highlight">' +
 			(sober + ' ' + unit + (sober > 1 ? 's' : '')) +
-			'</strong> out of total <strong>' +
+			'</span> out of total <strong>' +
 			(unitCount + ' ' + unit + (sober > 1 ? 's' : ''))
 		);
 	}
@@ -201,7 +203,12 @@ define(['moment', 'textures'], function (moment, textures) {
 	}
 
 	function getColor(data, d) {
-		return colors[getColorId(data, d)];
+
+		if (d[unit] === 0) {
+			return E.lightGrey;
+		} else {
+			return colors[getColorId(data, d)];
+		}
 	}
 
 	function showTextures(svg, data, d) {
@@ -264,8 +271,11 @@ define(['moment', 'textures'], function (moment, textures) {
 			.attr('height', (unit === 'day') ? block - 1 : block)
 			.style('fill', function (d) { return getColor(data, d); })
 			.on('mouseover', function (d, i) {
-				showTextures(svg, data, d);
-				E.setTooltipText([d[unit] + ' check-ins',
+				if (d[unit] > 0) {
+					showTextures(svg, data, d);
+				}
+				E.setTooltipText([d[unit] + ' check-ins' +
+					(d[unit] === 0 ? ', sober ' + unit + '!' : ''),
 					getTooltipString(eT.clone().startOf('day')
 						.subtract(d.dateId.day, 'days'))],
 					'cal', dim.w, getX(i), getY(i), block / 2);

@@ -1,113 +1,114 @@
 define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
 
-	'use strict';
+    'use strict';
 
-	var widths = {
-		frequency: 8,
-		calendar: 12,
-		score: 2.4,
-		categories: 2,
-		ratings: 6,
-		beers: 7,
-		when: 12,
-		where: 7.8,
-		day: 3.8,
-		timeline: 7.9,
-		behavior: 6,
+    var widths = {
+        frequency: 8,
+        calendar: 12,
+        score: 2.4,
+        categories: 2,
+        ratings: 6,
+        beers: 7,
+        when: 12,
+        where: 7.8,
+        day: 3.8,
+        timeline: 7.9,
+        behavior: 6,
         detail: 3,
         distinctive: 6,
         time: 12,
         publicRatio: 6,
         topTypes: 12,
         commonVenues: 8
-	};
+    };
 
-	var heights = {
-		frequency: 300,
-		calendar: null,
-		score: 260,
-		categories: null,
-		ratings: null,
-		beers: null,
-		when: 300,
-		where: null,
-		day: null,
-		timeline: null,
-		behavior: 350,
+    var heights = {
+        frequency: 300,
+        calendar: null,
+        score: 260,
+        categories: null,
+        ratings: null,
+        beers: null,
+        when: 300,
+        where: null,
+        day: null,
+        timeline: null,
+        behavior: 350,
         detail: 280,
-		distinctive: 50,
+        distinctive: 50,
         time: 420,
         publicRatio: 260,
         topTypes: null,
         commonVenues: null
-	};
-	var margins = {
-		frequency: { top: 80, right: 30, bottom: 50, left: 70 },
-		calendar: { top: 50, right: 40, bottom: 20, left: 50 },
-		score: { top: 0, right: 30, bottom: 40, left: 54 },
-		categories: { top: 60, right: 20, bottom: 10, left: 20 },
-		ratings: { top: 60, right: 20, bottom: 20, left: 240 },
-		beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 30 },
-		when: { top: 60, right: 20, bottom: 40, left: 65 },
-		where: { top: 20, right: 120, bottom: 0, left: 120 },
-		day: { top: 0, right: 50, bottom: 20, left: 36 },
-		timeline: { top: 140, right: 40, bottom: 0, left: 240 },
-		behavior: { top: 20, right: 170, bottom: 20, left: 150 },
-		detail: { top: 20, right: 20, bottom: 40, left: 40 },
+    };
+
+    var margins = {
+        frequency: { top: 80, right: 30, bottom: 50, left: 70 },
+        calendar: { top: 50, right: 40, bottom: 20, left: 50 },
+        score: { top: 0, right: 30, bottom: 40, left: 54 },
+        categories: { top: 60, right: 20, bottom: 10, left: 20 },
+        ratings: { top: 60, right: 20, bottom: 20, left: 240 },
+        beers: { top: 0, right: 20, bottom: 0, left: 20, oR: 20 , iR: 30 },
+        when: { top: 60, right: 20, bottom: 40, left: 65 },
+        where: { top: 20, right: 120, bottom: 0, left: 120 },
+        day: { top: 0, right: 50, bottom: 20, left: 36 },
+        timeline: { top: 140, right: 40, bottom: 0, left: 240 },
+        behavior: { top: 20, right: 170, bottom: 20, left: 150 },
+        detail: { top: 20, right: 20, bottom: 40, left: 40 },
         distinctive: { top: 10, right: 60, bottom: 10, left: 60 },
         time: { top: 65, right: 20, bottom: 20, left: 60, middle: 40 },
         publicRatio: { top: 20, right: 0, bottom: 20, left: 0, gap: 60, center: 40 },
         topTypes: { top: 70, right: 40, bottom: 20, left: 40, center: 60 },
         commonVenues: { top: 70, right: 40, bottom: 20, left: 20 }
-	};
+    };
 
-   	var getWidth = function(div) {
+    var getWidth = function(div) {
         var w = parseInt($('body').width() * 0.9 / 12 * widths[div]);
         if (div !== 'beers') {
             return Math.min(Math.max(w, 200), 4000);
         } else {
             return Math.min($(window).height() - 100, w);
         }
-   	};
+    };
 
-   	function drawSVG(vis, div) {
-   		var svg = d3.select('#vis-' + div).append('svg')
-			.attr('width', vis.dim.w + vis.margin.left + vis.margin.right)
-			.attr('height', vis.dim.h + vis.margin.top + vis.margin.bottom +
+    function drawSVG(vis, div) {
+        var svg = d3.select('#vis-' + div).append('svg')
+        .attr('width', vis.dim.w + vis.margin.left + vis.margin.right)
+        .attr('height', vis.dim.h + vis.margin.top + vis.margin.bottom +
                 (div === 'time' ? vis.margin.middle : 0))
-			.append('g')
-			.attr('transform',
-                'translate(' + vis.margin.left + ', ' + vis.margin.top + ')');
-		return svg;
-   	}
+        .append('g')
+            .attr('transform',
+            'translate(' + vis.margin.left + ', ' + vis.margin.top + ')');
+        return svg;
+    }
 
-   	var setVisNoSVG = function (div, callback) {
-   		var w = getWidth(div);
-   		var vis = {
-   			w: w,
-   			margin: margins[div],
-   			draw: drawSVG
-   		};
-   		if (callback) {
-	   		callback(vis);
-   		} else {
-   			return vis;
-   		}
-   	};
+    var setVisNoSVG = function (div, callback) {
+        var w = getWidth(div);
+        var vis = {
+            w: w,
+            margin: margins[div],
+            draw: drawSVG
+        };
+        if (callback) {
+            callback(vis);
+        } else {
+            return vis;
+        }
+    };
 
-   	var setVis = function(div, callback) {
-		var vis = {
-			dim: {
-				w: getWidth(div) - margins[div].left - margins[div].right,
-				h: ((_.isNull(heights[div]) ?
-                    getWidth(div) :
-                    heights[div])) - margins[div].top - margins[div].bottom
-			},
-			margin: margins[div]
-		};
-		vis.svg = drawSVG(vis, div);
-		callback(vis);
-   	};
+    var setVis = function(div, callback) {
+            var vis = {
+                dim: {
+                    w: getWidth(div) - margins[div].left - margins[div].right,
+                    h: ((_.isNull(heights[div]) ?
+                            getWidth(div) :
+                            heights[div])) - margins[div].top - margins[div].bottom
+                },
+                margin: margins[div]
+            };
+            vis.svg = drawSVG(vis, div);
+            callback(vis);
+    };
 
     var updateSelection = function (elm, tag) {
         elm.parent().find(tag).removeClass('selected');
@@ -139,12 +140,12 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
         });
     };
 
-	return {
-		setVisNoSVG: setVisNoSVG,
-		setVis: setVis,
+    return {
+        setVisNoSVG: setVisNoSVG,
+        setVis: setVis,
         changeRadioSelection: changeRadioSelection,
         updateSelection: updateSelection,
         getChroma: getChroma
-	};
+    };
 
 });
