@@ -83,7 +83,10 @@ define(['moment'], function (moment) {
         $('.js-beers-times').html('check-in' + (b.count > 1 ? 's' : ''));
 
         //center beer image transition
-        $('.js-beers-beer-img').hide().attr('href', b.label).fadeIn('fast');
+        $('.js-beers-beer-img').hide().attr('href', b.label).fadeIn('fast')
+            .error(function () {
+                $(this).attr('href', 'images/stripe.png');
+            });
 
         _.each(b.categories, function (d, category) {
 
@@ -171,7 +174,7 @@ define(['moment'], function (moment) {
             .attr('cy', dim.h/2)
             .attr('r', margin.iR)
             .attr('fill', 'url(#beer-label)')
-            .attr('class', 'stroke-black stroke-2 js-beers-beer-img');
+            .attr('class', 'stroke-black stroke-2');
     };
 
     var drawBeers = function (vis, ratings) {
@@ -274,8 +277,10 @@ define(['moment'], function (moment) {
                 .append('<img src="' + beer.label + '" width="40"' +
                     'class="label-image link ' +
                     (key === 'loves' && i + j === 0 ? 'selected"' : '"') +
-                    'data-value="' + key + '-' + i + '-' + j + '">');
+                    'data-value="' + key + '-' + i + '-' + j + '"' +
+                    'onerror="E.imgError(this);"' + '>');
         }
+
         _.each(beerList, function (sort, key) {
             if (_.isEmpty(sort)) {
                 $('.js-beers-' + key + '-list').html('No Beers');

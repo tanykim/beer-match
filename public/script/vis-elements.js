@@ -209,5 +209,11 @@ var E = {
             .text(str)
             .attr('transform', axis === 'y' ? 'rotate(-90)' : '')
             .attr('class', 'axis-lable ' + (jsc ? ' ' + jsc : ''));
+    },
+
+    imgError: function (image) {
+        image.onerror = '';
+        image.src = 'images/stripe.png';
+        return true;
     }
 };

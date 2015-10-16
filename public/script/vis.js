@@ -22,7 +22,6 @@ define(['moment', 'vis-settings',
 		$('.js-single-svg').empty();
 
 		//0--count
-		/*
 		var countScale = function (length) {
 			return S.getChroma(
 				E.colors.calendar, length);
@@ -98,7 +97,7 @@ define(['moment', 'vis-settings',
 			var val = $(this).data().value.split('-');
 			Beers.updateCenterBeer(b.beerList[val[0]][val[1]].list[val[2]], b.maxCount);
 		});
-		*/
+
 		//3--when
 		var whenScale = function (length) {
 			return S.getChroma([E.colors.when, '#000'], length);

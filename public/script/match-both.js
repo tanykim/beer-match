@@ -55,7 +55,8 @@ define(function () {
                 _.each(list, function (b) {
                     $('.js-both-' + i).append('<img src="' + b.label +
                         '" class="label-image" alt="' + b.name +
-                        '" title="' + b.name + '">');
+                        '" title="' + b.name + '"' +
+                        'onerror="E.imgError(this);"' + '>');
                 });
             } else {
                 $('.js-both-' + i).append('<span class="no-beer">No beers</span>');
