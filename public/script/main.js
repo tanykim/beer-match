@@ -286,9 +286,9 @@ require([
 
     var uIdURL = urlParts[urlParts.length-1];
 
-    //FOR TEST : delete later, data generating mode
+    //check url first
+    //TEST: delete later, data generating mode
     if (uIdURL.indexOf('---') > -1) {
-        //console.log('---dataset generating mode');
         socket.emit('dataset', { userId: uIdURL.split('---')[1] });
     } else if (uIdURL.indexOf('+') > -1) {
         //console.log('1---two users');
@@ -304,40 +304,16 @@ require([
         renderIntro(E.msgs.intro.init, '', '');
     }
 
-    //FOR TEST: directly go to single view
-    socket.on('dataExistTest', function (data) {
-        var userId = data.userId;
-        //console.log('---json exists');
-        $.ajax({
-            url: '/users/' + userId + '.json'
-        }).done(function (d) {
-           if (firstUserId) {
-               socket.emit('pair', { users: [$('.js-go-match').data().value, userId] });
-           } else {
-                //show directly vis
-                initVisSingle(d);
-                //show option
-                //renderVisOptions(E.msgs.intro.back, d);
-           }
-        });
-    });
-
     socket.on('error', function (data) {
         renderIntro(E.msgs.intro.diffName, data.error_detail);
-    });
-
-    socket.on('profile', function (data) {
+    }).on('profile', function (data) {
         $('.js-intro-status').html('');
         renderUserInfo(data);
-    });
-
-    socket.on('progress', function (data) {
+    }).on('progress', function (data) {
         var progress = Math.round(data.count/data.total * 100);
         $('.js-start').removeClass('underline')
-            .html(progress <= 100 ? progress + '%' : 'Analyzing...');
-    });
-
-    socket.on('success', function (data) {
+            .html(progress < 100 ? progress + '%' : 'Analyzing...');
+    }).on('success', function (data) {
         if (data.sample) {
             firstUserId = '_example1';
             var dataset = updateSampleData(data.data);
@@ -348,12 +324,9 @@ require([
         } else {
             renderVisOptions(E.msgs.intro.completed, data.data);
         }
-    });
-
-    socket.on('pair', function (data) {
+    }).on('pair', function (data) {
         initVisMatch(data);
     });
-
 
     /********************/
     /* View interaction */

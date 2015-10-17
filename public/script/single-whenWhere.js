@@ -139,22 +139,26 @@ define(['moment', 'textures'], function (moment, textures) {
             .attr('class', 'pos-end fill-grey size-tiny v-middle');
     }
 
+    function getX(x, key, period, bgW) {
+        return x(moment(key, period === 'month' ? 'YYYY-M' : 'YYYY-W')) + bgW;
+    }
+
     function highlightTimelineCity(data, period, svg, dim, x, bgW) {
         _.each(data.by, function (d, key) {
             svg.append('line')
-                .attr('x1', x(key) + bgW)
+                .attr('x1', getX(x, key, period, bgW))
                 .attr('y1', 0)
-                .attr('x2', x(key) + bgW)
+                .attr('x2', getX(x, key, period, bgW))
                 .attr('y2', dim.h)
                 .style('stroke-width', bgW)
                 .attr('class', 'stroke-tick js-timeline-bg');
         });
     }
 
-    function getTimeStr(key, sT, period, val) {
+    function getTimeStr(key, period, val) {
         var timeStr = period === 'month' ?
-            sT.clone().add(key, period).format('MMM, YYYY'):
-            sT.clone().add(key, period).format('W, YYYY');
+            moment(key, 'YYYY-M').format('MMM, YYYY') :
+            'Week ' + moment(key, 'YYYY-W').format('W, YYYY');
         return [val + ' check-ins', timeStr];
     }
 
@@ -171,18 +175,18 @@ define(['moment', 'textures'], function (moment, textures) {
         var timeRange = _.map(timeRangeStr, function (d) {
             return moment(d, 'YYYYMMDD');
         });
-        var periodCount = Math.ceil(moment(timeRange[1].endOf(period))
-            .diff(timeRange[0].startOf(period), period, true));
-        var x = d3.scale.linear().range([0, dim.w])
-            .domain([0, periodCount]);
+        var x = d3.time.scale().range([0, dim.w])
+                .domain([moment(timeRange[0]).startOf(period),
+                    moment(timeRange[1]).endOf(period)]);
+        var periodCount = moment(timeRange[1]).diff(timeRange[0], period);
         var xAxis = d3.svg.axis().scale(x).orient('top')
-                    .ticks(Math.min(Math.floor(dim.w / 100), periodCount))
-                    .tickFormat(function (d) {
-                        return moment(timeRange[0]).add(d, period)
-                            .format(period === 'month' ?
-                                'MMM YYYY' :
-                                'W, YYYY');
-                    });
+                    .ticks(Math.min(Math.floor(dim.w / 100), periodCount));
+                    // .tickFormat(function (d) {
+                    //     return moment(timeRange[0]).add(d, period)
+                    //         .format(period === 'month' ?
+                    //             'MMM YYYY' :
+                    //             'W, YYYY');
+                    // });
         svg.append('g')
             .attr('class', 'x axis')
             .call(xAxis);
@@ -250,7 +254,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
             _.each(d.by, function (val, key) {
 
-                var cx = x(key) + bgW;
+                var cx = getX(x, key, period, bgW);
                 var cy = yPos + unitH / 2;
                 if (val === maxVal) {
                     maxCx = cx;
@@ -276,7 +280,7 @@ define(['moment', 'textures'], function (moment, textures) {
                         }
                         d3.select(this).style('fill', tx[i % 4].url())
                             .style('opacity', 1);
-                        E.setTooltipText(getTimeStr(key, timeRange[0], period, val),
+                        E.setTooltipText(getTimeStr(key, period, val),
                             'timeline-c', dim.w, cx, cy - r);
                     })
                     .on('mouseout', function () {
@@ -292,7 +296,7 @@ define(['moment', 'textures'], function (moment, textures) {
             period + 's', 'Total ' + data[0].total + ' check-ins'],
             'timeline', dim.w, -E.noTicks.padding, unitH / 2 - 10);
         E.drawTooltip(svg, 'timeline-c', 2);
-        E.setTooltipText(getTimeStr(maxKey, timeRange[0], period, maxVal),
+        E.setTooltipText(getTimeStr(maxKey, period, maxVal),
             'timeline-c', dim.w, maxCx, maxCy - maxR);
     };
 

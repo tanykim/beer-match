@@ -145,6 +145,7 @@ define(['moment', 'textures'], function (moment, textures) {
         E.putAxisLable(svg, -dim.h / 2, 0,
             'number of ' + unit, 'y', 'js-freq-lable-y');
 
+        console.log(avgCount, unit);
         drawFreqBlocks(frequency, maxCount, avgCount[unit]);
     };
 
@@ -269,8 +270,7 @@ define(['moment', 'textures'], function (moment, textures) {
                 }
                 E.setTooltipText([d[unit] + ' check-ins' +
                     (d[unit] === 0 ? ', sober ' + unit + '!' : ''),
-                    getTooltipString(eT.clone().startOf('day')
-                        .subtract(d.dateId.day, 'days'))],
+                    getTooltipString(moment(d.date, 'YYYYMMDD'))],
                     'cal', dim.w, getX(i), getY(i), block / 2);
             })
             .on('mouseout', function (d, i) {
@@ -285,7 +285,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
         //month, year labels, and divide line
         _.each(data.list, function (d, i) {
-            var date = sT.clone().add(i, 'days');
+            var date = moment(d.date, 'YYYYMMDD');
 
             var x = getX(i) + (date.day() > 0 ? block : 0) + 4;
             var y = getRow(i) * colL;
@@ -321,10 +321,8 @@ define(['moment', 'textures'], function (moment, textures) {
 
         showTextures(svg, data, maxRange[0]);
         E.setTooltipText([maxRange[0][unit] + ' check-ins',
-            getTooltipString(eT.clone().startOf('day')
-                .subtract(maxRange[0].dateId.day, 'days'))],
-            'cal', dim.w, getX(maxRangeIds[0]), getY(maxRangeIds[0]),
-            block / 2);
+           getTooltipString(moment(maxRange[0].date, 'YYYYMMDD'))],
+           'cal', dim.w, getX(maxRangeIds[0]), getY(maxRangeIds[0]), block / 2);
     };
 
     return {

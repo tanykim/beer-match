@@ -96,9 +96,7 @@ function createSingleData(data) {
         callback(user);
     }
     createBeerData(data, function (u) {
-        fs.writeFileSync('public/users/' + data.userinfo.userId + '.json',
-            JSON.stringify(u));
-        //console.log('---file written');
+        fs.writeFileSync('public/users/' + data.userinfo.userId + '.json', JSON.stringify(u));
         io.emit('success', { data: u });
     });
 }
@@ -121,7 +119,8 @@ function createMatchData(users) {
 
 function getUserFeed(id, data) {
 
-    //console.log('userid----', data.userinfo.userId);
+    console.log('getting user data userid----', data.userinfo.userId);
+
     var userinfo = data.userinfo;
     var userId = userinfo.userId;
     var checkins = [];
@@ -134,12 +133,11 @@ function getUserFeed(id, data) {
 
         untappd.userFeed(function (err,obj){
             if (debug) console.log(err,obj);
-            if (obj && obj.response && obj.response.checkins &&
-                obj.response.checkins.items) {
+            if (obj && obj.response && obj.response.checkins && obj.response.checkins.items) {
                 checkins.push(obj.response.checkins.items);
                 if (obj.response.pagination.max_id) {
                     //FIXME: often called twice
-                    //console.log('feed api call---', id);
+                    console.log('feed api call---', id);
                     feedCallCount = feedCallCount + 1;
                     io.emit('progress', {
                         total: feedCallsNeeded,
@@ -169,10 +167,8 @@ function getUserInfo(userId, firstUserId) {
     if (fs.existsSync('public/users/' + userId + '.json')) {
         console.log('---file exists', userId, firstUserId);
 
-        //FOR TEST: skip the friend selection
+        //TEST: skip the friend selection
         //io.emit('dataExistTest', { userId: userId });
-
-        //FOR REAL: uncomment later
         if (_.isUndefined(firstUserId)) {
             var data = JSON.parse(
                 fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
@@ -257,10 +253,8 @@ io.on('connection', function (socket) {
 
     //TEST: data generating mode
     socket.on('dataset', function (data) {
-        //console.log('data generating mode---', data.userId);
         var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId +
             '.json', 'utf8'));
-        //console.log(d.userinfo.userId);
         createSingleData(d);
     });
 
@@ -273,28 +267,19 @@ io.on('connection', function (socket) {
         } else {
             getUserInfo(data.userId.toLowerCase(), data.firstUserId);
         }
-    });
-    socket.on('pair', function (data) {
-        //console.log('pair---', data);
+    }).on('pair', function (data) {
         if (data.sample) {
             createMatchData(data.users);
         } else {
             checkFileExists(data.users);
         }
-    });
-    socket.on('timezone', function (data) {
-        //console.log('timezone---', data);
+    }).on('timezone', function (data) {
         getUserFeed(undefined, data);
-    });
-    socket.on('friends', function (data) {
-        //console.log('friends---', data);
+    }).on('friends', function (data) {
         getFriendsList(data.userId.toLowerCase(), data.count);
-    });
-    socket.on('mapboxKey', function () {
+    }).on('mapboxKey', function () {
         io.emit('mapboxKey', { token: credentials.mapboxKey });
-    });
-    socket.on('signout', function (data) {
-        //console.log('singout---', data);
+    }).on('signout', function (data) {
         io.emit('signout', { userId: data.userId });
     });
 });
