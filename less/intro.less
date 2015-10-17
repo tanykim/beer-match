@@ -7,14 +7,35 @@ body {
 
 .intro {
 	width: 100%;
+
+	/* generated at http://www.cssportal.com/css-gradient-generator/ */
+	/* IE10+ */
+	background-image: -ms-linear-gradient(bottom left, #FFC61E 0%, #EE6411 20%, #7C2529 60%, #3F2021 80%, #25282A 100%);
+
+	/* Mozilla Firefox */
+	background-image: -moz-linear-gradient(bottom left, #FFC61E 0%, #EE6411 20%, #7C2529 60%, #3F2021 80%, #25282A 100%);
+
+	/* Opera */
+	background-image: -o-linear-gradient(bottom left, #FFC61E 0%, #EE6411 20%, #7C2529 60%, #3F2021 80%, #25282A 100%);
+
+	/* Webkit (Safari/Chrome 10) */
+	background-image: -webkit-gradient(linear, left bottom, right top, color-stop(0, #FFC61E), color-stop(20, #EE6411), color-stop(60, #7C2529), color-stop(80, #3F2021), color-stop(100, #25282A));
+
+	/* Webkit (Chrome 11+) */
+	background-image: -webkit-linear-gradient(bottom left, #FFC61E 0%, #EE6411 20%, #7C2529 60%, #3F2021 80%, #25282A 100%);
+
+	/* W3C Markup */
+	background-image: linear-gradient(to top right, #FFC61E 0%, #EE6411 20%, #7C2529 60%, #3F2021 80%, #25282A 100%);
 }
 
 .intro-main-wrapper {
 	padding-top: @headerH + @padding * 2 ;
 	padding-bottom: @padding * 2;
 	text-align: center;
-	background: url('../images/wooden.jpg') center 0 no-repeat;
-	background-size: 100% 100%;
+
+
+	background: url('../images/pattern.png');
+	/*background-size: 100% 100%;*/
 	.intro-main {
 		padding: @padding;
 		font-size: @large;
