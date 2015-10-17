@@ -161,8 +161,10 @@ define(['moment', 'textures'], function (moment, textures) {
                     E.setTooltipText([d.str, d.val + ' check-ins'],
                         'matrix', dim.w, d.x.matrix + d.width.matrix / 2,
                         d.y.matrix);
-                    setTextures(svg, d.fill.matrix);
-                    d3.select(this).style('fill', tx.url());
+                    if (d.val > 0) {
+                        setTextures(svg, d.fill.matrix);
+                        d3.select(this).style('fill', tx.url());
+                    }
                 }
             })
             .on('mouseout', function (d) {
