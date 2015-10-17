@@ -1,4 +1,5 @@
 {
 	"clientId": "<client id>",
-	"clientSecret": "<client secret>"
+	"clientSecret": "<client secret>",
+	"mapboxKey": "<mapbox public access key>"
 }

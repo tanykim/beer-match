@@ -7,6 +7,7 @@ Beer Match is a web-based visualization project powered by data from Untapped (h
 
 ## API credentials
 First obtain Untapped credentials here: https://untappd.com/api/register?register=new
+For mapping, Beer Match uses Mapbox: Optain an access token here: https://www.mapbox.com/help/create-api-access-token/
 
 ## Set-up
 #### 1. Install packages
@@ -17,12 +18,13 @@ $ sudo npm install
 ```
 
 #### 2. Change API credentials
-Open settings.local enter the Untapped credentials you've obtianed earlier.
+Open settings.local enter the Untapped credentials and Mapbox access key you've obtianed earlier.
 
 ```
 {
 	"clientId": "<client id>",
-	"clientSecret": "<client secret>"
+	"clientSecret": "<client secret>",
+	"mapboxKey": "<mapbox public access key>"
 }
 ```
 Then save it as a JSON file.

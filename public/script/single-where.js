@@ -1,4 +1,4 @@
-define(['textures'], function (textures) {
+define(['textures', 'socketio'], function (textures, io) {
 
     'use strict';
 
@@ -18,24 +18,7 @@ define(['textures'], function (textures) {
             '</div></div>';
     }
 
-    var createHeatmap = function (data) {
-
-        locations = data;
-        var center = locations[0].location;
-
-        //FIXME: the token should be hidden
-        if (_.isUndefined(map)) {
-            L.mapbox.accessToken = 'pk.eyJ1IjoidGFueWtpbSIsImEiOiJXNEJUOGhNIn0.pnUsTT-Zhecb67vCemuMSQ';
-            map = L.mapbox.map('vis-map', 'examples.map-20v6611k')
-                .setView(center, 12);
-        } else {
-            map.setView(center, 12);
-            map.removeLayer(m);
-            map.removeLayer(cluster);
-            m = undefined;
-            cluster = undefined;
-        }
-
+    function putMapElements(center) {
         cluster = new L.MarkerClusterGroup();
         _.each(locations, function (d, i) {
             var marker = L.marker(new L.LatLng(d.location[0], d.location[1]), {
@@ -61,6 +44,32 @@ define(['textures'], function (textures) {
         });
         m.bindPopup(getMapTooltip(locations[0])).addTo(map);
         m.openPopup();
+    }
+
+    var createHeatmap = function (data) {
+
+        locations = data;
+        var center = locations[0].location;
+
+        //FIXME: the token should be hidden
+        if (_.isUndefined(map)) {
+
+            var urlParts = window.location.href.split('/');
+            var socket = io.connect('http://' + urlParts[2]);
+            socket.emit('mapboxKey');
+
+            socket.on('mapboxKey', function (data) {
+                L.mapbox.accessToken = data.token;
+                map = L.mapbox.map('vis-map', 'mapbox.light').setView(center, 12);
+                putMapElements(center);
+            });
+        } else {
+            map.setView(center, 12);
+            map.removeLayer(m);
+            map.removeLayer(cluster);
+            m = undefined;
+            cluster = undefined;
+        }
     };
 
     function drawBubbles(data, sort) {

@@ -15,7 +15,7 @@ var port = process.env.PORT || 8080;
 server.listen(port);
 app.use(express.static(__dirname + '/public'));
 app.get('/', function (req, res) {
-	console.log('server started--');
+    console.log('server started--');
     res.sendFile(__dirname + '/index.html');
 });
 app.get('/:userId', function (req, res) {
@@ -28,8 +28,9 @@ var debug = false;
 var untappd = new UntappdClient(debug);
 nconf.argv().env().file({ file: 'settings.json'});
 var credentials = {
-	clientId: nconf.get('clientId'),
-	clientSecret: nconf.get('clientSecret')
+    clientId: nconf.get('clientId'),
+    clientSecret: nconf.get('clientSecret'),
+    mapboxKey: nconf.get('mapboxKey')
 };
 untappd.setClientId(credentials.clientId);
 untappd.setClientSecret(credentials.clientSecret);
@@ -39,55 +40,55 @@ var User = require('./lib/BeerMatch-user.js');
 var Match = require('./lib/BeerMatch-match.js');
 
 function emitProfile(userinfo, timezone) {
-	io.emit('profile', {
-		userinfo: userinfo,
-		timezone: timezone
-	});
+    io.emit('profile', {
+        userinfo: userinfo,
+        timezone: timezone
+    });
 }
 
 function getTimezone(user) {
 
-	var userinfo = {
-		userId: user.user_name.toLowerCase(),
-		address: user.location,
-		avatar: user.user_avatar,
-		username: user.first_name + ' ' + user.last_name,
-		since: user.date_joined,
-		beerCount: user.stats.total_beers,
-		checkinCount: user.stats.total_checkins,
-		friendCount: user.stats.total_friends
-	};
+    var userinfo = {
+        userId: user.user_name.toLowerCase(),
+        address: user.location,
+        avatar: user.user_avatar,
+        username: user.first_name + ' ' + user.last_name,
+        since: user.date_joined,
+        beerCount: user.stats.total_beers,
+        checkinCount: user.stats.total_checkins,
+        friendCount: user.stats.total_friends
+    };
 
-	geocoder.geocode(userinfo.address, function (err, data) {
-		if (err) {
-			//console.log('geocoding error');
-			emitProfile(userinfo, '');
-		} else {
-			//console.log(data.results[0].geometry.location);
-			location = data.results[0].geometry.location;
-			timezoner.getTimeZone(
-			    location.lat, location.lng,
-			    function (err, data) {
-			        if (err) {
-			            //console.log(err);
-			            emitProfile(userinfo, '');
-			        } else {
-			            //console.log(data);
-			            emitProfile(userinfo, {
-			            	name: data.timeZoneId,
-			            	offset: data.rawOffset
-			            });
-			        }
-			    }
-			);
-	    }
-	});
+    geocoder.geocode(userinfo.address, function (err, data) {
+        if (err) {
+            //console.log('geocoding error');
+            emitProfile(userinfo, '');
+        } else {
+            //console.log(data.results[0].geometry.location);
+            location = data.results[0].geometry.location;
+            timezoner.getTimeZone(
+                location.lat, location.lng,
+                function (err, data) {
+                    if (err) {
+                        //console.log(err);
+                        emitProfile(userinfo, '');
+                    } else {
+                        //console.log(data);
+                        emitProfile(userinfo, {
+                            name: data.timeZoneId,
+                            offset: data.rawOffset
+                        });
+                    }
+                }
+            );
+        }
+    });
 }
 
 function createSingleData(data) {
 
-	//FOR TEST: temporarily save raw data
-	fs.writeFileSync('public/users/raw/' + data.userinfo.userId + '.json',
+    //FOR TEST: temporarily save raw data
+    fs.writeFileSync('public/users/raw/' + data.userinfo.userId + '.json',
         JSON.stringify(data));
 
     function createBeerData(data, callback) {
@@ -95,203 +96,205 @@ function createSingleData(data) {
         callback(user);
     }
     createBeerData(data, function (u) {
-		fs.writeFileSync('public/users/' + data.userinfo.userId + '.json',
+        fs.writeFileSync('public/users/' + data.userinfo.userId + '.json',
             JSON.stringify(u));
-		//console.log('---file written');
-		io.emit('success', { data: u });
+        //console.log('---file written');
+        io.emit('success', { data: u });
     });
 }
 
 function createMatchData(users) {
 
     function createBeerMatchData(users, callback) {
-    	var dataset = _.map(users, function (user) {
-    		return JSON.parse(fs.readFileSync('public/users/' + user + '.json',
+        var dataset = _.map(users, function (user) {
+            return JSON.parse(fs.readFileSync('public/users/' + user + '.json',
                 'utf8'));
-    	});
+        });
         var match = new Match(dataset);
         callback(match);
     }
 
-	createBeerMatchData(users, function (m) {
-		io.emit('pair', { data: m });
-	});
+    createBeerMatchData(users, function (m) {
+        io.emit('pair', { data: m });
+    });
 }
 
 function getUserFeed(id, data) {
 
-	//console.log('userid----', data.userinfo.userId);
-	var userinfo = data.userinfo;
-	var userId = userinfo.userId;
-	var checkins = [];
+    //console.log('userid----', data.userinfo.userId);
+    var userinfo = data.userinfo;
+    var userId = userinfo.userId;
+    var checkins = [];
 
-	//max 50 feeds per call
-	var feedCallsNeeded = Math.ceil(userinfo.checkinCount / 50);
-	var feedCallCount = 0;
+    //max 50 feeds per call
+    var feedCallsNeeded = Math.ceil(userinfo.checkinCount / 50);
+    var feedCallCount = 0;
 
-	function callUserFeedAPI(id) {
+    function callUserFeedAPI(id) {
 
-		untappd.userFeed(function (err,obj){
-			if (debug) console.log(err,obj);
-			if (obj && obj.response && obj.response.checkins &&
+        untappd.userFeed(function (err,obj){
+            if (debug) console.log(err,obj);
+            if (obj && obj.response && obj.response.checkins &&
                 obj.response.checkins.items) {
-				checkins.push(obj.response.checkins.items);
-				if (obj.response.pagination.max_id) {
-					//FIXME: often called twice
-					//console.log('feed api call---', id);
-					feedCallCount = feedCallCount + 1;
-					io.emit('progress', {
+                checkins.push(obj.response.checkins.items);
+                if (obj.response.pagination.max_id) {
+                    //FIXME: often called twice
+                    //console.log('feed api call---', id);
+                    feedCallCount = feedCallCount + 1;
+                    io.emit('progress', {
                         total: feedCallsNeeded,
                         count: feedCallCount
                     });
-					callUserFeedAPI(obj.response.pagination.max_id);
-				} else {
-					createSingleData({
+                    callUserFeedAPI(obj.response.pagination.max_id);
+                } else {
+                    createSingleData({
                         userinfo: userinfo,
                         timezone: data.name,
                         checkins: _.flatten(checkins)
                     });
-				}
-			}
-			else {
-				//console.log('-----error at feed api', err, obj, obj.meta.code);
-				io.emit('error', { error_detail: obj.meta.error_detail });
-			}
-		}, userId, 50, id);
-	}
-	callUserFeedAPI();
+                }
+            }
+            else {
+                //console.log('-----error at feed api', err, obj, obj.meta.code);
+                io.emit('error', { error_detail: obj.meta.error_detail });
+            }
+        }, userId, 50, id);
+    }
+    callUserFeedAPI();
 }
 
 function getUserInfo(userId, firstUserId) {
 
-	//file check first
-	if (fs.existsSync('public/users/' + userId + '.json')) {
-    	console.log('---file exists', userId, firstUserId);
+    //file check first
+    if (fs.existsSync('public/users/' + userId + '.json')) {
+        console.log('---file exists', userId, firstUserId);
 
-    	//FOR TEST: skip the friend selection
-    	//io.emit('dataExistTest', { userId: userId });
+        //FOR TEST: skip the friend selection
+        //io.emit('dataExistTest', { userId: userId });
 
-    	//FOR REAL: uncomment later
-    	if (_.isUndefined(firstUserId)) {
-			var data = JSON.parse(
+        //FOR REAL: uncomment later
+        if (_.isUndefined(firstUserId)) {
+            var data = JSON.parse(
                 fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
-			io.emit('success', { data: data });
-  		} else {
-			createMatchData([firstUserId, userId]);
-  		}
-	} else {
-		untappd.userInfo(function (err,obj) {
-			if (obj && obj.response && obj.response.user) {
-				if (obj.response.user.is_private) {
-					console.log('--private id');
-					io.emit('error', {
+            io.emit('success', { data: data });
+        } else {
+            createMatchData([firstUserId, userId]);
+        }
+    } else {
+        untappd.userInfo(function (err,obj) {
+            if (obj && obj.response && obj.response.user) {
+                if (obj.response.user.is_private) {
+                    console.log('--private id');
+                    io.emit('error', {
                         error_detail:
                             userId.toUpperCase() + ' is a private account.'
                     });
-				} else if (obj.response.user.stats.total_checkins === 0) {
-					io.emit('error', {
+                } else if (obj.response.user.stats.total_checkins === 0) {
+                    io.emit('error', {
                         error_detail: 'No check-in data available.'
                     });
-				} else {
-					//get timezone info & emit
-					console.log ('--id found, get timezone info now');
-					getTimezone(obj.response.user);
-				}
-			}
-			else {
-				//console.log('--------error at userinfo api', err, obj.meta.code);
-				io.emit('error', { error_detail: obj.meta.error_detail });
-			}
-		}, userId);
-	}
+                } else {
+                    //get timezone info & emit
+                    console.log ('--id found, get timezone info now');
+                    getTimezone(obj.response.user);
+                }
+            }
+            else {
+                //console.log('--------error at userinfo api', err, obj.meta.code);
+                io.emit('error', { error_detail: obj.meta.error_detail });
+            }
+        }, userId);
+    }
 }
 
 function getFriendsList(userId, count) {
 
-	//console.log('----friends', userId, count);
+    //console.log('----friends', userId, count);
 
-	//max 25 feeds per call, upto 100 friends
-	var friendCallsNeeded = Math.min(count, 100);
-	var friendCallCount = 0;
+    //max 25 feeds per call, upto 100 friends
+    var friendCallsNeeded = Math.min(count, 100);
+    var friendCallCount = 0;
 
-	var friends = [];
+    var friends = [];
 
-	function callFriendsFeedAPI(offset) {
-	  	untappd.userFriends(function (err,obj) {
-	  		if (obj && obj.response && obj.response.items &&
+    function callFriendsFeedAPI(offset) {
+        untappd.userFriends(function (err,obj) {
+            if (obj && obj.response && obj.response.items &&
                 obj.response.count > 0) {
-				var fList = _.map(obj.response.items, function (d) {
-					return d.user.user_name.toLowerCase();
-				});
-				friends.push(fList);
-				friendCallCount = friendCallCount + 25;
-				if (friendCallCount < friendCallsNeeded) {
-					//console.log('----', offset);
-					callFriendsFeedAPI(friendCallCount);
-				}
-				else {
-					//console.log('---friends loading done');
-					io.emit('friends', { friends: _.flatten(friends).sort() });
-				}
-			}
-		}, userId, 25, offset);
-	}
-	callFriendsFeedAPI();
+                var fList = _.map(obj.response.items, function (d) {
+                    return d.user.user_name.toLowerCase();
+                });
+                friends.push(fList);
+                friendCallCount = friendCallCount + 25;
+                if (friendCallCount < friendCallsNeeded) {
+                    //console.log('----', offset);
+                    callFriendsFeedAPI(friendCallCount);
+                }
+                else {
+                    //console.log('---friends loading done');
+                    io.emit('friends', { friends: _.flatten(friends).sort() });
+                }
+            }
+        }, userId, 25, offset);
+    }
+    callFriendsFeedAPI();
 }
 
 function checkFileExists(users) {
-	var u0 = fs.existsSync('public/users/' + users[0] + '.json') ? true : false;
-	var u1 = fs.existsSync('public/users/' + users[1] + '.json') ? true : false;
-	if (u0 && u1) {
-		//console.log('---both file exist');
-		createMatchData(users);
-	} else {
-		io.emit('error', {
+    var u0 = fs.existsSync('public/users/' + users[0] + '.json') ? true : false;
+    var u1 = fs.existsSync('public/users/' + users[1] + '.json') ? true : false;
+    if (u0 && u1) {
+        //console.log('---both file exist');
+        createMatchData(users);
+    } else {
+        io.emit('error', {
             error_detail: 'No previous data exist. Please restart.'
         });
-	}
+    }
 }
 
 io.on('connection', function (socket) {
 
-	//TEST: data generating mode
-	socket.on('dataset', function (data) {
-		//console.log('data generating mode---', data.userId);
-		var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId +
+    //TEST: data generating mode
+    socket.on('dataset', function (data) {
+        //console.log('data generating mode---', data.userId);
+        var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId +
             '.json', 'utf8'));
-		//console.log(d.userinfo.userId);
-		createSingleData(d);
-  	});
+        //console.log(d.userinfo.userId);
+        createSingleData(d);
+    });
 
-	socket.on('userId', function (data) {
-		console.log('userId---', data);
+    socket.on('userId', function (data) {
+        console.log('userId---', data);
         if (data.sample) {
             var data = JSON.parse(fs.readFileSync('public/users/_sample1.json',
                 'utf8'));
-
             io.emit('success', { data: data, sample: true });
         } else {
             getUserInfo(data.userId.toLowerCase(), data.firstUserId);
         }
-  	});
-  	socket.on('pair', function (data) {
-  		//console.log('pair---', data);
+    });
+    socket.on('pair', function (data) {
+        //console.log('pair---', data);
         if (data.sample) {
             createMatchData(data.users);
         } else {
             checkFileExists(data.users);
         }
-  	});
-  	socket.on('timezone', function (data) {
-  		//console.log('timezone---', data);
-  		getUserFeed(undefined, data);
-  	});
-  	socket.on('friends', function (data) {
-  		//console.log('friends---', data);
-  		getFriendsList(data.userId.toLowerCase(), data.count);
-  	});
-  	socket.on('signout', function (data) {
-  		//console.log('singout---', data);
-  		io.emit('signout', { userId: data.userId });
-  	});
+    });
+    socket.on('timezone', function (data) {
+        //console.log('timezone---', data);
+        getUserFeed(undefined, data);
+    });
+    socket.on('friends', function (data) {
+        //console.log('friends---', data);
+        getFriendsList(data.userId.toLowerCase(), data.count);
+    });
+    socket.on('mapboxKey', function () {
+        io.emit('mapboxKey', { token: credentials.mapboxKey });
+    });
+    socket.on('signout', function (data) {
+        //console.log('singout---', data);
+        io.emit('signout', { userId: data.userId });
+    });
 });

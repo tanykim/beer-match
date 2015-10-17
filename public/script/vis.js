@@ -117,7 +117,7 @@ define(['moment', 'vis-settings',
 
 		//4-where
 		if (!_.isEmpty(b.locationList)) {
-			//Where.createHeatmap(b.locationList);
+			Where.createHeatmap(b.locationList);
 			Where.drawVenueConnection(b.venues, S.setVisNoSVG('where'));
 			WhenWhere.drawTimeline(b.venueByTime, b.venueByTimeUnit,
 				b.timeRange, S.setVisNoSVG('timeline'));
