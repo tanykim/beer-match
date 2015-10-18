@@ -61,8 +61,8 @@ require([
 
         var u = data.userinfo;
 
-        $('.js-go-match').attr('data-value', u.userId);
-        $('.js-go-match').attr('data-friends', u.friendCount);
+        $('.js-go-match').data('value', u.userId);
+        $('.js-go-match').data('friends', u.friendCount);
 
         var html = {
             avatar: u.avatar,
@@ -80,9 +80,9 @@ require([
         var data = d.data;
 
         $('.js-goSingle-0').html(data.userinfo[0].userId.toUpperCase())
-            .parent().attr('data-value', data.userinfo[0].userId);
+            .parent().data('value', data.userinfo[0].userId);
         $('.js-goSingle-1').html(data.userinfo[1].userId.toUpperCase())
-            .parent().attr('data-value', data.userinfo[1].userId);
+            .parent().data('value', data.userinfo[1].userId);
 
         var html = {
             avatar0: data.userinfo[0].avatar,
@@ -394,7 +394,6 @@ require([
     $('.js-go-match').click(function() {
 
         var id = $(this).data().value;
-        console.log('---go match', id);
 
         if (id === '_sample1' || id === '_sample2') {
             firstUserId = id;
@@ -408,7 +407,7 @@ require([
             $('.js-nav').hide();
             $('.js-intro').removeClass('hide');
             $('.js-intro-main').html('LOADING...');
-            renderFriends($(this).data().value, $(this).data().friends, undefined, true);
+            renderFriends(id, $(this).data().friends, undefined, true);
         }
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
@@ -419,7 +418,6 @@ require([
     $('.js-goSingle').click(function() {
 
         var id = $(this).data().value;
-        console.log('--go single', id);
 
         if (id === '_sample1' || id === '_sample2') {
             firstUserId = undefined;
@@ -429,7 +427,7 @@ require([
                 initVisSingle(d);
             });
         } else {
-            socket.emit('userId', { userId: $(this).data().value, firstUserId: undefined });
+            socket.emit('userId', { userId: id, firstUserId: undefined });
         }
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
