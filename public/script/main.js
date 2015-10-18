@@ -25,8 +25,9 @@ require([
     'textures',
     'socketio',
     'vis',
+    'BeerMatch-match',
     'elements'
-], function ($, _, d3, moment, chroma, textures, io, Vis, E) {
+], function ($, _, d3, moment, chroma, textures, io, Vis, Match, E) {
 
     'use strict';
 
@@ -75,14 +76,35 @@ require([
     }
 
     //match
-    function initVisMatch(d) {
+    function initVisMatch(data) {
 
-        var data = d.data;
+        /*
+        console.log(data);
+        var temp = data;
 
-        $('.js-goSingle-0').html(data.userinfo[0].userId.toUpperCase())
-            .parent().data('value', data.userinfo[0].userId);
-        $('.js-goSingle-1').html(data.userinfo[1].userId.toUpperCase())
-            .parent().data('value', data.userinfo[1].userId);
+        temp.userinfo[0].userId = '_sample1';
+        temp.userinfo[1].userId = '_sample2';
+        temp.userinfo[0].username = 'Ale B.';
+        temp.userinfo[1].username = 'Lager B.';
+        temp.userinfo[0].address = 'Santa Cruz, CA';
+        temp.userinfo[1].address = 'Santa Cruz, CA';
+        temp.userinfo[0].avatar = 'http://beer.tany.kim/images/sample1.png';
+        temp.userinfo[1].avatar = 'http://beer.tany.kim/images/sample2.png';
+        temp.profile[0].username = 'Ale B.';
+        temp.profile[1].username = 'Lager B.';
+        temp.profile[0].avatar = 'http://beer.tany.kim/images/sample1.png';
+        temp.profile[1].avatar = 'http://beer.tany.kim/images/sample2.png';
+        temp.url = '_sample1+_sample2';
+
+        console.log(JSON.stringify(temp));
+        socket.emit('sampleMatchMake', { data: data});
+        */
+
+        var userIds = [data.userinfo[0].userId, data.userinfo[1].userId];
+        $('.js-goSingle-0').html(userIds[0].toUpperCase())
+            .parent().data('value', userIds[0]);
+        $('.js-goSingle-1').html(userIds[1].toUpperCase())
+            .parent().data('value', userIds[1]);
 
         var html = {
             avatar0: data.userinfo[0].avatar,
@@ -116,7 +138,7 @@ require([
         if (apiError) {
             callSampleVis();
             $('.js-start-single').click(function() {
-                socket.emit('userId', { userId: userId });
+                initVisSingle(JSON.parse(sessionStorage.getItem(userId)));
             });
         }
     }
@@ -171,6 +193,10 @@ require([
 
     //render friends list after the first user is loaded
     function renderFriends(userId, friendCount, data, isTopMenu) {
+
+        if (!sessionStorage[userId]) {
+            sessionStorage.setItem(userId, JSON.stringify(data));
+        }
 
         firstUserId = userId;
         console.log('3--. two users match', userId, friendCount);
@@ -284,29 +310,83 @@ require([
         }
     }
 
-    /************************/
-    /* socket communication */
-    /************************/
+    function createMatchData(userIds) {
+
+        function createDataset(userIds, callback) {
+            var match = Match.createDataset([
+                JSON.parse(sessionStorage.getItem(userIds[0])),
+                JSON.parse(sessionStorage.getItem(userIds[1]))
+            ]);
+            callback(match);
+        }
+        createDataset(userIds, function (m) {
+            sessionStorage.setItem(m.url, JSON.stringify(m));
+            initVisMatch(m);
+        });
+    }
+
+    /*****************************/
+    /* url check for socket comm */
+    /*****************************/
+
+    //sessionStorage.clear();
+    //sessionStorage.removeItem('ryln');
+    //sessionStorage.removeItem('ryln+tanyofish');
+    console.log(sessionStorage);
 
     var uIdURL = urlParts[urlParts.length-1];
 
     //check url first
-    //TEST: delete later, data generating mode
+    /*TEST: delete later, data generating mode
     if (uIdURL.indexOf('---') > -1) {
         socket.emit('dataset', { userId: uIdURL.split('---')[1] });
-    } else if (uIdURL.indexOf('+') > -1) {
+    } else if (uIdURL.indexOf('___') > -1) {
+        socket.emit('datasetSession', { userId: uIdURL.split('___')[1] });
+    }
+    */
+
+    //match view
+    if (uIdURL.indexOf('+') > -1) {
+
         console.log('1---two users');
-        //FIXME: loading needed
+
         firstUserId = uIdURL.split('+')[0];
-        socket.emit('pair', { users: uIdURL.split('+') });
+        var secondUserId = uIdURL.split('+')[1];
+        if (firstUserId === '_sample1' && secondUserId === '_sample2') {
+            socket.emit('sampleMatch');
+        } else if (sessionStorage[uIdURL]) {
+            initVisMatch(JSON.parse(sessionStorage.getItem(uIdURL)));
+        } else if (sessionStorage[firstUserId] && sessionStorage[secondUserId]){
+            //create match data
+            createMatchData([firstUserId, secondUserId]);
+        } else if (sessionStorage[firstUserId] && !sessionStorage[secondUserId]) {
+            //create single data first
+            socket.emit('userId', { userId: secondUserId});
+        } else if (!sessionStorage[firstUserId] && sessionStorage[secondUserId]) {
+            //create single data first
+            socket.emit('userId', { userId: firstUserId});
+        } else {
+            renderIntro(E.msg.intro.noData, '', '');
+        }
+    //single view
     } else if (uIdURL) {
         console.log('1---single user');
-        renderIntro('', E.msgs.intro.userIdCheck, uIdURL);
-        socket.emit('userId', { userId: uIdURL });
+        //check session first
+        if (uIdURL === '_sample1' || uIdURL === '_sample2') {
+            socket.emit('sampleSingle', { userId: uIdURL });
+        } else if (sessionStorage[uIdURL]) {
+            renderVisOptions(E.msgs.intro.back, JSON.parse(sessionStorage.getItem(uIdURL)));
+        } else {
+            socket.emit('userId', { userId: uIdURL });
+        }
     } else {
         console.log('1---no url');
         renderIntro(E.msgs.intro.init, '', '');
     }
+
+    /************************/
+    /* socket communication */
+    /************************/
 
     socket.on('error', function (data) {
         renderIntro(E.msgs.intro.diffName, data.error_detail);
@@ -320,21 +400,23 @@ require([
         $('.js-progress').html(progress < 100 ? progress + '%' : 'Analyzing...');
     }).on('success', function (data) {
         if (data.sample) {
-            firstUserId = '_example1';
+            firstUserId = data.sample;
             initVisSingle(data.data);
-        } else if (firstUserId) {
-            firstUserId = undefined;
-            initVisSingle(data.data);
+        } else if (firstUserId) { //for match
+            var userId = data.data.userinfo.userId;
+            //console.log(userId, data);
+            sessionStorage.setItem(userId, JSON.stringify(data.data));
+            createMatchData([firstUserId, userId]);
         } else {
             renderVisOptions(E.msgs.intro.completed, data.data);
         }
-    }).on('pair', function (data) {
-        initVisMatch(data);
+    }).on('sampleMatch', function (data) {
+        initVisMatch(data.data);
     });
 
-    /********************/
-    /* View interaction */
-    /********************/
+    /*******************/
+    /* intro key enter */
+    /*******************/
 
     //intro id input check
     $('.js-intro-main').keypress(function(event){
@@ -354,20 +436,36 @@ require([
             if (userId.length < 3) {
                 renderIntro(E.msgs.intro.diffName, E.msgs.intro.tooShort);
             } else {
-                console.log('---entered');
-                renderIntro('', E.msgs.intro.userIdCheck, userId);
-                socket.emit('userId', { userId: userId, firstUserId: firstUserId });
+                //Single view, session exists
+                if (sessionStorage[userId] && !firstUserId) {
+                    renderVisOptions(E.msgs.intro.back, JSON.parse(sessionStorage.getItem(userId)));
+                //match view, session exists
+                } else if (sessionStorage[userId + '_' + firstUserId]) {
+                    initVisMatch(JSON.parse(sessionStorage.getItem(userId + '+' + firstUserId)));
+                //match view, single session exists, but match session doesn't exist
+                } else if (sessionStorage[userId] && sessionStorage[firstUserId]) {
+                    console.log('----2');
+                    createMatchData([firstUserId, userId]);
+                //} else if (sessionStorage[userId] && !sessionStorage[firstUserId]){
+                } else {
+                    renderIntro('', E.msgs.intro.userIdCheck, userId);
+                    socket.emit('userId', { userId: userId, firstUserId: firstUserId });
+                }
             }
         }
     });
 
+    /********************/
+    /* page interaction */
+    /********************/
+
     //intro sample vis
     function callSampleVis() {
         $('.js-start-sample-single').click(function() {
-            socket.emit('userId', { userId: '_sample1', sample: true });
+            socket.emit('sampleSingle', { userId: '_sample1' });
         });
         $('.js-start-sample-match').click(function() {
-            socket.emit('pair', { users: ['_sample1', '_sample2'], sample: true });
+            socket.emit('sampleMatch');
         });
     }
     callSampleVis();
@@ -394,7 +492,6 @@ require([
     $('.js-go-match').click(function() {
 
         var id = $(this).data().value;
-
         if (id === '_sample1' || id === '_sample2') {
             firstUserId = id;
             $.ajax({
@@ -416,9 +513,8 @@ require([
 
     //go to single view
     $('.js-goSingle').click(function() {
-
         var id = $(this).data().value;
-
+        console.log(id);
         if (id === '_sample1' || id === '_sample2') {
             firstUserId = undefined;
             $.ajax({
@@ -427,7 +523,11 @@ require([
                 initVisSingle(d);
             });
         } else {
-            socket.emit('userId', { userId: id, firstUserId: undefined });
+            if (sessionStorage[id]) {
+                initVisSingle(JSON.parse(sessionStorage.getItem(id)));
+            } else {
+               socket.emit('userId', { userId: id, firstUserId: undefined });
+            }
         }
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');

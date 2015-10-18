@@ -83,33 +83,13 @@ function getTimezone(user) {
 
 function createSingleData(data) {
 
-    //FOR TEST: temporarily save raw data
-    fs.writeFileSync('public/users/raw/' + data.userinfo.userId + '.json',
-        JSON.stringify(data));
-
     function createBeerData(data, callback) {
         var user = new User(data.userinfo, data.timezone, data.checkins);
         callback(user);
     }
+
     createBeerData(data, function (u) {
-        fs.writeFileSync('public/users/' + data.userinfo.userId + '.json', JSON.stringify(u));
         io.emit('success', { data: u });
-    });
-}
-
-function createMatchData(users) {
-
-    function createBeerMatchData(users, callback) {
-        var dataset = _.map(users, function (user) {
-            return JSON.parse(fs.readFileSync('public/users/' + user + '.json',
-                'utf8'));
-        });
-        var match = new Match(dataset);
-        callback(match);
-    }
-
-    createBeerMatchData(users, function (m) {
-        io.emit('pair', { data: m });
     });
 }
 
@@ -158,45 +138,28 @@ function getUserFeed(id, data) {
 
 function getUserInfo(userId, firstUserId) {
 
-    //file check first
-    if (fs.existsSync('public/users/' + userId + '.json')) {
-        console.log('---file exists', userId, firstUserId);
-
-        //TEST: skip the friend selection
-        //io.emit('dataExistTest', { userId: userId });
-
-        if (_.isUndefined(firstUserId)) {
-            console.log(firstUserId);
-            var data = JSON.parse(
-                fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
-            io.emit('success', { data: data });
-        } else {
-            createMatchData([firstUserId, userId]);
+    untappd.userInfo(function (err,obj) {
+        if (obj && obj.response && obj.response.user) {
+            if (obj.response.user.is_private) {
+                console.log('--private id');
+                io.emit('error', {
+                    error_detail:
+                        userId.toUpperCase() + ' is a private account.'
+                });
+            } else if (obj.response.user.stats.total_checkins === 0) {
+                io.emit('error', {
+                    error_detail: 'No check-in data available.'
+                });
+            } else {
+                //get timezone info & emit
+                console.log ('--id found, get timezone info now');
+                getTimezone(obj.response.user);
+            }
         }
-    } else {
-        untappd.userInfo(function (err,obj) {
-            if (obj && obj.response && obj.response.user) {
-                if (obj.response.user.is_private) {
-                    console.log('--private id');
-                    io.emit('error', {
-                        error_detail:
-                            userId.toUpperCase() + ' is a private account.'
-                    });
-                } else if (obj.response.user.stats.total_checkins === 0) {
-                    io.emit('error', {
-                        error_detail: 'No check-in data available.'
-                    });
-                } else {
-                    //get timezone info & emit
-                    console.log ('--id found, get timezone info now');
-                    getTimezone(obj.response.user);
-                }
-            }
-            else {
-                io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
-            }
-        }, userId);
-    }
+        else {
+            io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
+        }
+    }, userId);
 }
 
 function getFriendsList(userId, count) {
@@ -230,41 +193,34 @@ function getFriendsList(userId, count) {
     callFriendsFeedAPI();
 }
 
-function checkFileExists(users) {
-    var u0 = fs.existsSync('public/users/' + users[0] + '.json') ? true : false;
-    var u1 = fs.existsSync('public/users/' + users[1] + '.json') ? true : false;
-    if (u0 && u1) {
-        createMatchData(users);
-    } else {
-        io.emit('error', {
-            error_detail: 'No previous data exist. Please restart.'
-        });
-    }
-}
-
 io.on('connection', function (socket) {
 
-    //TEST: data generating mode
+    /*TEST: data generating mode
     socket.on('dataset', function (data) {
         var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId + '.json', 'utf8'));
         createSingleData(d);
     });
+    socket.on('datasetSession', function (data) {
+        console.log('using downloaded json');
+        var d = JSON.parse(fs.readFileSync('public/users/' + data.userId + '.json', 'utf8'));
+        io.emit('success', { data: d });
+    });
+    socket.on('sampleMatchMake', function (data) {
+        fs.writeFileSync('public/users/_match.json', JSON.stringify(data.data));
+    });
+    */
 
     socket.on('userId', function (data) {
         console.log('--user data request', data);
-        if (data.sample) {
-            var d = JSON.parse(fs.readFileSync('public/users/_sample1.json', 'utf8'));
-            io.emit('success', { data: d, sample: true });
-        } else {
-            getUserInfo(data.userId.toLowerCase(), data.firstUserId);
-        }
-    }).on('pair', function (data) {
-        if (data.sample) {
-            createMatchData(data.users);
-        } else {
-            checkFileExists(data.users);
-        }
-    }).on('timezone', function (data) {
+        getUserInfo(data.userId.toLowerCase(), data.firstUserId);
+    }).on('sampleSingle', function (data) {
+        var d = JSON.parse(fs.readFileSync('public/users/' + data.userId + '.json', 'utf8'));
+        io.emit('success', { data: d, sample: data.userId });
+    }).on('sampleMatch', function () {
+        var d = JSON.parse(fs.readFileSync('public/users/_match.json', 'utf8'));
+        io.emit('sampleMatch', { data: d });
+    })
+    .on('timezone', function (data) {
         getUserFeed(undefined, data);
     }).on('friends', function (data) {
         console.log('--friends request, data');
@@ -272,7 +228,5 @@ io.on('connection', function (socket) {
     }).on('mapboxKey', function () {
         console.log('---mapbox key request');
         io.emit('mapboxKey', { token: credentials.mapboxKey });
-    }).on('signout', function (data) {
-        io.emit('signout', { userId: data.userId });
     });
 });

@@ -51,6 +51,7 @@ define(function () {
     var putBoth = function (beersList) {
         _.each(_.range(4), function (i) {
             var list = beersList[i];
+            $('.js-both-' + i).html('');
             if (!_.isEmpty(list)) {
                 _.each(list, function (b) {
                     $('.js-both-' + i).append('<img src="' + b.label +
