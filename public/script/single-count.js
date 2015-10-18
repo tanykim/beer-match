@@ -145,7 +145,6 @@ define(['moment', 'textures'], function (moment, textures) {
         E.putAxisLable(svg, -dim.h / 2, 0,
             'number of ' + unit, 'y', 'js-freq-lable-y');
 
-        console.log(avgCount, unit);
         drawFreqBlocks(frequency, maxCount, avgCount[unit]);
     };
 

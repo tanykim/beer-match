@@ -269,17 +269,6 @@ require([
         }
     }
 
-    function updateSampleData(data) {
-        var dCount = moment()
-            .diff(moment(data.timeRange[1], 'YYYYMMDD'), 'days');
-        var wCount = Math.floor(dCount/7);
-        var newEd = moment(data.timeRange[1], 'YYYYMMDD').add(wCount, 'weeks');
-        data.timeRange = _.map(data.timeRange, function (d) {
-            return moment(d, 'YYYYMMDD').add(wCount, 'weeks')
-                .format('YYYYMMDD');
-        });
-    }
-
     /************************/
     /* socket communication */
     /************************/
@@ -316,7 +305,6 @@ require([
     }).on('success', function (data) {
         if (data.sample) {
             firstUserId = '_example1';
-            var dataset = updateSampleData(data.data);
             initVisSingle(data.data);
         } else if (firstUserId) {
             firstUserId = undefined;

@@ -253,16 +253,14 @@ io.on('connection', function (socket) {
 
     //TEST: data generating mode
     socket.on('dataset', function (data) {
-        var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId +
-            '.json', 'utf8'));
+        var d = JSON.parse(fs.readFileSync('public/users/raw/' + data.userId + '.json', 'utf8'));
         createSingleData(d);
     });
 
     socket.on('userId', function (data) {
         console.log('userId---', data);
         if (data.sample) {
-            var data = JSON.parse(fs.readFileSync('public/users/_sample1.json',
-                'utf8'));
+            var data = JSON.parse(fs.readFileSync('public/users/_sample1.json', 'utf8'));
             io.emit('success', { data: data, sample: true });
         } else {
             getUserInfo(data.userId.toLowerCase(), data.firstUserId);
