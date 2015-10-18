@@ -59,6 +59,8 @@ require([
     //initiate single vis
     function initVisSingle(data) {
 
+        console.log(data);
+
         var u = data.userinfo;
 
         $('.js-go-match').attr('data-value', u.userId);
@@ -96,7 +98,7 @@ require([
     }
 
     // default text input
-    function renderIntro(desc, warning, userId, friends) {
+    function renderIntro(desc, warning, userId, friends, apiError) {
 
         var template = _.template($('#intro-start').html());
         $('.js-intro-main').html(template({
@@ -104,11 +106,20 @@ require([
             warning: warning,
             userId: userId,
             friends: friends,
-            firstUserId: firstUserId? firstUserId.toUpperCase() : ''
+            firstUserId: firstUserId? firstUserId.toUpperCase() : '',
+            apiError: apiError
         }));﻿
 
         if (!userId) {
             $('.js-intro-input').focus();
+        }
+
+        //api error
+        if (apiError) {
+            callSampleVis();
+            $('.js-start-single').click(function() {
+                socket.emit('userId', { userId: userId });
+            });
         }
     }
 
@@ -301,6 +312,8 @@ require([
 
     socket.on('error', function (data) {
         renderIntro(E.msgs.intro.diffName, data.error_detail);
+    }).on('apiError', function (data) {
+        renderIntro(E.msgs.intro.apiError, data.error_detail, data.userId, '', true);
     }).on('profile', function (data) {
         $('.js-intro-status').html('');
         renderUserInfo(data);

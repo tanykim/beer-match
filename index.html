@@ -318,7 +318,8 @@
         <!-- 4 where -->
         <div class="vis-contents single-where js-single-contents-4">
             <div class="vis-wrapper">
-                <div id="vis-map" class="map"></div>
+                <div class="noData js-where-noData hide">No public venue data exist.</div>
+                <div id="vis-map" class="map js-where-map"></div>
                 <div id="vis-where" class="where js-single-svg"></div>
             </div>
         </div>
@@ -394,7 +395,9 @@
     </select>
     <% } %>
     <div class="desc"><%= desc %></div>
+    <% if (!apiError) { %>
     <input type="text" class="input js-intro-input" value="<%= userId %>" <%= userId ? ' disabled' : '' %> >
+    <% } %>
     <% if (firstUserId) { %>
         <div class="start-single">
             Or

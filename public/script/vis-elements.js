@@ -6,6 +6,7 @@ var E = {
             init: '<span class="tagline">Explore your beers and see a match with a friend!</span>' +
                 '<br/> Enter your <strong>UNTAPPD</strong> user name',
             diffName: 'Try a different user name',
+            apiError: 'Refresh this page later.',
             userIdCheck: 'Checking user name...',
             tooShort: 'Should be at least 3 characters',
             friends: 'Or enter an Untapped user name',

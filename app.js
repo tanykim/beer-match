@@ -149,7 +149,7 @@ function getUserFeed(id, data) {
                 }
             }
             else {
-                io.emit('error', { error_detail: obj.meta.error_detail });
+                io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
             }
         }, userId, 50, id);
     }
@@ -166,6 +166,7 @@ function getUserInfo(userId, firstUserId) {
         //io.emit('dataExistTest', { userId: userId });
 
         if (_.isUndefined(firstUserId)) {
+            console.log(firstUserId);
             var data = JSON.parse(
                 fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
             io.emit('success', { data: data });
@@ -192,7 +193,7 @@ function getUserInfo(userId, firstUserId) {
                 }
             }
             else {
-                io.emit('error', { error_detail: obj.meta.error_detail });
+                io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
             }
         }, userId);
     }
@@ -221,6 +222,8 @@ function getFriendsList(userId, count) {
                 else {
                     io.emit('friends', { friends: _.flatten(friends).sort() });
                 }
+            } else {
+                io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
             }
         }, userId, 25, offset);
     }
@@ -248,6 +251,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('userId', function (data) {
+        console.log('--user data request', data);
         if (data.sample) {
             var d = JSON.parse(fs.readFileSync('public/users/_sample1.json', 'utf8'));
             io.emit('success', { data: d, sample: true });
@@ -263,8 +267,10 @@ io.on('connection', function (socket) {
     }).on('timezone', function (data) {
         getUserFeed(undefined, data);
     }).on('friends', function (data) {
+        console.log('--friends request, data');
         getFriendsList(data.userId.toLowerCase(), data.count);
     }).on('mapboxKey', function () {
+        console.log('---mapbox key request');
         io.emit('mapboxKey', { token: credentials.mapboxKey });
     }).on('signout', function (data) {
         io.emit('signout', { userId: data.userId });

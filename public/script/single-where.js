@@ -51,13 +51,10 @@ define(['textures', 'socketio'], function (textures, io) {
         locations = data;
         var center = locations[0].location;
 
-        //FIXME: the token should be hidden
         if (_.isUndefined(map)) {
-
             var urlParts = window.location.href.split('/');
             var socket = io.connect('http://' + urlParts[2]);
             socket.emit('mapboxKey');
-
             socket.on('mapboxKey', function (data) {
                 L.mapbox.accessToken = data.token;
                 map = L.mapbox.map('vis-map', 'mapbox.light').setView(center, 12);
@@ -69,6 +66,7 @@ define(['textures', 'socketio'], function (textures, io) {
             map.removeLayer(cluster);
             m = undefined;
             cluster = undefined;
+            putMapElements(center);
         }
     };
 
