@@ -59,8 +59,6 @@ require([
     //initiate single vis
     function initVisSingle(data) {
 
-        console.log(data);
-
         var u = data.userinfo;
 
         $('.js-go-match').attr('data-value', u.userId);
@@ -431,8 +429,7 @@ require([
                 initVisSingle(d);
             });
         } else {
-            socket.emit('userId',
-                { userId: $(this).data().value, firstUserId: undefined });
+            socket.emit('userId', { userId: $(this).data().value, firstUserId: undefined });
         }
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');

@@ -5,7 +5,7 @@ define(['textures'], function (textures) {
     var colors = E.colors.ratings;
     var canvas = {};
     var checkinCount;
-    var data;
+    var allData, data, avgScore;
     var topDatum;
     var category;
 
@@ -106,12 +106,13 @@ define(['textures'], function (textures) {
             .endAngle(eA);
     };
 
-    var drawCategories = function (vis, cg, cic, dt) {
+    var drawCategories = function (vis, cg, cic, allD) {
 
         category = cg;
         checkinCount = cic;
-        data = dt[category];
-        topDatum = dt[category][0];
+        allData = allD;
+        data = allData[category];
+        topDatum = data[0];
 
         var margin = vis.margin;
         var dim = { w: vis.w, h: vis.w };
@@ -161,10 +162,14 @@ define(['textures'], function (textures) {
         });
     };
 
-    var drawRatings = function(vis, avgScore) {
+    var drawRatings = function(vis, avg) {
 
         $('.js-ratings-elm').remove();
         $('.js-ratings-tooltip').remove();
+
+        if (avg) {
+            avgScore = avg;
+        }
 
         if (vis) {
             margin = vis.margin;
@@ -255,10 +260,10 @@ define(['textures'], function (textures) {
         showTextures(data[0], 0);
     };
 
-    var updateVis = function (dt, cg) {
+    var updateVis = function (cg) {
 
-        data = dt;
-        topDatum = dt[0];
+        data = allData[cg];
+        topDatum = data[0];
         category = cg;
 
         //update pie

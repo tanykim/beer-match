@@ -44,8 +44,9 @@ define(['moment', 'vis-settings',
         });
 
         //1--ratings
-        Ratings.drawCategories(S.setVisNoSVG('categories'), 'style', b.userinfo.checkinCount,
-                b.ratingsList);
+        //revert to the first category
+        S.resetRadioSelect('js-ratings-title', 'style');
+        Ratings.drawCategories(S.setVisNoSVG('categories'), 'style', b.userinfo.checkinCount, b.ratingsList);
         Ratings.drawRatings(S.setVisNoSVG('ratings'), b.scoreAvg);
 
         //select category
@@ -53,19 +54,9 @@ define(['moment', 'vis-settings',
             var changed = S.changeRadioSelection($(this));
             if (changed) {
                 var category = $(this).data().value;
-
-                //revert to the first choice
-                _.each($('.js-ratings-sortBy'), function (d) {
-                    if ($(d).data().value === 'count') {
-                        $(d).addClass('selected');
-                        $(d).find('i').removeClass('fa-circle-o').addClass('fa-dot-circle-o');
-                    } else {
-                        $(d).removeClass('selected');
-                        $(d).find('i').removeClass('fa-dot-circle-o').addClass('fa-circle-o');
-                    }
-                });
-                Ratings.updateVis(b.ratingsList[category], category);
-                Ratings.drawRatings(null, b.scoreAvg);
+                S.resetRadioSelect('js-ratings-sortBy', 'count');
+                Ratings.updateVis(category);
+                Ratings.drawRatings();
             }
         });
 

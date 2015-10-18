@@ -121,6 +121,18 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
         }
     };
 
+    var resetRadioSelect = function (elm, val) {
+        _.each($('.' + elm), function (d) {
+            if ($(d).data().value === val) {
+                $(d).addClass('selected');
+                $(d).find('i').removeClass('fa-circle-o').addClass('fa-dot-circle-o');
+            } else {
+                $(d).removeClass('selected');
+                $(d).find('i').removeClass('fa-dot-circle-o').addClass('fa-circle-o');
+            }
+        });
+    }
+
     var changeRadioSelection = function (elm, tag) {
         if (!tag) {
             tag = 'span';
@@ -143,6 +155,7 @@ define(['jquery', 'd3', 'chroma'], function ($, d3, chroma) {
     return {
         setVisNoSVG: setVisNoSVG,
         setVis: setVis,
+        resetRadioSelect: resetRadioSelect,
         changeRadioSelection: changeRadioSelection,
         updateSelection: updateSelection,
         getChroma: getChroma
