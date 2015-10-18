@@ -69,7 +69,7 @@ require([
         var html = {
             avatar: u.avatar,
             name: u.username,
-            address: u.address,
+            address: u.address? '<i class="fa fa-lg fa-map-marker"></i> ' + u.address : '',
             checkinCount: u.checkinCount
         };
         initVisCommon('single', 'match', html, u.userId);
