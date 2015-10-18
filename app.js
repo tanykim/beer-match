@@ -61,19 +61,15 @@ function getTimezone(user) {
 
     geocoder.geocode(userinfo.address, function (err, data) {
         if (err) {
-            //console.log('geocoding error');
             emitProfile(userinfo, '');
         } else {
-            //console.log(data.results[0].geometry.location);
-            location = data.results[0].geometry.location;
+            var location = data.results[0].geometry.location;
             timezoner.getTimeZone(
                 location.lat, location.lng,
                 function (err, data) {
                     if (err) {
-                        //console.log(err);
                         emitProfile(userinfo, '');
                     } else {
-                        //console.log(data);
                         emitProfile(userinfo, {
                             name: data.timeZoneId,
                             offset: data.rawOffset
@@ -153,7 +149,6 @@ function getUserFeed(id, data) {
                 }
             }
             else {
-                //console.log('-----error at feed api', err, obj, obj.meta.code);
                 io.emit('error', { error_detail: obj.meta.error_detail });
             }
         }, userId, 50, id);
@@ -169,6 +164,7 @@ function getUserInfo(userId, firstUserId) {
 
         //TEST: skip the friend selection
         //io.emit('dataExistTest', { userId: userId });
+
         if (_.isUndefined(firstUserId)) {
             var data = JSON.parse(
                 fs.readFileSync('public/users/' + userId + '.json', 'utf8'));
@@ -196,7 +192,6 @@ function getUserInfo(userId, firstUserId) {
                 }
             }
             else {
-                //console.log('--------error at userinfo api', err, obj.meta.code);
                 io.emit('error', { error_detail: obj.meta.error_detail });
             }
         }, userId);
@@ -204,8 +199,6 @@ function getUserInfo(userId, firstUserId) {
 }
 
 function getFriendsList(userId, count) {
-
-    //console.log('----friends', userId, count);
 
     //max 25 feeds per call, upto 100 friends
     var friendCallsNeeded = Math.min(count, 100);
@@ -223,11 +216,9 @@ function getFriendsList(userId, count) {
                 friends.push(fList);
                 friendCallCount = friendCallCount + 25;
                 if (friendCallCount < friendCallsNeeded) {
-                    //console.log('----', offset);
                     callFriendsFeedAPI(friendCallCount);
                 }
                 else {
-                    //console.log('---friends loading done');
                     io.emit('friends', { friends: _.flatten(friends).sort() });
                 }
             }
@@ -240,7 +231,6 @@ function checkFileExists(users) {
     var u0 = fs.existsSync('public/users/' + users[0] + '.json') ? true : false;
     var u1 = fs.existsSync('public/users/' + users[1] + '.json') ? true : false;
     if (u0 && u1) {
-        //console.log('---both file exist');
         createMatchData(users);
     } else {
         io.emit('error', {
@@ -258,10 +248,9 @@ io.on('connection', function (socket) {
     });
 
     socket.on('userId', function (data) {
-        console.log('userId---', data);
         if (data.sample) {
-            var data = JSON.parse(fs.readFileSync('public/users/_sample1.json', 'utf8'));
-            io.emit('success', { data: data, sample: true });
+            var d = JSON.parse(fs.readFileSync('public/users/_sample1.json', 'utf8'));
+            io.emit('success', { data: d, sample: true });
         } else {
             getUserInfo(data.userId.toLowerCase(), data.firstUserId);
         }

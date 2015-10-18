@@ -32,10 +32,7 @@ body {
 	padding-top: @headerH + @padding * 2 ;
 	padding-bottom: @padding * 2;
 	text-align: center;
-
-
 	background: url('../images/pattern.png');
-	/*background-size: 100% 100%;*/
 	.intro-main {
 		padding: @padding;
 		font-size: @large;
@@ -71,15 +68,9 @@ body {
 			font-size: @small;
 			color: @grey;
 		}
-		.view-single {
+		.view-icon {
 			#view-icon-intro;
 			#view-icon;
-			#view-icon-single;
-		}
-		.view-match {
-			#view-icon-intro;
-			#view-icon;
-			#view-icon-match;
 		}
 		@picSize: 80px;
 		.user {
@@ -109,12 +100,20 @@ body {
 			font-size: @normal;
 			margin-top: 1em;
 		}
-		.start {
-			margin-top: 1em;
-			.bold();
+		.start-download {
+			background-color: @darkRed;
+			display: inline-block;
+			color: @white;
+			#view-icon();
+			margin-top: 1.5em;
 		}
 		.start-single {
 			margin-top: 1.5em;
+		}
+		.progress {
+			margin-top: 1.5em;
+			color: @darkRed;
+			.bold();
 		}
 	}
 	.untappd {

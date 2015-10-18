@@ -80,16 +80,17 @@ require([
         var data = d.data;
 
         $('.js-goSingle-0').html(data.userinfo[0].userId.toUpperCase())
-            .attr('data-value', data.userinfo[0].userId);
+            .parent().attr('data-value', data.userinfo[0].userId);
         $('.js-goSingle-1').html(data.userinfo[1].userId.toUpperCase())
-            .attr('data-value', data.userinfo[1].userId);
+            .parent().attr('data-value', data.userinfo[1].userId);
 
         var html = {
             avatar0: data.userinfo[0].avatar,
             avatar1: data.userinfo[1].avatar,
             name0: data.userinfo[0].username,
-            name1: data.userinfo[1].username,
+            name1: data.userinfo[1].username
         };﻿
+
         initVisCommon('match', 'single', html, data.url);
         Vis.startVisMatch(data);
     }
@@ -114,6 +115,8 @@ require([
     //download
     function startDownload(d, tz) {
         $('.js-start').click(function() {
+            $(this).addClass('hide');
+            $('.js-progress').removeClass('hide').html('Starting to download...');
             console.log('2---. downloading feeds');
             socket.emit('timezone', {
                 userinfo: d.userinfo,
@@ -152,7 +155,7 @@ require([
         });
         $('.js-timezone-select').change(function() {
             newTimezone = $(this).val();
-            $('.js-start').removeClass('disabled').addClass('link underline');
+            $('.js-start').removeClass('disabled').addClass('link').html('<i class="fa fa-cloud-download"></i> Download');
             startDownload(data, newTimezone);
         });
     }
@@ -168,6 +171,7 @@ require([
             var msg = friends ? E.msgs.intro.friends : E.msgs.intro.noFriends;
             renderIntro(msg, '', '', friends);
             $('.js-friend-select').change(function() {
+                $('.js-status').html('Downloading friend\'s info');
                 var friend = $(this).val();
                 socket.emit('userId', { userId: friend, firstUserId: userId });
             });
@@ -184,7 +188,6 @@ require([
     //after loading the first user
     function renderVisOptions(msg, data) {
 
-        console.log(data);
         var userId = data.userinfo.userId;
         var template = _.template($('#intro-option').html());
         $('.js-intro-main').html(template({
@@ -220,9 +223,12 @@ require([
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-intro').removeClass('hide');
+        $('.js-start').removeClass('hide');
+        $('.js-progress').addClass('hide').html('');
         window.history.pushState('object or string', 'Title', '/');
         firstUserId = undefined;
         renderIntro(E.msgs.intro.init, '');
+        callSampleVis();
     }
 
     function getHeightSum (num, view, offset) {
@@ -280,16 +286,16 @@ require([
     if (uIdURL.indexOf('---') > -1) {
         socket.emit('dataset', { userId: uIdURL.split('---')[1] });
     } else if (uIdURL.indexOf('+') > -1) {
-        //console.log('1---two users');
+        console.log('1---two users');
         //FIXME: loading needed
         firstUserId = uIdURL.split('+')[0];
         socket.emit('pair', { users: uIdURL.split('+') });
     } else if (uIdURL) {
-        //console.log('1---single user');
+        console.log('1---single user');
         renderIntro('', E.msgs.intro.userIdCheck, uIdURL);
         socket.emit('userId', { userId: uIdURL });
     } else {
-        //console.log('1---no url');
+        console.log('1---no url');
         renderIntro(E.msgs.intro.init, '', '');
     }
 
@@ -300,8 +306,7 @@ require([
         renderUserInfo(data);
     }).on('progress', function (data) {
         var progress = Math.round(data.count/data.total * 100);
-        $('.js-start').removeClass('underline')
-            .html(progress < 100 ? progress + '%' : 'Analyzing...');
+        $('.js-progress').html(progress < 100 ? progress + '%' : 'Analyzing...');
     }).on('success', function (data) {
         if (data.sample) {
             firstUserId = '_example1';
@@ -346,17 +351,19 @@ require([
     });
 
     //intro sample vis
-    $('.js-start-sample-single').click(function() {
-        socket.emit('userId', { userId: '_sample1', sample: true });
-    });
-    $('.js-start-sample-match').click(function() {
-        socket.emit('pair', { users: ['_sample1', '_sample2'], sample: true });
-    });
+    function callSampleVis() {
+        $('.js-start-sample-single').click(function() {
+            socket.emit('userId', { userId: '_sample1', sample: true });
+        });
+        $('.js-start-sample-match').click(function() {
+            socket.emit('pair', { users: ['_sample1', '_sample2'], sample: true });
+        });
+    }
+    callSampleVis();
 
     //add intro footer height
     var hDiff = $(window).height() - $('.js-intro-last').outerHeight();
-    $('.js-intro-last')
-        .css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
+    $('.js-intro-last').css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
 
     //scroll
     var scrolled = _.debounce(checkView, 100);
