@@ -12,7 +12,8 @@ var E = {
             friends: 'Or enter an Untapped user name',
             noFriends: 'No friends found, enter an UNTAPPD user name',
             back: 'Welcome back!',
-            completed: 'Download completed!'
+            completed: 'Download completed!',
+            noData: 'No previous data exist. Please restart'
         },
         share: {
             facebook: 'https://www.facebook.com/sharer/' +
