@@ -20,8 +20,8 @@ define(['textures'], function (textures) {
 
         if (opacity === 1) {
             $('.js-styles-name').html(names[i]);
-            $('.js-styles-user0').html(checkins[i][0]);
-            $('.js-styles-user1').html(checkins[i][1]);
+            $('.js-styles-user0').html(checkins[i][i < divide ? 0 : 1]);
+            $('.js-styles-user1').html(checkins[i][i < divide ? 1 : 0]);
             $('.js-styles-checkins').show();
         } else {
             $('.js-styles-name').html('See which styles you share!');
