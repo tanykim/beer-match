@@ -366,7 +366,7 @@ require([
             //create single data first
             socket.emit('userId', { userId: firstUserId});
         } else {
-            renderIntro(E.msg.intro.noData, '', '');
+            renderIntro(E.msgs.intro.noData, '', '');
         }
     //single view
     } else if (uIdURL) {

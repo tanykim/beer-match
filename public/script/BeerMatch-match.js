@@ -38,7 +38,8 @@ define(['moment'], function (moment) {
             getBeerInfo(loves(allBeers[0]), loves(allBeers[1])), //both love
             getBeerInfo(hates(allBeers[0]), hates(allBeers[1])), //both hate
             getBeerInfo(loves(allBeers[0]), hates(allBeers[1])), //1 love 2 hate
-            getBeerInfo(hates(allBeers[0]), loves(allBeers[1])) //1 hate 2 love
+            getBeerInfo(hates(allBeers[0]), loves(allBeers[1])), //1 hate 2 love
+            getBeerInfo(common, common), //both drank
         ];
     }
 
