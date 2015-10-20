@@ -33,14 +33,19 @@ require([
 
     var firstUserId;
     var prevTitle = 0;
-    var sessions;
+    var sessions = [];
 
     function initVisCommon(sel, other, html, url) {
 
         window.history.pushState('object or string', 'Title', url);
 
         $('.js-intro').addClass('hide');
+
         $('.js-nav').show();
+        $('.js-nav-expand').addClass('hide');
+        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
+        $('.js-sessions').hide();
+
         $('.js-' + other).addClass('hide');
         $('.js-' + sel).removeClass('hide');
         $('.js-go-' + other).removeClass('hide');
@@ -55,7 +60,6 @@ require([
         });
     }
 
-    //initiate single vis
     function initVisSingle(data) {
 
         var u = data.userinfo;
@@ -73,7 +77,6 @@ require([
         Vis.startVis(data);
     }
 
-    //match
     function initVisMatch(data) {
 
         /*
@@ -125,8 +128,9 @@ require([
             warning: warning,
             userId: userId,
             friends: friends,
-            sessions: !_.isEmpty(sessions) ? sessions: '',
-            firstUserId: firstUserId? firstUserId.toUpperCase() : '',
+            sessions: _.isEmpty(sessions) ? '' :
+                _.map(sessions, function (d) { return d[0]; }).reverse(),
+            firstUserId: _.isUndefined(firstUserId) ? '' : firstUserId.toUpperCase(),
             apiError: apiError
         }));﻿
 
@@ -143,15 +147,14 @@ require([
             }
         });
 
-        // if (apiError) {
-            callSampleVis();
+        if (apiError) {
             $('.js-start-single').click(function() {
                 initVisSingle(JSON.parse(localStorage.getItem(userId)));
             });
-        // }
+        }
+        callSampleVis();
     }
 
-    //download
     function startDownload(d, tz) {
         $('.js-start').click(function() {
             $(this).addClass('hide');
@@ -200,7 +203,7 @@ require([
     }
 
     //render friends list after the first user is loaded
-    function renderFriends(userId, friendCount, data, isTopMenu) {
+    function renderFriends(userId, friendCount) {
 
         firstUserId = userId;
         console.log('3--. two users match', userId, friendCount);
@@ -210,15 +213,24 @@ require([
             var msg = friends ? E.msgs.intro.friends : E.msgs.intro.noFriends;
             renderIntro(msg, '', '', friends);
             $('.js-friend-select').change(function() {
-                $('.js-status').html('Downloading friend\'s info');
                 var friend = $(this).val();
-                socket.emit('userId', { userId: friend, firstUserId: userId });
+                resetToIntro(true);
+                if (localStorage[friend]) {
+                    var matchURL = userId + '+' + friend;
+                    if (localStorage[matchURL]) {
+                        initVisMatch(JSON.parse(localStorage.getItem(matchURL)));
+                    } else {
+                        createMatchData([userId, friend]);
+                    }
+                } else {
+                    socket.emit('userId', { userId: friend, firstUserId: userId });
+                }
             });
             $('.js-start-single').click(function() {
-                if (isTopMenu) {
-                    socket.emit('userId', { userId: uIdURL });
+                if (localStorage[userId]) {
+                    initVisSingle(JSON.parse(localStorage.getItem(userId)));
                 } else {
-                    initVisSingle(data);
+                    socket.emit('userId', { userId: userId });
                 }
             });
         });
@@ -236,7 +248,7 @@ require([
         }));﻿
 
         if (!localStorage[userId] && userId !== '_sample1' && userId !== '_sample2') {
-            setLocalStorageItem(u.userId, JSON.stringify(data));
+            setLocalStorageItem(userId, JSON.stringify(data));
         }
 
         $('.js-start-single').click(function() {
@@ -254,12 +266,12 @@ require([
                     initVisMatch(d);
                 });
             } else {
-                renderFriends(userId, data.userinfo.friendCount, data);
+                renderFriends(userId, data.userinfo.friendCount);
             }
         });
     }
 
-    function resetToIntro() {
+    function resetToIntro(loading) {
         $('.js-single').addClass('hide');
         $('.js-match').addClass('hide');
         $('.js-nav').hide();
@@ -271,8 +283,12 @@ require([
         $('.js-progress').addClass('hide').html('');
         window.history.pushState('object or string', 'Title', '/');
         firstUserId = undefined;
-        renderIntro(E.msgs.intro.init, '');
-        callSampleVis();
+        if (loading) {
+            $('.js-intro-main').html('LOADING...');
+        } else {
+            renderIntro(E.msgs.intro.init, '');
+            callSampleVis();
+        }
     }
 
     function getHeightSum (num, view, offset) {
@@ -339,30 +355,48 @@ require([
     /*******************/
 
     console.log(localStorage);
+    //localStorage.clear();
 
-    //FIXME: remove the oldest one
+    //keep max 10 sessions, if longer, delete oldest
     function checkSessionLength() {
-        if (localStorage.length > 10) {
-            localStorage.removeItem(0);
+        function removeItem(len) {
+            if (len > 10) {
+                localStorage.removeItem(sessions[0][0]);
+                sessions.shift();
+                checkSessionLength();
+            }
         }
+        removeItem(sessions.length)
     }
+
     function setLocalStorageItem(key, val) {
         checkSessionLength();
         localStorage.setItem(key, val);
-        $('.js-sessions-items').append('<li data-value="' + key + '">' +
+        $('.js-sessions-items').prepend('<li data-value="' + key + '">' +
             key + ' <i class="fa fa-times-circle link"></i>' +
             '</li>');
-        sessions.push(key);
+        sessions.push([key, moment().unix()]);
     }
 
-    //keep only up to 10 sessions
+    if (localStorage.length > 1) {
+        sessions = _.sortBy(_.map(_.range(localStorage.length), function (i) {
+            var key = localStorage.key(i);
+            if (key !== 'debug') {
+                var val = JSON.parse(localStorage.getItem(key));
+                return [key, val.created];
+            } else {
+                return [key, 0];
+            }
+        }), function (d) {
+            return d[1];
+        });
+    }
+    sessions.shift();
     checkSessionLength();
-    sessions = _.without(_.map(_.range(localStorage.length), function (i) {
-        return localStorage.key(i);
-    }), 'debug');
-    _.each(sessions, function (d) {
-        $('.js-sessions-items').append('<li data-value="' + d + '">' +
-            d + ' <i class="fa fa-times-circle link js-session-button"></i>' +
+
+    _.each(_.clone(sessions).reverse(), function (d) {
+        $('.js-sessions-items').append('<li data-value="' + d[0] + '">' +
+            d[0] + ' <i class="fa fa-times-circle link js-session-button"></i>' +
             '</li>');
     });
 
@@ -442,7 +476,6 @@ require([
             initVisSingle(data.data);
         } else if (firstUserId) { //for match
             var userId = data.data.userinfo.userId;
-            //console.log(userId, data);
             setLocalStorageItem(userId, JSON.stringify(data.data));
             createMatchData([firstUserId, userId]);
         } else {
@@ -484,7 +517,6 @@ require([
                 } else if (localStorage[userId] && localStorage[firstUserId]) {
                     console.log('----2');
                     createMatchData([firstUserId, userId]);
-                //} else if (localStorage[userId] && !localStorage[firstUserId]){
                 } else {
                     renderIntro('', E.msgs.intro.userIdCheck, userId);
                     socket.emit('userId', { userId: userId, firstUserId: firstUserId });
@@ -537,21 +569,14 @@ require([
                 initVisMatch(d);
             });
         } else {
-            $('.js-single').addClass('hide');
-            $('.js-nav').hide();
-            $('.js-intro').removeClass('hide');
-            $('.js-intro-main').html('LOADING...');
-            renderFriends(id, $(this).data().friends, undefined, true);
+            resetToIntro(true);
+            renderFriends(id, $(this).data().friends);
         }
-        $('.js-nav-expand').addClass('hide');
-        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
-        $('.js-go-match').addClass('hide');
     });
 
     //go to single view
     $('.js-goSingle').click(function() {
         var id = $(this).data().value;
-        console.log(id);
         if (id === '_sample1' || id === '_sample2') {
             firstUserId = undefined;
             $.ajax({
@@ -563,11 +588,11 @@ require([
             if (localStorage[id]) {
                 initVisSingle(JSON.parse(localStorage.getItem(id)));
             } else {
-               socket.emit('userId', { userId: id, firstUserId: undefined });
+                console.log('----');
+                resetToIntro(true);
+                socket.emit('userId', { userId: id, firstUserId: undefined });
             }
         }
-        $('.js-nav-expand').addClass('hide');
-        $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
     });
 
     //remove sessions

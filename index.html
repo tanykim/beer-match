@@ -420,7 +420,7 @@
     <% } %>
     <% if (sessions && !firstUserId) { %>
         <div class="sessions">
-            <select class="list js-session-select">
+            <select class="list js-session-select" <%= (userId && !apiError) ? ' disabled' : '' %>>
                 <option>Or select a previously downloaded dataset</option>
             <%  _.each(sessions, function (s) { %>
                 <option value="<%= s %>"><%= s %></option>

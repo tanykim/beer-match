@@ -139,6 +139,7 @@ function getUserFeed(id, data) {
 function getUserInfo(userId, firstUserId) {
 
     untappd.userInfo(function (err, obj) {
+        console.log(err, obj);
         if (obj && obj.response && obj.response.user) {
             if (obj.response.user.is_private) {
                 console.log('--private id');
@@ -151,7 +152,7 @@ function getUserInfo(userId, firstUserId) {
                 getTimezone(obj.response.user);
             }
         } else {
-            io.emit('error', { error_detail: obj.meta.error_detail });
+            io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
         }
     }, userId);
 }
@@ -166,6 +167,7 @@ function getFriendsList(userId, count) {
 
     function callFriendsFeedAPI(offset) {
         untappd.userFriends(function (err, obj) {
+            console.log(err, obj);
             if (obj && obj.response && obj.response.items && obj.response.count > 0) {
                 var fList = _.map(obj.response.items, function (d) {
                     return d.user.user_name.toLowerCase();
@@ -181,7 +183,7 @@ function getFriendsList(userId, count) {
             } else if (obj.response.count === 0) {
                 io.emit('error', { error_detail: userId.toUpperCase() + ' doesn\'t have friends', userId: userId });
             } else {
-                io.emit('error', { error_detail: obj.meta.error_detail });
+                io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
             }
         }, userId, 25, offset);
     }
