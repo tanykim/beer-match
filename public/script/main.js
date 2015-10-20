@@ -609,7 +609,10 @@ require([
         $(this).parent().remove();
         var val = $(this).parent().data().value;
         localStorage.removeItem(val);
-        sessions = _.without(sessions, val);
+        sessions.shift();
+        if (sessions.length === 0) {
+            $('.js-remove').addClass('hide');
+        }
         var currentUrl = window.location.href.split('/');
         if (currentUrl[currentUrl.length - 1] === val) {
             resetToIntro();
