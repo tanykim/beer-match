@@ -49,24 +49,6 @@ ul {
     padding: 0;
 }
 
-/*icons*/
-#view-icon-intro {
-    background-color: @yellow;
-    display: inline-block;
-    color: @dark;
-    .bold();
-}
-#view-icon-vis {
-    background-color: @white;
-    .bold();
-}
-#view-icon {
-    border-radius: 1em;
-    margin: 0.6em 0.1em 0 0.1em;
-    text-decoration: none;
-    padding: 0.375em 1em 0.5em 1em;
-}
-
 /*common */
 .hide {
     display: none !important;
@@ -101,6 +83,28 @@ ul {
 .60p {
     width: 60%;
     margin: 0 auto;
+}
+
+/*icons*/
+.view-icon-margin {
+    margin: 0.6em 0.1em 0 0.1em;
+}
+@view-icon-padding-top: 0.375em;
+#view-icon-intro {
+    background-color: @yellow;
+    display: inline-block;
+    color: @dark;
+    .bold();
+}
+#view-icon-vis {
+    background-color: @white;
+    .bold();
+}
+#view-icon {
+    border-radius: 1em;
+    .view-icon-margin();
+    text-decoration: none;
+    padding: @view-icon-padding-top 1em 0.5em 1em;
 }
 
 @import 'mapbox';

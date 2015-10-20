@@ -78,6 +78,12 @@
             }
         }
     }
+    .remove {
+        float: right;
+        .view-icon-margin();
+        padding-top: @view-icon-padding-top;
+        margin-right: @visHeaderH/2;
+    }
     .goSingles {
         float: right;
         margin-right: @visHeaderH/2;
@@ -97,8 +103,31 @@
         float: right;
         #view-icon-vis;
         #view-icon;
-        margin-right: @visHeaderH/2;
+        margin-right: @visHeaderH/4;
         color: @orange;
+    }
+}
+
+.vis-sessions {
+    z-index: 1001;
+    position: fixed;
+    top: @visHeaderH + @visHeaderP;
+    background-color: @grey;
+    right: @visHeaderH/2;
+    padding: 0.5em 1em;
+    border-radius: 0.25em;
+    color: @black;
+    .sessions-title {
+        font-size: @tiny;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: @lightGrey;
+    }
+    ul {
+        margin-top: 0.5em;
+        li {
+            margin-top: 0.5em;
+        }
     }
 }
 

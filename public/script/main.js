@@ -31,11 +31,9 @@ require([
 
     'use strict';
 
-    var urlParts = window.location.href.split('/');
-    var socket = io.connect('http://' + urlParts[2]);
-
     var firstUserId;
     var prevTitle = 0;
+    var sessions;
 
     function initVisCommon(sel, other, html, url) {
 
@@ -121,11 +119,13 @@ require([
     function renderIntro(desc, warning, userId, friends, apiError) {
 
         var template = _.template($('#intro-start').html());
+
         $('.js-intro-main').html(template({
             desc: desc,
             warning: warning,
             userId: userId,
             friends: friends,
+            sessions: !_.isEmpty(sessions) ? sessions: '',
             firstUserId: firstUserId? firstUserId.toUpperCase() : '',
             apiError: apiError
         }));﻿
@@ -134,13 +134,21 @@ require([
             $('.js-intro-input').focus();
         }
 
-        //api error
-        if (apiError) {
+        $('.js-session-select').change(function () {
+            var url = $(this).val();
+            if (url.indexOf('+') > -1) {
+                initVisMatch(JSON.parse(localStorage.getItem(url)));
+            } else {
+                initVisSingle(JSON.parse(localStorage.getItem(url)));
+            }
+        });
+
+        // if (apiError) {
             callSampleVis();
             $('.js-start-single').click(function() {
-                initVisSingle(JSON.parse(sessionStorage.getItem(userId)));
+                initVisSingle(JSON.parse(localStorage.getItem(userId)));
             });
-        }
+        // }
     }
 
     //download
@@ -194,10 +202,6 @@ require([
     //render friends list after the first user is loaded
     function renderFriends(userId, friendCount, data, isTopMenu) {
 
-        if (!sessionStorage[userId]) {
-            sessionStorage.setItem(userId, JSON.stringify(data));
-        }
-
         firstUserId = userId;
         console.log('3--. two users match', userId, friendCount);
         socket.emit('friends', { userId: userId, count: friendCount });
@@ -231,6 +235,10 @@ require([
             avatar: data.userinfo.avatar
         }));﻿
 
+        if (!localStorage[userId] && userId !== '_sample1' && userId !== '_sample2') {
+            setLocalStorageItem(u.userId, JSON.stringify(data));
+        }
+
         $('.js-start-single').click(function() {
             console.log('3--. single user vis');
             initVisSingle(data);
@@ -255,6 +263,7 @@ require([
         $('.js-single').addClass('hide');
         $('.js-match').addClass('hide');
         $('.js-nav').hide();
+        $('.js-sessions').hide();
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
         $('.js-intro').removeClass('hide');
@@ -314,27 +323,56 @@ require([
 
         function createDataset(userIds, callback) {
             var match = Match.createDataset([
-                JSON.parse(sessionStorage.getItem(userIds[0])),
-                JSON.parse(sessionStorage.getItem(userIds[1]))
+                JSON.parse(localStorage.getItem(userIds[0])),
+                JSON.parse(localStorage.getItem(userIds[1]))
             ]);
             callback(match);
         }
         createDataset(userIds, function (m) {
-            sessionStorage.setItem(m.url, JSON.stringify(m));
+            setLocalStorageItem(m.url, JSON.stringify(m));
             initVisMatch(m);
         });
     }
+
+    /*******************/
+    /* session control */
+    /*******************/
+
+    console.log(localStorage);
+
+    //FIXME: remove the oldest one
+    function checkSessionLength() {
+        if (localStorage.length > 10) {
+            localStorage.removeItem(0);
+        }
+    }
+    function setLocalStorageItem(key, val) {
+        checkSessionLength();
+        localStorage.setItem(key, val);
+        $('.js-sessions-items').append('<li data-value="' + key + '">' +
+            key + ' <i class="fa fa-times-circle link"></i>' +
+            '</li>');
+        sessions.push(key);
+    }
+
+    //keep only up to 10 sessions
+    checkSessionLength();
+    sessions = _.without(_.map(_.range(localStorage.length), function (i) {
+        return localStorage.key(i);
+    }), 'debug');
+    _.each(sessions, function (d) {
+        $('.js-sessions-items').append('<li data-value="' + d + '">' +
+            d + ' <i class="fa fa-times-circle link js-session-button"></i>' +
+            '</li>');
+    });
 
     /*****************************/
     /* url check for socket comm */
     /*****************************/
 
-    //sessionStorage.clear();
-    //sessionStorage.removeItem('ryln');
-    //sessionStorage.removeItem('ryln+tanyofish');
-    console.log(sessionStorage);
-
-    var uIdURL = urlParts[urlParts.length-1];
+    var urlParts = window.location.href.split('/');
+    var uIdURL = urlParts[urlParts.length - 1];
+    var socket = io.connect('http://' + urlParts[2]);
 
     //check url first
     /*TEST: delete later, data generating mode
@@ -354,15 +392,15 @@ require([
         var secondUserId = uIdURL.split('+')[1];
         if (firstUserId === '_sample1' && secondUserId === '_sample2') {
             socket.emit('sampleMatch');
-        } else if (sessionStorage[uIdURL]) {
-            initVisMatch(JSON.parse(sessionStorage.getItem(uIdURL)));
-        } else if (sessionStorage[firstUserId] && sessionStorage[secondUserId]){
+        } else if (localStorage[uIdURL]) {
+            initVisMatch(JSON.parse(localStorage.getItem(uIdURL)));
+        } else if (localStorage[firstUserId] && localStorage[secondUserId]){
             //create match data
             createMatchData([firstUserId, secondUserId]);
-        } else if (sessionStorage[firstUserId] && !sessionStorage[secondUserId]) {
+        } else if (localStorage[firstUserId] && !localStorage[secondUserId]) {
             //create single data first
             socket.emit('userId', { userId: secondUserId});
-        } else if (!sessionStorage[firstUserId] && sessionStorage[secondUserId]) {
+        } else if (!localStorage[firstUserId] && localStorage[secondUserId]) {
             //create single data first
             socket.emit('userId', { userId: firstUserId});
         } else {
@@ -374,8 +412,8 @@ require([
         //check session first
         if (uIdURL === '_sample1' || uIdURL === '_sample2') {
             socket.emit('sampleSingle', { userId: uIdURL });
-        } else if (sessionStorage[uIdURL]) {
-            renderVisOptions(E.msgs.intro.back, JSON.parse(sessionStorage.getItem(uIdURL)));
+        } else if (localStorage[uIdURL]) {
+            renderVisOptions(E.msgs.intro.back, JSON.parse(localStorage.getItem(uIdURL)));
         } else {
             socket.emit('userId', { userId: uIdURL });
         }
@@ -389,7 +427,7 @@ require([
     /************************/
 
     socket.on('error', function (data) {
-        renderIntro(E.msgs.intro.diffName, data.error_detail);
+        renderIntro(E.msgs.intro.diffName, data.error_detail, data.userId);
     }).on('apiError', function (data) {
         renderIntro(E.msgs.intro.apiError, data.error_detail, data.userId, '', true);
     }).on('profile', function (data) {
@@ -405,7 +443,7 @@ require([
         } else if (firstUserId) { //for match
             var userId = data.data.userinfo.userId;
             //console.log(userId, data);
-            sessionStorage.setItem(userId, JSON.stringify(data.data));
+            setLocalStorageItem(userId, JSON.stringify(data.data));
             createMatchData([firstUserId, userId]);
         } else {
             renderVisOptions(E.msgs.intro.completed, data.data);
@@ -437,16 +475,16 @@ require([
                 renderIntro(E.msgs.intro.diffName, E.msgs.intro.tooShort);
             } else {
                 //Single view, session exists
-                if (sessionStorage[userId] && !firstUserId) {
-                    renderVisOptions(E.msgs.intro.back, JSON.parse(sessionStorage.getItem(userId)));
+                if (localStorage[userId] && !firstUserId) {
+                    renderVisOptions(E.msgs.intro.back, JSON.parse(localStorage.getItem(userId)));
                 //match view, session exists
-                } else if (sessionStorage[userId + '_' + firstUserId]) {
-                    initVisMatch(JSON.parse(sessionStorage.getItem(userId + '+' + firstUserId)));
+                } else if (localStorage[userId + '_' + firstUserId]) {
+                    initVisMatch(JSON.parse(localStorage.getItem(userId + '+' + firstUserId)));
                 //match view, single session exists, but match session doesn't exist
-                } else if (sessionStorage[userId] && sessionStorage[firstUserId]) {
+                } else if (localStorage[userId] && localStorage[firstUserId]) {
                     console.log('----2');
                     createMatchData([firstUserId, userId]);
-                //} else if (sessionStorage[userId] && !sessionStorage[firstUserId]){
+                //} else if (localStorage[userId] && !localStorage[firstUserId]){
                 } else {
                     renderIntro('', E.msgs.intro.userIdCheck, userId);
                     socket.emit('userId', { userId: userId, firstUserId: firstUserId });
@@ -490,7 +528,6 @@ require([
 
     //go to match view
     $('.js-go-match').click(function() {
-
         var id = $(this).data().value;
         if (id === '_sample1' || id === '_sample2') {
             firstUserId = id;
@@ -523,14 +560,29 @@ require([
                 initVisSingle(d);
             });
         } else {
-            if (sessionStorage[id]) {
-                initVisSingle(JSON.parse(sessionStorage.getItem(id)));
+            if (localStorage[id]) {
+                initVisSingle(JSON.parse(localStorage.getItem(id)));
             } else {
                socket.emit('userId', { userId: id, firstUserId: undefined });
             }
         }
         $('.js-nav-expand').addClass('hide');
         $('.js-nav-open').html('<i class="fa fa-chevron-right"></i>');
+    });
+
+    //remove sessions
+    $('.js-remove').click(function() {
+        $('.js-sessions').toggle();
+    });
+    $('.js-sessions-items').find('i').click(function () {
+        $(this).parent().remove();
+        var val = $(this).parent().data().value;
+        localStorage.removeItem(val);
+        sessions = _.without(sessions, val);
+        var currentUrl = window.location.href.split('/');
+        if (currentUrl[currentUrl.length - 1] === val) {
+            resetToIntro();
+        }
     });
 
     //header/footer slide

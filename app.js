@@ -107,8 +107,8 @@ function getUserFeed(id, data) {
 
     function callUserFeedAPI(id) {
 
-        untappd.userFeed(function (err,obj){
-            if (debug) console.log(err,obj);
+        untappd.userFeed(function (err, obj){
+            if (debug) console.log(err, obj);
             if (obj && obj.response && obj.response.checkins && obj.response.checkins.items) {
                 checkins.push(obj.response.checkins.items);
                 if (obj.response.pagination.max_id) {
@@ -138,26 +138,20 @@ function getUserFeed(id, data) {
 
 function getUserInfo(userId, firstUserId) {
 
-    untappd.userInfo(function (err,obj) {
+    untappd.userInfo(function (err, obj) {
         if (obj && obj.response && obj.response.user) {
             if (obj.response.user.is_private) {
                 console.log('--private id');
-                io.emit('error', {
-                    error_detail:
-                        userId.toUpperCase() + ' is a private account.'
-                });
+                io.emit('error', { error_detail: userId.toUpperCase() + ' is a private account.' });
             } else if (obj.response.user.stats.total_checkins === 0) {
-                io.emit('error', {
-                    error_detail: 'No check-in data available.'
-                });
+                io.emit('error', { error_detail: 'No check-in data available.' });
             } else {
                 //get timezone info & emit
                 console.log ('--id found, get timezone info now');
                 getTimezone(obj.response.user);
             }
-        }
-        else {
-            io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
+        } else {
+            io.emit('error', { error_detail: obj.meta.error_detail });
         }
     }, userId);
 }
@@ -171,9 +165,8 @@ function getFriendsList(userId, count) {
     var friends = [];
 
     function callFriendsFeedAPI(offset) {
-        untappd.userFriends(function (err,obj) {
-            if (obj && obj.response && obj.response.items &&
-                obj.response.count > 0) {
+        untappd.userFriends(function (err, obj) {
+            if (obj && obj.response && obj.response.items && obj.response.count > 0) {
                 var fList = _.map(obj.response.items, function (d) {
                     return d.user.user_name.toLowerCase();
                 });
@@ -185,8 +178,10 @@ function getFriendsList(userId, count) {
                 else {
                     io.emit('friends', { friends: _.flatten(friends).sort() });
                 }
+            } else if (obj.response.count === 0) {
+                io.emit('error', { error_detail: userId.toUpperCase() + ' doesn\'t have friends', userId: userId });
             } else {
-                io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
+                io.emit('error', { error_detail: obj.meta.error_detail });
             }
         }, userId, 25, offset);
     }
