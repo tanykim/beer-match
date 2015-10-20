@@ -378,6 +378,9 @@ require([
             key + ' <i class="fa fa-times-circle link"></i>' +
             '</li>');
         sessions.push([key, moment().unix()]);
+        if (sessions.length > 0) {
+            $('.js-remove').removeClass('hide');
+        }
     }
 
     if (localStorage.length > 1) {
