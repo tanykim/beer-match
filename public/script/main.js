@@ -365,7 +365,7 @@ require([
                 sessions.shift();
                 checkSessionLength();
             } else if (len === 0) {
-                $('js-remove').addClass('hide');
+                $('.js-remove').addClass('hide');
             }
         }
         removeItem(sessions.length)
@@ -381,7 +381,7 @@ require([
     }
 
     if (localStorage.length > 1) {
-        $('js-remove').removeClass('hide');
+        $('.js-remove').removeClass('hide');
         sessions = _.sortBy(_.map(_.range(localStorage.length), function (i) {
             var key = localStorage.key(i);
             if (key !== 'debug') {
