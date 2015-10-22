@@ -423,6 +423,7 @@ require([
     var socket = io.connect('http://' + urlParts[2]);
 
     Path.root('#/');
+
     Path.map('#/').to(function () {
         resetToIntro();
     });
@@ -434,7 +435,7 @@ require([
     Path.map('#/_smaple2').to(function () {
         socket.emit('sampleSingle', { userId: '_sample2' });
     });
-    Path.map('#/_match').to(function () {
+    Path.map('#/_sample1/_sample2').to(function () {
         socket.emit('sampleMatch');
     });
 
