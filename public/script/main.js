@@ -2,6 +2,9 @@ require.config({
     shim: {
         'elements': {
             exports: 'E'
+        },
+        'pathjs': {
+            exports: 'Path'
         }
     },
     paths: {
@@ -10,6 +13,7 @@ require.config({
         d3: '../bower_components/d3/d3',
         moment: '../bower_components/moment/moment',
         momentTZ: '../bower_components/moment-timezone/moment-timezone',
+        pathjs: '../bower_components/pathjs/path',
         chroma: '../bower_components/chroma-js/chroma.min',
         textures: '../bower_components/textures/textures.min',
         socketio: '../socket.io/socket.io',
@@ -21,13 +25,14 @@ require([
     'underscore',
     'd3',
     'moment',
+    'pathjs',
     'chroma',
     'textures',
     'socketio',
     'vis',
     'BeerMatch-match',
     'elements'
-], function ($, _, d3, moment, chroma, textures, io, Vis, Match, E) {
+], function ($, _, d3, moment, Path, chroma, textures, io, Vis, Match, E) {
 
     'use strict';
 
@@ -36,8 +41,6 @@ require([
     var sessions = [];
 
     function initVisCommon(sel, other, html, url) {
-
-        window.history.pushState('object or string', 'Title', url);
 
         $('.js-intro').addClass('hide');
 
@@ -63,6 +66,7 @@ require([
     function initVisSingle(data) {
 
         var u = data.userinfo;
+        window.location.hash = '#/' + u.userId;
 
         $('.js-go-match').data('value', u.userId);
         $('.js-go-match').data('friends', u.friendCount);
@@ -102,6 +106,8 @@ require([
         */
 
         var userIds = [data.userinfo[0].userId, data.userinfo[1].userId];
+        window.location.hash = '#/' + userIds[0] + '/' + userIds[1];
+
         $('.js-goSingle-0').html(userIds[0].toUpperCase())
             .parent().data('value', userIds[0]);
         $('.js-goSingle-1').html(userIds[1].toUpperCase())
@@ -272,6 +278,7 @@ require([
     }
 
     function resetToIntro(loading) {
+
         $('.js-single').addClass('hide');
         $('.js-match').addClass('hide');
         $('.js-nav').hide();
@@ -281,7 +288,6 @@ require([
         $('.js-intro').removeClass('hide');
         $('.js-start').removeClass('hide');
         $('.js-progress').addClass('hide').html('');
-        window.history.pushState('object or string', 'Title', '/');
         firstUserId = undefined;
         if (loading) {
             $('.js-intro-main').html('LOADING...');
@@ -289,6 +295,9 @@ require([
             renderIntro(E.msgs.intro.init, '');
             callSampleVis();
         }
+
+        window.location.hash = '#/';
+
     }
 
     function getHeightSum (num, view, offset) {
@@ -411,56 +420,56 @@ require([
     /*****************************/
 
     var urlParts = window.location.href.split('/');
-    var uIdURL = urlParts[urlParts.length - 1];
     var socket = io.connect('http://' + urlParts[2]);
 
-    //check url first
-    /*TEST: delete later, data generating mode
-    if (uIdURL.indexOf('---') > -1) {
-        socket.emit('dataset', { userId: uIdURL.split('---')[1] });
-    } else if (uIdURL.indexOf('___') > -1) {
-        socket.emit('datasetSession', { userId: uIdURL.split('___')[1] });
-    }
-    */
+    Path.root('#/');
+    Path.map('#/').to(function () {
+        resetToIntro();
+    });
 
-    //match view
-    if (uIdURL.indexOf('+') > -1) {
+    //samples
+    Path.map('#/_sample1').to(function () {
+        socket.emit('sampleSingle', { userId: '_sample1' });
+    });
+    Path.map('#/_smaple2').to(function () {
+        socket.emit('sampleSingle', { userId: '_sample2' });
+    });
+    Path.map('#/_match').to(function () {
+        socket.emit('sampleMatch');
+    });
 
-        console.log('1---two users');
-
-        firstUserId = uIdURL.split('+')[0];
-        var secondUserId = uIdURL.split('+')[1];
-        if (firstUserId === '_sample1' && secondUserId === '_sample2') {
-            socket.emit('sampleMatch');
-        } else if (localStorage[uIdURL]) {
-            initVisMatch(JSON.parse(localStorage.getItem(uIdURL)));
-        } else if (localStorage[firstUserId] && localStorage[secondUserId]){
-            //create match data
-            createMatchData([firstUserId, secondUserId]);
-        } else if (localStorage[firstUserId] && !localStorage[secondUserId]) {
-            //create single data first
-            socket.emit('userId', { userId: secondUserId});
-        } else if (!localStorage[firstUserId] && localStorage[secondUserId]) {
-            //create single data first
-            socket.emit('userId', { userId: firstUserId});
-        } else {
-            renderIntro(E.msgs.intro.noData, '', '');
-        }
-    //single view
-    } else if (uIdURL) {
-        console.log('1---single user');
-        //check session first
-        if (uIdURL === '_sample1' || uIdURL === '_sample2') {
-            socket.emit('sampleSingle', { userId: uIdURL });
-        } else if (localStorage[uIdURL]) {
+    //normal id
+    Path.map('#/:userId').to(function () {
+        var uIdURL = this.params['userId'];
+        if (localStorage[uIdURL]) {
             renderVisOptions(E.msgs.intro.back, JSON.parse(localStorage.getItem(uIdURL)));
         } else {
             socket.emit('userId', { userId: uIdURL });
         }
-    } else {
-        console.log('1---no url');
+    });
+    Path.map('#/:userId0/:userId1').to(function () {
+        firstUserId = this.params['userId0'];
+        var secondUserId = this.params['userId1'];
+        var uIdURL = firstUserId + '+' + secondUserId;
+        if (localStorage[uIdURL]) {
+            initVisMatch(JSON.parse(localStorage.getItem(uIdURL)));
+        } else if (localStorage[firstUserId] && localStorage[secondUserId]){
+            createMatchData([firstUserId, secondUserId]);
+        } else if (localStorage[firstUserId] && !localStorage[secondUserId]) {
+            socket.emit('userId', { userId: secondUserId});
+        } else if (!localStorage[firstUserId] && localStorage[secondUserId]) {
+            socket.emit('userId', { userId: firstUserId});
+        } else {
+            renderIntro(E.msgs.intro.noData, '', '');
+        }
+    });
+
+    Path.rescue(function () {
         renderIntro(E.msgs.intro.init, '', '');
-    }
+    });
+
+    Path.listen();
+
 
     /************************/
     /* socket communication */
@@ -658,5 +667,4 @@ require([
         var val = $(this).data().value;
         window.open(E.msgs.share[val]);
     });
-
 });

@@ -62,7 +62,7 @@ Then go to the public folder and install necessary libraries.
 
 ```
 $ cd public
-$ bower install d3 moment-timezone moment underscore jquery chroma-js textures
+$ bower install d3 moment-timezone moment pathjs underscore jquery chroma-js textures
 ```
 
 ## Start the server
