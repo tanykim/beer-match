@@ -136,16 +136,16 @@ function getUserFeed(id, data) {
     callUserFeedAPI();
 }
 
-function getUserInfo(userId, firstUserId) {
+function getUserInfo(userId) {
 
     untappd.userInfo(function (err, obj) {
         console.log(err, obj);
         if (obj && obj.response && obj.response.user) {
             if (obj.response.user.is_private) {
                 console.log('--private id');
-                io.emit('error', { error_detail: userId.toUpperCase() + ' is a private account.' });
+                io.emit('error', { error_detail: userId.toUpperCase() + ' is a private account.', userId: userId });
             } else if (obj.response.user.stats.total_checkins === 0) {
-                io.emit('error', { error_detail: 'No check-in data available.' });
+                io.emit('error', { error_detail: 'No check-in data available.', userId: userId });
             } else {
                 //get timezone info & emit
                 console.log ('--id found, get timezone info now');
@@ -209,10 +209,10 @@ io.on('connection', function (socket) {
 
     socket.on('userId', function (data) {
         console.log('--user data request', data);
-        getUserInfo(data.userId.toLowerCase(), data.firstUserId);
+        getUserInfo(data.userId.toLowerCase());
     }).on('sampleSingle', function (data) {
         var d = JSON.parse(fs.readFileSync('public/users/' + data.userId + '.json', 'utf8'));
-        io.emit('success', { data: d, sample: data.userId });
+        io.emit('sampleSingle', { data: d, userId: data.userId });
     }).on('sampleMatch', function () {
         var d = JSON.parse(fs.readFileSync('public/users/_match.json', 'utf8'));
         io.emit('sampleMatch', { data: d });

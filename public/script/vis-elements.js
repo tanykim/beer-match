@@ -13,7 +13,9 @@ var E = {
             noFriends: 'No friends found, enter an UNTAPPD user name',
             back: 'Welcome back!',
             completed: 'Download completed!',
-            noData: 'No previous data exist. Please restart'
+            noData: 'No previous data exist. Please restart',
+            loadingImg: '<img class="loading" src="images/loading.gif" width="64" height="16">',
+            loading: '<img class="loading" src="images/loading.gif" width="64" height="16"><br/>LOADING...'
         },
         share: {
             facebook: 'https://www.facebook.com/sharer/' +
