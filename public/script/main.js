@@ -23,6 +23,7 @@ require.config({
         chroma: '../bower_components/chroma-js/chroma.min',
         textures: '../bower_components/textures/textures.min',
         socketio: '../socket.io/socket.io',
+        'mobile-detect': '../bower_components/mobile-detect/mobile-detect',
         elements: 'vis-elements',
         scroll: 'scroll',
         storage: 'storage'
@@ -37,12 +38,13 @@ require([
     'chroma',
     'textures',
     'socketio',
+    'mobile-detect',
     'vis',
     'BeerMatch-match',
     'elements',
     'scroll',
     'storage'
-], function ($, _, d3, moment, Path, chroma, textures, io, Vis, Match, E, Scroll, Storage) {
+], function ($, _, d3, moment, Path, chroma, textures, io, MobileDetect, Vis, Match, E, Scroll, Storage) {
 
     'use strict';
 
@@ -325,6 +327,19 @@ require([
             Storage.setLocalStorageItem(m.url, JSON.stringify(m));
             initVisMatch(m);
         });
+    }
+
+    /****************/
+    /* MobileDetect */
+    /****************/
+
+    var md = new MobileDetect(window.navigator.userAgent);
+    if (md.mobile()) {
+        $('.js-pc').addClass('hide');
+        $('.js-mobile').removeClass('hide');
+    } else {
+        $('.js-mobile').addClass('hide');
+        $('.js-pc').removeClass('hide');
     }
 
     /*******************/

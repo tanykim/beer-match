@@ -5,6 +5,28 @@ body {
 @padding: 2em;
 @headerH: 5em;
 
+#icon {
+    span {
+        color: @light;
+        width: 2em;
+        height: 2em;
+        display: inline-block;
+        background-color: @dark;
+        border-radius: 1em;
+        margin-left: 0.2em;
+        i {
+            padding-top: 0.5em;
+        }
+    }
+    .facebook i {
+        margin-left: 0.3em;
+    }
+    span:hover {
+        background-color: @dark;
+        color: @grey;
+    }
+}
+
 .intro {
     width: 100%;
 
@@ -26,6 +48,35 @@ body {
 
     /* W3C Markup */
     background-image: linear-gradient(to top right, #FFC61E 0%, #EE6411 20%, #7C2529 60%, #3F2021 80%, #25282A 100%);
+}
+
+.intro-mobile {
+    padding: @padding;
+    background: url('../images/pattern.png');
+    color: @white;
+    .logo {
+        text-align: center;
+        margin: 0 auto;
+        margin-top: -2.2em;
+        width: @headerH * 2;
+        background: url('../images/logo.png') center @headerH * -0.5 no-repeat;
+        height: @headerH * 2 - 2.2em;
+        background-size: @headerH * 2 @headerH * 2;
+    }
+    .icons-wrapper {
+        font-size: @small;
+        text-align: center;
+    }
+    .icons {
+        #icon;
+        span {
+            background-color: @white;
+            color: @dark;
+        }
+        span:hover {
+            color: @white;
+        }
+    }
 }
 
 .intro-main-wrapper {
@@ -252,25 +303,7 @@ body {
             }
         }
         .icons {
-            span {
-                color: @light;
-                width: 2em;
-                height: 2em;
-                display: inline-block;
-                background-color: @dark;
-                border-radius: 1em;
-                margin-left: 0.2em;
-                i {
-                    padding-top: 0.5em;
-                }
-            }
-            .facebook i {
-                margin-left: 0.3em;
-            }
-            span:hover {
-                background-color: @dark;
-                color: @grey;
-            }
+            #icon;
         }
     }
     .header-scrolled {

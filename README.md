@@ -62,12 +62,12 @@ Then go to the public folder and install necessary libraries.
 
 ```
 $ cd public
-$ bower install d3 moment-timezone moment pathjs underscore jquery chroma-js textures
+$ bower install d3 moment-timezone moment pathjs underscore jquery chroma-js mobile-detect textures
 ```
 
-#### 5. Update SocketIO address
+#### 5. Update SocketIO address (Optional)
 
-Change the sockeio address to number ip address in public/script/main.js
+If you see errors, change the sockeio address to number ip address in public/script/main.js
 
 > var socket = io.connect('http://localhost:8080'); 
 
