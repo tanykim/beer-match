@@ -33,9 +33,6 @@ define(['jquery', 'underscore', 'socketio', 'moment'], function ($, _, io, momen
 
     function callSessionInteraction(socket) {
 
-        $('.js-remove').click(function() {
-            $('.js-sessions').toggle();
-        });
         $('.js-sessions-items').find('i').click(function () {
             $(this).parent().remove();
             var key = $(this).parent().data().value;
@@ -81,6 +78,10 @@ define(['jquery', 'underscore', 'socketio', 'moment'], function ($, _, io, momen
                     '</li>');
             });
         }
+
+        $('.js-remove').click(function() {
+            $('.js-sessions').toggle();
+        });
         checkSessionLength();
         callSessionInteraction(socket);
     }

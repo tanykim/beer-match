@@ -458,7 +458,7 @@
     <% if (!apiError) { %>
         <input type="text" class="input js-intro-input" value="<%= userId %>" <%= userId ? ' disabled' : '' %> >
     <% } %>
-    <% if (sessions && !firstUserId) { %>
+    <% if (sessions) { %>
         <div class="sessions">
             <select class="list js-session-select" <%= (userId && !apiError) ? ' disabled' : '' %>>
                 <option>Or select a previously downloaded dataset</option>

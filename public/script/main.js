@@ -48,6 +48,26 @@ require([
 
     'use strict';
 
+    /****************/
+    /* MobileDetect */
+    /****************/
+
+    var md = new MobileDetect(window.navigator.userAgent);
+    if (md.mobile()) {
+        $('.js-pc').addClass('hide');
+        $('.js-mobile').removeClass('hide');
+    } else {
+        $('.js-mobile').addClass('hide');
+        $('.js-pc').removeClass('hide');
+    }
+
+    /*******************/
+    /* Storage control */
+    /*******************/
+
+    var socket = io.connect('http://localhost:8080');
+    Storage.init(socket);
+
     var firstUserId;
 
     function initVisCommon(sel, other, html, url) {
@@ -140,7 +160,11 @@ require([
         var template = _.template($('#intro-start').html());
 
         var sessions = Storage.getSessions();
-
+        if (friends) {
+            sessions = _.filter(sessions, function (d) {
+                return d[0].indexOf(firstUserId) <= 0 && d[0].indexOf('+') > -1;
+            });
+        }
         $('.js-intro-main').html(template({
             desc: desc,
             warning: warning,
@@ -265,7 +289,7 @@ require([
         }));﻿
 
         if (!localStorage[userId] && userId !== '_sample1' && userId !== '_sample2') {
-            Storage.setLocalStorageItem(userId, JSON.stringify(data));
+            Storage.setLocalStorageItem(userId, JSON.stringify(data), socket);
         }
 
         $('.js-start-single').click(function() {
@@ -324,30 +348,10 @@ require([
             callback(match);
         }
         createDataset(userIds, function (m) {
-            Storage.setLocalStorageItem(m.url, JSON.stringify(m));
+            Storage.setLocalStorageItem(m.url, JSON.stringify(m), socket);
             initVisMatch(m);
         });
     }
-
-    /****************/
-    /* MobileDetect */
-    /****************/
-
-    var md = new MobileDetect(window.navigator.userAgent);
-    if (md.mobile()) {
-        $('.js-pc').addClass('hide');
-        $('.js-mobile').removeClass('hide');
-    } else {
-        $('.js-mobile').addClass('hide');
-        $('.js-pc').removeClass('hide');
-    }
-
-    /*******************/
-    /* Storage control */
-    /*******************/
-
-    var socket = io.connect('http://localhost:8080');
-    Storage.init(socket);
 
     /*****************************/
     /* url check for socket comm */
@@ -373,6 +377,7 @@ require([
     //normal id
     Path.map('#/:userId').to(function () {
         var uIdURL = this.params['userId'];
+        firstUserId = uIdURL;
         if (localStorage[uIdURL]) {
             renderVisOptions(E.msgs.intro.back, JSON.parse(localStorage.getItem(uIdURL)));
         } else {
