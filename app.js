@@ -139,7 +139,7 @@ function getUserFeed(id, data) {
 function getUserInfo(userId) {
 
     untappd.userInfo(function (err, obj) {
-        console.log(err, obj);
+        //console.log(err, obj);
         if (obj && obj.response && obj.response.user) {
             if (obj.response.user.is_private) {
                 console.log('--private id');
@@ -167,7 +167,7 @@ function getFriendsList(userId, count) {
 
     function callFriendsFeedAPI(offset) {
         untappd.userFriends(function (err, obj) {
-            console.log(err, obj);
+            //console.log(err, obj);
             if (obj && obj.response && obj.response.items && obj.response.count > 0) {
                 var fList = _.map(obj.response.items, function (d) {
                     return d.user.user_name.toLowerCase();

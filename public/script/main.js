@@ -331,7 +331,10 @@ require([
     /*******************/
 
     var urlParts = window.location.href.split('/');
-    var socket = io.connect('http://' + urlParts[2]);
+    //var socket = io.connect('http://' + urlParts[2]);
+    var socket = io.connect('http://beer.tany.kim');
+
+    //console.log(socket);
     Storage.init(socket);
 
     /*****************************/
@@ -530,7 +533,6 @@ require([
             if (localStorage[userId]) {
                 initVisSingle(JSON.parse(localStorage.getItem(userId)));
             } else {
-                console.log('----');
                 resetToIntro(true);
                 socket.emit('userId', { userId: userId });
             }
