@@ -225,5 +225,8 @@ io.on('connection', function (socket) {
     }).on('mapboxKey', function () {
         console.log('---mapbox key request');
         io.emit('mapboxKey', { token: credentials.mapboxKey });
+    }).on('reset', function () {
+        console.log('----session removed');
+        io.emit('reset');
     });
 });

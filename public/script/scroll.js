@@ -55,7 +55,6 @@ define(['jquery', 'underscore'], function ($, _) {
         }
     }
 
-
     function init() {
         var scrolled = _.debounce(checkView, 100);
         $(window).scroll(scrolled);

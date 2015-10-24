@@ -8,6 +8,9 @@ require.config({
         },
         'scroll': {
             exports: 'Scroll'
+        },
+        'storage': {
+            exports: 'Storage'
         }
     },
     paths: {
@@ -22,6 +25,7 @@ require.config({
         socketio: '../socket.io/socket.io',
         elements: 'vis-elements',
         scroll: 'scroll',
+        storage: 'storage'
     }
 });
 require([
@@ -36,13 +40,13 @@ require([
     'vis',
     'BeerMatch-match',
     'elements',
-    'scroll'
-], function ($, _, d3, moment, Path, chroma, textures, io, Vis, Match, E, Scroll) {
+    'scroll',
+    'storage'
+], function ($, _, d3, moment, Path, chroma, textures, io, Vis, Match, E, Scroll, Storage) {
 
     'use strict';
 
     var firstUserId;
-    var sessions = [];
 
     function initVisCommon(sel, other, html, url) {
 
@@ -132,6 +136,8 @@ require([
     function renderIntro(desc, warning, userId, friends, error, apiError) {
 
         var template = _.template($('#intro-start').html());
+
+        var sessions = Storage.getSessions();
 
         $('.js-intro-main').html(template({
             desc: desc,
@@ -262,7 +268,7 @@ require([
         }));﻿
 
         if (!localStorage[userId] && userId !== '_sample1' && userId !== '_sample2') {
-            setLocalStorageItem(userId, JSON.stringify(data));
+            Storage.setLocalStorageItem(userId, JSON.stringify(data));
         }
 
         $('.js-start-single').click(function() {
@@ -319,74 +325,22 @@ require([
             callback(match);
         }
         createDataset(userIds, function (m) {
-            setLocalStorageItem(m.url, JSON.stringify(m));
+            Storage.setLocalStorageItem(m.url, JSON.stringify(m));
             initVisMatch(m);
         });
     }
 
     /*******************/
-    /* session control */
+    /* Storage control */
     /*******************/
 
-    console.log(localStorage);
-    //localStorage.clear();
-
-    //keep max 10 sessions, if longer, delete oldest
-    function checkSessionLength() {
-        function removeItem(len) {
-            if (len > 10) {
-                localStorage.removeItem(sessions[0][0]);
-                sessions.shift();
-                checkSessionLength();
-            } else if (len === 0) {
-                $('.js-remove').addClass('hide');
-            }
-        }
-        removeItem(sessions.length)
-    }
-
-    function setLocalStorageItem(key, val) {
-        checkSessionLength();
-        localStorage.setItem(key, val);
-        $('.js-sessions-items').prepend('<li data-value="' + key + '">' +
-            key + ' <i class="fa fa-times-circle link"></i>' +
-            '</li>');
-        sessions.push([key, moment().unix()]);
-        if (sessions.length > 0) {
-            $('.js-remove').removeClass('hide');
-        }
-    }
-
-    if (localStorage.length > 1) {
-        $('.js-remove').removeClass('hide');
-        sessions = _.sortBy(_.map(_.range(localStorage.length), function (i) {
-            var key = localStorage.key(i);
-            if (key !== 'debug') {
-                var val = JSON.parse(localStorage.getItem(key));
-                return [key, val.created];
-            } else {
-                return [key, 0];
-            }
-        }), function (d) {
-            return d[1];
-        });
-    }
-    sessions.shift();
-    console.log(sessions);
-    checkSessionLength();
-
-    _.each(_.clone(sessions).reverse(), function (d) {
-        $('.js-sessions-items').append('<li data-value="' + d[0] + '">' +
-            d[0] + ' <i class="fa fa-times-circle link js-session-button"></i>' +
-            '</li>');
-    });
+    var urlParts = window.location.href.split('/');
+    var socket = io.connect('http://' + urlParts[2]);
+    Storage.init(socket);
 
     /*****************************/
     /* url check for socket comm */
     /*****************************/
-
-    var urlParts = window.location.href.split('/');
-    var socket = io.connect('http://' + urlParts[2]);
 
     Path.root('#/');
     Path.map('#/').to(function () {
@@ -421,12 +375,8 @@ require([
             initVisMatch(JSON.parse(localStorage.getItem(uIdURL)));
         } else if (localStorage[firstUserId] && localStorage[secondUserId]){
             createMatchData([firstUserId, secondUserId]);
-        } else if (localStorage[firstUserId] && !localStorage[secondUserId]) {
-            socket.emit('userId', { userId: secondUserId});
-        } else if (!localStorage[firstUserId] && localStorage[secondUserId]) {
-            socket.emit('userId', { userId: firstUserId});
         } else {
-            renderIntro(E.msgs.intro.noData, '', '');
+            renderIntro(E.msgs.intro.noData, '', '', '', true);
         }
     });
 
@@ -460,11 +410,13 @@ require([
     }).on('success', function (data) {
         if (firstUserId) { //for match
             var userId = data.data.userinfo.userId;
-            setLocalStorageItem(userId, JSON.stringify(data.data));
+            Storage.setLocalStorageItem(userId, JSON.stringify(data.data));
             createMatchData([firstUserId, userId]);
         } else {
             renderVisOptions(E.msgs.intro.completed, data.data);
         }
+    }).on('reset', function () {
+        resetToIntro();
     });
 
     /*******************/
@@ -492,7 +444,7 @@ require([
                 if (firstUserId) {
                     showMatchFriend(firstUserId, userId);
                 } else {
-                    if (setLocalStorageItem[userId]) {
+                    if (localStorage.getItem(userId)) {
                         renderVisOptions(E.msgs.intro.back, JSON.parse(localStorage.getItem(userId)));
                     } else {
                         renderIntro('', E.msgs.intro.userIdCheck, userId);
@@ -586,25 +538,5 @@ require([
                 socket.emit('userId', { userId: userId });
             }
         }
-    });
-
-    //remove sessions
-    $('.js-remove').click(function() {
-        $('.js-sessions').toggle();
-    });
-    $('.js-sessions-items').find('i').click(function () {
-        $(this).parent().remove();
-        var key = $(this).parent().data().value;
-        localStorage.removeItem(key);
-        console.log(sessions);
-        sessions.shift();
-        if (sessions.length === 0) {
-            $('.js-remove').addClass('hide');
-        }
-        console.log(window.location.hash);
-        // var currentUrl = window.location.href.split('/');
-        // if (currentUrl[currentUrl.length - 1] === val) {
-        //     resetToIntro();
-        // }
     });
 });
