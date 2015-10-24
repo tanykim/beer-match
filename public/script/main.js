@@ -422,7 +422,7 @@ require([
     }).on('success', function (data) {
         if (firstUserId) { //for match
             var userId = data.data.userinfo.userId;
-            Storage.setLocalStorageItem(userId, JSON.stringify(data.data));
+            Storage.setLocalStorageItem(userId, JSON.stringify(data.data), socket);
             createMatchData([firstUserId, userId]);
         } else {
             renderVisOptions(E.msgs.intro.completed, data.data);

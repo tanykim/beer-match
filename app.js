@@ -208,7 +208,7 @@ io.on('connection', function (socket) {
     */
 
     socket.on('userId', function (data) {
-        console.log('--user data request', data);
+        //console.log('--user data request', data);
         getUserInfo(data.userId.toLowerCase());
     }).on('sampleSingle', function (data) {
         var d = JSON.parse(fs.readFileSync('public/users/' + data.userId + '.json', 'utf8'));
@@ -220,13 +220,13 @@ io.on('connection', function (socket) {
     .on('timezone', function (data) {
         getUserFeed(undefined, data);
     }).on('friends', function (data) {
-        console.log('--friends request, data');
+        //console.log('--friends request, data');
         getFriendsList(data.userId.toLowerCase(), data.count);
     }).on('mapboxKey', function () {
-        console.log('---mapbox key request');
+        //console.log('---mapbox key request');
         io.emit('mapboxKey', { token: credentials.mapboxKey });
     }).on('reset', function () {
-        console.log('----session removed');
+        //console.log('----session removed');
         io.emit('reset');
     });
 });

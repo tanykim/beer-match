@@ -167,7 +167,7 @@ define(['textures'], function (textures) {
         $('.js-ratings-elm').remove();
         $('.js-ratings-tooltip').remove();
 
-        if (avg) {
+        if (_.isNumber(avg)) {
             avgScore = avg;
         }
 

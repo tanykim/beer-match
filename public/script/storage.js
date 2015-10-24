@@ -9,15 +9,16 @@ define(['jquery', 'underscore', 'socketio', 'moment'], function ($, _, io, momen
             if (len > 10) {
                 localStorage.removeItem(sessions[0][0]);
                 sessions.shift();
+                $('.js-sessions-items li:last-child').remove();
                 checkSessionLength();
             } else if (len === 0) {
-                $('.js-remove').addClass('hide');
+                $('.js-remove').hide();
             }
         }
         removeItem(sessions.length);
     }
 
-    function setLocalStorageItem(key, val) {
+    function setLocalStorageItem(key, val, socket) {
         checkSessionLength();
         localStorage.setItem(key, val);
         $('.js-sessions-items').prepend('<li data-value="' + key + '">' +
@@ -25,9 +26,9 @@ define(['jquery', 'underscore', 'socketio', 'moment'], function ($, _, io, momen
             '</li>');
         sessions.push([key, moment().unix()]);
         if (sessions.length > 0) {
-            $('.js-remove').removeClass('hide');
+            $('.js-remove').show();
         }
-        callSessionInteraction();
+        callSessionInteraction(socket);
     }
 
     function callSessionInteraction(socket) {
@@ -45,7 +46,7 @@ define(['jquery', 'underscore', 'socketio', 'moment'], function ($, _, io, momen
                 return d[0] !== key;
             });
             if (sessions.length === 0) {
-                $('.js-remove').addClass('hide');
+                $('.js-remove').hide();;
             }
             var url = key;
             if (key.indexOf('+') > -1) {
