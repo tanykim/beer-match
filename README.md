@@ -65,6 +65,17 @@ $ cd public
 $ bower install d3 moment-timezone moment pathjs underscore jquery chroma-js textures
 ```
 
+#### 5. Update SocketIO address
+
+Change the sockeio address to number ip address in public/script/main.js
+
+> var socket = io.connect('http://localhost:8080'); 
+
+to below (i.e., 100.100.100.100)
+
+> var socket = io.connect('http://100.100.100.100:8080');
+
+
 ## Start the server
 > Beer Match works on Forever installed globally. If you don't have Forever installed yet and wish to install locally, do this first:
 

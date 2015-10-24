@@ -74,7 +74,6 @@ define(['jquery', 'underscore', 'socketio', 'moment'], function ($, _, io, momen
             sessions.shift();
         }
         if (sessions.length > 0) {
-            $('.js-remove').removeClass('hide');
             _.each(_.clone(sessions).reverse(), function (d) {
                 $('.js-sessions-items').append('<li data-value="' + d[0] + '">' +
                     d[0] + ' <i class="fa fa-times-circle link js-session-button"></i>' +

@@ -330,11 +330,7 @@ require([
     /* Storage control */
     /*******************/
 
-    var urlParts = window.location.href.split('/');
-    //var socket = io.connect('http://' + urlParts[2]);
-    var socket = io.connect('http://beer.tany.kim');
-
-    //console.log(socket);
+    var socket = io.connect('http://localhost:8080');
     Storage.init(socket);
 
     /*****************************/
