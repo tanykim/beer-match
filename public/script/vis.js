@@ -130,8 +130,6 @@ define(['moment', 'vis-settings',
 
         $('.js-match-svg').empty();
 
-        console.log('---match view');
-
         //0--match scores
         Score.putScore(m.profile, m.matchScore, m.matchList);
 

@@ -15,7 +15,7 @@ var E = {
             completed: 'Download completed!',
             noData: 'No previous data exist. Please restart',
             loadingImg: '<img class="loading" src="images/loading.gif" width="64" height="16">',
-            loading: '<img class="loading" src="images/loading.gif" width="64" height="16"><br/>LOADING...'
+            loading: '<img class="loading" src="images/loading.gif" width="64" height="16"><br/>LOADING'
         },
         share: {
             facebook: 'https://www.facebook.com/sharer/' +

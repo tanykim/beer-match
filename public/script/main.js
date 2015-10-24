@@ -273,9 +273,10 @@ require([
 
         $('.js-start-match').click(function() {
 
+            console.log('3--. match vis');
+
             firstUserId = userId;
 
-            console.log('3--. match vis');
             if (data.userinfo.userId === '_sample1' ||
                 data.userinfo.userId === '_sample2') {
                 $.ajax({
