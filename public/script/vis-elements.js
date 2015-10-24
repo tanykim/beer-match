@@ -34,7 +34,7 @@ var E = {
                 'love & hate',
                 'When do I drink?',
                 'Where do I drink?',
-                'When & Where'
+                'When & Where?'
             ],
             match: [
                 'Taste Match',

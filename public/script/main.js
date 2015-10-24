@@ -142,18 +142,13 @@ require([
         $('.js-intro-main').html(template({
             desc: desc,
             warning: warning,
-            userId: userId,
+            userId: error? '' : userId,
             friends: friends,
             sessions: _.isEmpty(sessions) ? '' :
                 _.map(sessions, function (d) { return d[0]; }).reverse(),
             firstUserId: _.isUndefined(firstUserId) ? '' : firstUserId.toUpperCase(),
             apiError: apiError
         }));﻿
-
-        if (!userId) {
-            $('.js-intro-input').focus();
-        }
-
         $('.js-session-select').change(function () {
             var key = $(this).val();
             if (key.indexOf('+') > -1) {
@@ -289,6 +284,7 @@ require([
                     initVisMatch(d);
                 });
             } else {
+                resetToIntro(true);
                 renderFriends(userId, data.userinfo.friendCount);
             }
         });
@@ -345,6 +341,7 @@ require([
     Path.root('#/');
     Path.map('#/').to(function () {
         resetToIntro();
+        $('.js-intro-input').focus();
     });
 
     //samples
@@ -462,7 +459,7 @@ require([
     //scroll interaction
     Scroll.init();
     $('.js-intro-footer').click(function() {
-        resetToIntro(false);
+        resetToIntro();
     });
 
     //---- intro

@@ -49,7 +49,6 @@ define(function () {
     };
 
     var putBoth = function (beersList) {
-        console.log(beersList);
         _.each(_.range(beersList.length), function (i) {
             var list = beersList[i];
             $('.js-both-' + i).html('');

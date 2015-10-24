@@ -73,7 +73,7 @@ define(['jquery', 'underscore'], function ($, _) {
 
     $('.js-intro-slide').click(function() {
         $('html body').animate({
-            scrollTop: getHeightSum(+$(this).data().value, 'intro', 0)
+            scrollTop: getHeightSum(+$(this).data().value, 'intro', 42)
         });
     });
 
