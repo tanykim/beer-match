@@ -363,7 +363,7 @@ require([
     Path.map('#/_sample1').to(function () {
         socket.emit('sampleSingle', { userId: '_sample1' });
     });
-    Path.map('#/_smaple2').to(function () {
+    Path.map('#/_sample2').to(function () {
         socket.emit('sampleSingle', { userId: '_sample2' });
     });
     Path.map('#/_sample1/_sample2').to(function () {
