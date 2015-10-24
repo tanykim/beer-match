@@ -47,7 +47,7 @@ var E = {
         }
     },
 
-    footerHeight: 240,
+    footerHeight: 300,
 
     //colors
     colors: {
