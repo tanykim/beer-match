@@ -57,7 +57,7 @@ define(['moment'], function (moment) {
             };
         }), function (d) {
             return d.counts[0] + d.counts[1];
-        }).reverse();
+        }).reverse().slice(0, 10);
     }
 
     function getSimilarity(v, base) {
