@@ -10,9 +10,6 @@ Beer Match is a web-based visualization project powered by data from Untapped (h
 First obtain Untapped credentials here.
 > https://untappd.com/api/register?register=new
 
-For mapping, Beer Match uses Mapbox: Optain an access token here. 
-> https://www.mapbox.com/help/create-api-access-token/
-
 ## Set-up
 #### 1. Install packages
 
@@ -28,8 +25,7 @@ Open settings.local enter the Untapped credentials and Mapbox access key you've 
 ```
 {
 	"clientId": "<client id>",
-	"clientSecret": "<client secret>",
-	"mapboxKey": "<mapbox public access key>"
+	"clientSecret": "<client secret>"
 }
 ```
 Then save it as a JSON file.
@@ -69,7 +65,7 @@ $ bower install d3 moment-timezone moment pathjs underscore jquery chroma-js mob
 
 If you see errors, change the sockeio address to number ip address in public/script/main.js
 
-> var socket = io.connect('http://localhost:8080'); 
+> var socket = io.connect('http://localhost:8080');
 
 to below (i.e., 100.100.100.100)
 
