@@ -65,7 +65,7 @@ require([
     /* Storage control */
     /*******************/
 
-    var socket = io.connect('http://localhost:8080');
+    var socket = io.connect('http://54.191.198.241:8080');
     Storage.init(socket);
 
     var firstUserId;
@@ -163,9 +163,11 @@ require([
         var sessions = Storage.getSessions();
         if (friends) {
             sessions = _.filter(sessions, function (d) {
-                return d[0].indexOf(firstUserId) <= 0 && d[0].indexOf('+') > -1;
+                return d[0].indexOf('+' + firstUserId) > -1 ||
+                    d[0].indexOf(firstUserId + '+') > -1;
             });
         }
+
         $('.js-intro-main').html(template({
             desc: desc,
             warning: warning,
@@ -175,7 +177,12 @@ require([
                 _.map(sessions, function (d) { return d[0]; }).reverse(),
             firstUserId: _.isUndefined(firstUserId) ? '' : firstUserId.toUpperCase(),
             apiError: apiError
-        }));﻿
+        }));
+
+        if (!userId) {
+            $('.js-intro-input').focus();
+        }
+
         $('.js-session-select').change(function () {
             var key = $(this).val();
             if (key.indexOf('+') > -1) {
@@ -361,7 +368,6 @@ require([
     Path.root('#/');
     Path.map('#/').to(function () {
         resetToIntro();
-        $('.js-intro-input').focus();
     });
 
     //samples
