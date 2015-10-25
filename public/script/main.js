@@ -87,6 +87,7 @@ require([
         var template = _.template($('#header-' + sel).html());
         $('.js-vis-header').html(template(html));﻿
 
+        $('.js-' + sel + '-wrapper').css('top', 0);
         $('.js-title-overlaid').html(E.msgs.titles[sel][0]);
         _.each(_.range(6), function (i) {
             $('.js-nav-title-' + i).html(E.msgs.titles[sel][i]);

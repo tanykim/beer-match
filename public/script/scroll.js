@@ -4,9 +4,9 @@ define(['jquery', 'underscore'], function ($, _) {
 
     var prevTitle = 0;
 
-    function isMatch() {
+    function checkIsMatch() {
         var status = false;
-        if ($('.js-vis').hasClass('hide')) {
+        if ($('.js-single').hasClass('hide')) {
             status = true;
         }
         return status;
@@ -24,7 +24,7 @@ define(['jquery', 'underscore'], function ($, _) {
     function changeVisTitle(i) {
         if (i !== prevTitle) {
             $('.js-title-overlaid')
-                .html(isMatch() ? E.msgs.titles.match[i] : E.msgs.titles.single[i]);
+                .html(checkIsMatch() ? E.msgs.titles.match[i] : E.msgs.titles.single[i]);
             $('.js-slide').removeClass('selected');
             $('.js-nav-' + i).addClass('selected');
             prevTitle = i;
@@ -32,8 +32,9 @@ define(['jquery', 'underscore'], function ($, _) {
     }
 
     function positionVisTitle() {
+        var isMatch = checkIsMatch();
         for (var i = 1; i < 7; i++) {
-            var diff = $(window).scrollTop() - getHeightSum(i, isMatch() ? 'match' : 'single', 0);
+            var diff = $(window).scrollTop() - getHeightSum(i, isMatch ? 'match' : 'single', 0);
             if (diff < -60) {
                 changeVisTitle(i-1);
                 break;
@@ -64,7 +65,7 @@ define(['jquery', 'underscore'], function ($, _) {
     $('.js-slide').click(function() {
         $('html body').animate({
             scrollTop: getHeightSum(+$(this).data().value,
-                isMatch() ? 'match' : 'single',
+                checkIsMatch() ? 'match' : 'single',
                 0)
             });
         $('.js-nav-expand').addClass('hide');
@@ -73,7 +74,7 @@ define(['jquery', 'underscore'], function ($, _) {
 
     $('.js-intro-slide').click(function() {
         $('html body').animate({
-            scrollTop: getHeightSum(+$(this).data().value, 'intro', 42)
+            scrollTop: getHeightSum(+$(this).data().value, 'intro', E.visMarginTop)
         });
     });
 
