@@ -2,6 +2,7 @@ define(['moment', 'textures'], function (moment, textures) {
 
     'use strict';
 
+    var data;
     var unit, colors;
     var svg, dim, margin, xAxis, yAxis, x, y; //frequency
     var block = 12; //calendar
@@ -57,7 +58,7 @@ define(['moment', 'textures'], function (moment, textures) {
             .attr('class', 'size-large pos-middle fill-white js-freq-block');
     }
 
-    function updateSoberCount(data) {
+    function updateSoberCount() {
 
         var sober = data.sober[unit];
         var unitCount = data.unitCounts[unit];
@@ -72,7 +73,7 @@ define(['moment', 'textures'], function (moment, textures) {
         );
     }
 
-    var transformCount = function (u, c, data, avgCount) {
+    var transformCount = function (u, c, avgCount) {
 
         setUnit(u, c);
 
@@ -96,16 +97,20 @@ define(['moment', 'textures'], function (moment, textures) {
         drawFreqBlocks(frequency, maxCount, avgCount[unit]);
 
         //calendar
-        updateSoberCount(data);
+        updateSoberCount();
         $('.js-calendar-legend-block').remove();
         E.updateChroma(frequency.counts.length, frequency.gap, 'calendar', colors);
         d3.selectAll('.js-cal-block').style('fill', function (d) {
             return getColor(data, d);
         }).attr('width', unit === 'month' ? block : block -1)
         .attr('height', unit === 'day' ? block - 1 : block );
+
+        $('.js-cal-tooltip').hide();
     };
 
-    var drawFrequency = function (vis, data, avgCount) {
+    var drawFrequency = function (vis, frequencyData, avgCount) {
+
+        data = frequencyData;
 
         var frequency = data.frequency[unit];
         var maxCount = data.maxCount[unit];
@@ -217,9 +222,9 @@ define(['moment', 'textures'], function (moment, textures) {
             .attr('class', 'js-cal-block js-cal-block-over');
     }
 
-    var drawCalendar = function (vis, rangeStr, data) {
+    var drawCalendar = function (vis, rangeStr) {
 
-        updateSoberCount(data);
+        updateSoberCount();
 
         //number of days - start with the first day of the month
         var sT = moment(rangeStr[0], 'YYYYMMDD');

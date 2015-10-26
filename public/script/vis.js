@@ -29,15 +29,14 @@ define(['moment', 'vis-settings',
         S.setVis('frequency', function (vis) {
             Count.drawFrequency(vis, b.countByPeriod, b.avgCount);
         });
-        Count.drawCalendar(S.setVisNoSVG('calendar'), b.timeRange, b.countByPeriod);
-            $('.js-count-period').click(function() {
-                var changed = S.changeRadioSelection($(this));
-                if (changed) {
-                    var unit = $(this).data().value;
-                    Count.transformCount(unit,
-                        countScale(b.countByPeriod.frequency[unit].counts.length),
-                        b.countByPeriod, b.avgCount);
-                }
+        Count.drawCalendar(S.setVisNoSVG('calendar'), b.timeRange);
+        $('.js-count-period').click(function() {
+            var changed = S.changeRadioSelection($(this));
+            if (changed) {
+                var unit = $(this).data().value;
+                Count.transformCount(unit,
+                    countScale(b.countByPeriod.frequency[unit].counts.length), b.avgCount);
+            }
         });
 
         //1--ratings

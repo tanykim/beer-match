@@ -311,17 +311,17 @@ require([
 
             firstUserId = userId;
 
-            if (data.userinfo.userId === '_sample1' ||
-                data.userinfo.userId === '_sample2') {
-                $.ajax({
-                    url: 'users/_match.json'
-                }).done(function (d) {
-                    initVisMatch(d);
-                });
-            } else {
+            // if (data.userinfo.userId === '_sample1' ||
+            //     data.userinfo.userId === '_sample2') {
+            //     $.ajax({
+            //         url: 'users/_match.json'
+            //     }).done(function (d) {
+            //         initVisMatch(d);
+            //     });
+            // } else {
                 resetToIntro(true);
                 renderFriends(userId, data.userinfo.friendCount);
-            }
+            //}
         });
     }
 
