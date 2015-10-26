@@ -59,16 +59,16 @@ define(['moment', 'textures'], function (moment, textures) {
 
     function updateSoberCount(data) {
 
-        //FIXME: _sample 1, week
         var sober = data.sober[unit];
         var unitCount = data.unitCounts[unit];
+        var unitTail = unit + (sober > 1 ? 's' : '');
         $('.js-count-sober').html(
-            sober === 0 ?
-            '<strong>You are never sober!</strong>' :
-            'You were sober for <span class="highlight">' +
-            (sober + ' ' + unit + (sober > 1 ? 's' : '')) +
-            '</span> out of total <strong>' +
-            (unitCount + ' ' + unit + (sober > 1 ? 's' : ''))
+            (sober === 0 ?
+            '<strong>You drink every ' + unit + '</strong>' :
+            ('You did not drink for ' +
+            '<span class="highlight">' + sober + ' ' + unitTail + '</span>' +
+            ' out of <strong>' + unitCount + ' ' + unitTail + '</strong>')) +
+            ' from ' + moment(data.list[0].date, 'YYYYMMDD').format('MMM D, YYYY')
         );
     }
 
@@ -275,7 +275,7 @@ define(['moment', 'textures'], function (moment, textures) {
             .on('mouseout', function (d, i) {
                 d3.selectAll('.js-cal-block-over')
                     .style('fill', function (d) {
-                        return getColor(data, d)
+                        return getColor(data, d);
                     })
                     .attr('class', 'js-cal-block');
                 $('.js-cal-tooltip').hide();

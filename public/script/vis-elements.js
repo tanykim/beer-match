@@ -68,12 +68,12 @@ var E = {
     users: ['#e55d5d', '#8cc33c'],
 
     //vis
-	noTicks: { size: 0, padding: 9 },
+    noTicks: { size: 0, padding: 9 },
 
-	getAxisTicks: function (maxVal, len) {
+    getAxisTicks: function (maxVal, len) {
 
         //no length value for chroma
-		//gap: 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000...
+        //gap: 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000...
         var gap = Math.pow(10, maxVal.toString().length - 1);
         if (maxVal / gap < 2) {
             gap = gap / 5;
@@ -86,10 +86,10 @@ var E = {
             count = len / slicesCount < 20 ? 5 : count;
         }
         return {
-        	endPoint: slicesCount * gap,
-        	count: count
-       };
-	},
+            endPoint: slicesCount * gap,
+            count: count
+        };
+    },
 
     ttP: 14, //tooltip Padding
     ttL: 22, //tooltip line height
