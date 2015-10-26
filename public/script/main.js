@@ -361,9 +361,23 @@ require([
         });
     }
 
+    function showSampleFile(fileName) {
+        $.ajax({
+            url: 'users/' + fileName + '.json'
+        }).done(function (d) {
+            if (fileName === '_match') {
+                initVisMatch(d);
+            } else {
+                initVisSingle(d);
+            }
+        });
+    }
+
     /*****************************/
     /* url check for socket comm */
     /*****************************/
+
+    renderIntro(E.msgs.intro.init);
 
     Path.root('#/');
     Path.map('#/').to(function () {
@@ -372,13 +386,13 @@ require([
 
     //samples
     Path.map('#/_sample1').to(function () {
-        socket.emit('sampleSingle', { userId: '_sample1' });
+        showSampleFile('_sample1');
     });
     Path.map('#/_sample2').to(function () {
-        socket.emit('sampleSingle', { userId: '_sample2' });
+        showSampleFile('_sample2');
     });
     Path.map('#/_sample1/_sample2').to(function () {
-        socket.emit('sampleMatch');
+        showSampleFile('_match');
     });
 
     //normal id
@@ -414,12 +428,7 @@ require([
     /* socket communication */
     /************************/
 
-    socket.on('sampleSingle', function (data) {
-        firstUserId = data.userId;
-        initVisSingle(data.data);
-    }).on('sampleMatch', function (data) {
-        initVisMatch(data.data);
-    }).on('error', function (data) {
+    socket.on('error', function (data) {
         renderIntro(E.msgs.intro.diffName, data.error_detail, data.userId, '', true);
     }).on('apiError', function (data) {
         renderIntro(E.msgs.intro.apiError, data.error_detail, data.userId, '', false, true);
@@ -501,10 +510,12 @@ require([
     //sample vis
     function callSampleVis() {
         $('.js-start-sample-single').click(function() {
-            socket.emit('sampleSingle', { userId: '_sample1' });
+            window.location.hash = '#/_sample1';
+            showSampleFile('_sample1');
         });
         $('.js-start-sample-match').click(function() {
-            socket.emit('sampleMatch');
+            window.location.hash = '#/_sample1/sample2';
+            showSampleFile('_match');
         });
     }
     callSampleVis();
@@ -530,11 +541,7 @@ require([
         firstUserId = userId;
 
         if (userId === '_sample1' || userId === '_sample2') {
-            $.ajax({
-                url: 'users/_match.json'
-            }).done(function (d) {
-                initVisMatch(d);
-            });
+            showSampleFile('_match');
         } else {
             resetToIntro(true);
             renderFriends(userId, $(this).data().friends);
@@ -548,11 +555,7 @@ require([
 
         var userId = $(this).data().value;
         if (userId === '_sample1' || userId === '_sample2') {
-            $.ajax({
-                url: 'users/' + userId + '.json'
-            }).done(function (d) {
-                initVisSingle(d);
-            });
+            showSampleFile(userId);
         } else {
             if (localStorage[userId]) {
                 initVisSingle(JSON.parse(localStorage.getItem(userId)));

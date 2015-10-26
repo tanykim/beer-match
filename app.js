@@ -18,9 +18,6 @@ app.get('/', function (req, res) {
     console.log('server started--');
     res.sendFile(__dirname + '/index.html');
 });
-app.get('/:userId', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-});
 
 //untapped api
 var UntappdClient = require('./lib/UntappdClient_edited.js');
@@ -36,7 +33,6 @@ untappd.setClientSecret(credentials.clientSecret);
 
 //data processing
 var User = require('./lib/BeerMatch-user.js');
-var Match = require('./lib/BeerMatch-match.js');
 
 function emitProfile(userinfo, timezone) {
     io.emit('profile', {
@@ -208,14 +204,7 @@ io.on('connection', function (socket) {
 
     socket.on('userId', function (data) {
         getUserInfo(data.userId.toLowerCase());
-    }).on('sampleSingle', function (data) {
-        var d = JSON.parse(fs.readFileSync('public/users/' + data.userId + '.json', 'utf8'));
-        io.emit('sampleSingle', { data: d, userId: data.userId });
-    }).on('sampleMatch', function () {
-        var d = JSON.parse(fs.readFileSync('public/users/_match.json', 'utf8'));
-        io.emit('sampleMatch', { data: d });
-    })
-    .on('timezone', function (data) {
+    }).on('timezone', function (data) {
         getUserFeed(undefined, data);
     }).on('friends', function (data) {
         getFriendsList(data.userId.toLowerCase(), data.count);
