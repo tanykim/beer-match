@@ -52,14 +52,6 @@ define(['textures'], function (textures) {
         var center = locations[0].location;
 
         if (_.isUndefined(map)) {
-            // var urlParts = window.location.href.split('/');
-            // var socket = io.connect('http://' + urlParts[2]);
-            // socket.emit('mapboxKey');
-            // socket.on('mapboxKey', function (data) {
-            //     L.mapbox.accessToken = data.token;
-            //     map = L.mapbox.map('vis-map', 'mapbox.light').setView(center, 12);
-            //     putMapElements(center);
-            // });
             L.mapbox.accessToken = 'pk.eyJ1IjoidGFueWtpbSIsImEiOiJjaWZ1cnV2a3EyMzFzc3htMW1jNXJ5eHV4In0.PeW9ioBsGEwLlT7xIKoylQ';
             map = L.mapbox.map('vis-map', 'mapbox.light').setView(center, 12);
             putMapElements(center);
