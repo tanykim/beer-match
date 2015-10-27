@@ -56,7 +56,7 @@ function getTimezone(user, client) {
 
     geocoder.geocode(userinfo.address, function (err, data) {
         if (err) {
-            emitProfile(userinfo, '');
+            emitProfile(userinfo, '', client);
         } else {
             var location = data.results[0].geometry.location;
             timezoner.getTimeZone(
