@@ -442,14 +442,14 @@ require([
 
     //intro id input check
     $('.js-intro-main').keypress(function(event){
-        //allow only alpha-numeric characters
+        //allow only alpha-numeric characters, -, _
         var ew = event.which;
-        if (48 <= ew && ew <= 57)
+        if ((48 <= ew && ew <= 57) ||
+            (65 <= ew && ew <= 90) ||
+            (97 <= ew && ew <= 122) ||
+            ew === 45 || ew === 95) {
             return true;
-        if (65 <= ew && ew <= 90)
-            return true;
-        if (97 <= ew && ew <= 122)
-            return true;
+        }
         return false;
     }).keydown(function(event) {
         if (event.keyCode == 13) {
