@@ -23,7 +23,6 @@ require.config({
         chroma: '../bower_components/chroma-js/chroma.min',
         textures: '../bower_components/textures/textures.min',
         socketio: '../socket.io/socket.io',
-        'mobile-detect': '../bower_components/mobile-detect/mobile-detect',
         elements: 'vis-elements',
         scroll: 'scroll',
         storage: 'storage'
@@ -38,22 +37,20 @@ require([
     'chroma',
     'textures',
     'socketio',
-    'mobile-detect',
     'vis',
     'BeerMatch-match',
     'elements',
     'scroll',
     'storage'
-], function ($, _, d3, moment, Path, chroma, textures, io, MobileDetect, Vis, Match, E, Scroll, Storage) {
+], function ($, _, d3, moment, Path, chroma, textures, io, Vis, Match, E, Scroll, Storage) {
 
     'use strict';
 
-    /****************/
-    /* MobileDetect */
-    /****************/
+    /*********************/
+    /* window size first */
+    /*********************/
 
-    var md = new MobileDetect(window.navigator.userAgent);
-    if (md.mobile()) {
+    if ($(document).width() < 400) {
         $('.js-pc').addClass('hide');
         $('.js-mobile').removeClass('hide');
     } else {
@@ -86,7 +83,6 @@ require([
 
         var template = _.template($('#header-' + sel).html());
         $('.js-vis-header').html(template(html));﻿
-
         $('.js-' + sel + '-wrapper').css('top', 0);
         $('.js-title-overlaid').html(E.msgs.titles[sel][0]);
         _.each(_.range(6), function (i) {
@@ -179,7 +175,7 @@ require([
             apiError: apiError
         }));
 
-        if (!userId) {
+        if (!userId || error) {
             $('.js-intro-input').focus();
         }
 
@@ -192,22 +188,24 @@ require([
             }
         });
 
-        if (error || apiError) {
-            $('.js-start-single').click(function() {
-                if (userId) {
-                    initVisSingle(JSON.parse(localStorage.getItem(userId)));
+        $('.js-start-single').click(function() {
+            if (userId) {
+                initVisSingle(JSON.parse(localStorage.getItem(userId)));
+            } else {
+                if (localStorage[firstUserId]) {
+                    initVisSingle(JSON.parse(localStorage.getItem(firstUserId)));
                 } else {
-                    if (localStorage[firstUserId]) {
-                        initVisSingle(JSON.parse(localStorage.getItem(firstUserId)));
-                    } else {
-                        socket.emit('userId', { userId: firstUserId });
-                    }
+                    socket.emit('userId', { userId: firstUserId });
                 }
+            }
+        });
 
-            });
-        } else {
-            callSampleVis();
-        }
+        $('.js-start-sample-single').click(function() {
+            window.location.hash = '#/_sample1';
+        });
+        $('.js-start-sample-match').click(function() {
+            window.location.hash = '#/_sample1/_sample2';
+        });
     }
 
     function startDownload(d, tz) {
@@ -274,6 +272,7 @@ require([
     //render friends list after the first user is loaded
     function renderFriends(userId, friendCount) {
         console.log('3--. two users match', userId, friendCount);
+        resetToIntro(true);
         socket.emit('friends', { userId: userId, count: friendCount });
         socket.on('friends', function (d) {
             var friends = d.friends;
@@ -306,22 +305,9 @@ require([
         });
 
         $('.js-start-match').click(function() {
-
             console.log('3--. match vis');
-
             firstUserId = userId;
-
-            // if (data.userinfo.userId === '_sample1' ||
-            //     data.userinfo.userId === '_sample2') {
-            //     $.ajax({
-            //         url: 'users/_match.json'
-            //     }).done(function (d) {
-            //         initVisMatch(d);
-            //     });
-            // } else {
-                resetToIntro(true);
-                renderFriends(userId, data.userinfo.friendCount);
-            //}
+            renderFriends(userId, data.userinfo.friendCount);
         });
     }
 
@@ -376,8 +362,6 @@ require([
     /*****************************/
     /* url check for socket comm */
     /*****************************/
-
-    renderIntro(E.msgs.intro.init);
 
     Path.root('#/');
     Path.map('#/').to(function () {
@@ -507,19 +491,6 @@ require([
         window.open(E.msgs.share[val]);
     });
 
-    //sample vis
-    function callSampleVis() {
-        $('.js-start-sample-single').click(function() {
-            window.location.hash = '#/_sample1';
-            showSampleFile('_sample1');
-        });
-        $('.js-start-sample-match').click(function() {
-            window.location.hash = '#/_sample1/sample2';
-            showSampleFile('_match');
-        });
-    }
-    callSampleVis();
-
     //intro footer height
     var hDiff = $(window).height() - $('.js-intro-last').outerHeight();
     $('.js-intro-last').css('margin-bottom', Math.max(hDiff, E.footerHeight) + 'px');
@@ -529,7 +500,7 @@ require([
     $('.js-goHome').mouseover(function() {
         $(this).addClass('home-over');
     }).click(function() {
-        resetToIntro();
+        window.location.hash = '#/';
     }).mouseout(function() {
         $(this).removeClass('home-over');
     });
@@ -541,9 +512,8 @@ require([
         firstUserId = userId;
 
         if (userId === '_sample1' || userId === '_sample2') {
-            showSampleFile('_match');
+            window.location.hash = '#/_sample1/_sample2';
         } else {
-            resetToIntro(true);
             renderFriends(userId, $(this).data().friends);
         }
     });
@@ -555,7 +525,7 @@ require([
 
         var userId = $(this).data().value;
         if (userId === '_sample1' || userId === '_sample2') {
-            showSampleFile(userId);
+            window.location.hash = '#/' + userId;
         } else {
             if (localStorage[userId]) {
                 initVisSingle(JSON.parse(localStorage.getItem(userId)));

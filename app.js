@@ -60,7 +60,8 @@ function getTimezone(user) {
         } else {
             var location = data.results[0].geometry.location;
             timezoner.getTimeZone(
-                location.lat, location.lng,
+                location.lat,
+                location.lng,
                 function (err, data) {
                     if (err) {
                         emitProfile(userinfo, '');
@@ -102,8 +103,10 @@ function getUserFeed(id, data) {
 
     function callUserFeedAPI(id) {
 
-        untappd.userFeed(function (err, obj){
-            if (debug) console.log(err, obj);
+        untappd.userFeed(function (err, obj) {
+            if (debug) {
+                console.log(err, obj);
+            }
             if (obj && obj.response && obj.response.checkins && obj.response.checkins.items) {
                 checkins.push(obj.response.checkins.items);
                 if (obj.response.pagination.max_id) {
@@ -147,7 +150,11 @@ function getUserInfo(userId) {
                 getTimezone(obj.response.user);
             }
         } else {
-            io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
+            if (obj.meta.error_detail === 'There is no user with that username.') {
+                io.emit('error', { error_detail: obj.meta.error_detail, userId: userId });
+            } else {
+                io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
+            }
         }
     }, userId);
 }
@@ -162,7 +169,6 @@ function getFriendsList(userId, count) {
 
     function callFriendsFeedAPI(offset) {
         untappd.userFriends(function (err, obj) {
-            //console.log(err, obj);
             if (obj && obj.response && obj.response.items && obj.response.count > 0) {
                 var fList = _.map(obj.response.items, function (d) {
                     return d.user.user_name.toLowerCase();
