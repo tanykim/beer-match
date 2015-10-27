@@ -479,7 +479,7 @@ require([
     //scroll interaction
     Scroll.init();
     $('.js-intro-footer').click(function() {
-        resetToIntro();
+        window.location.hash = '#/';
     });
 
     //---- intro

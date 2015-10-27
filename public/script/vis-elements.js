@@ -48,7 +48,7 @@ var E = {
     },
 
     footerHeight: 300,
-    visMarginTop: 46,
+    visMarginTop: 42,
 
     //colors
     colors: {
