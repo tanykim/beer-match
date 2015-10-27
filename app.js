@@ -34,14 +34,14 @@ untappd.setClientSecret(credentials.clientSecret);
 //data processing
 var User = require('./lib/BeerMatch-user.js');
 
-function emitProfile(userinfo, timezone) {
-    io.emit('profile', {
+function emitProfile(userinfo, timezone, client) {
+    client.emit('profile', {
         userinfo: userinfo,
         timezone: timezone
     });
 }
 
-function getTimezone(user) {
+function getTimezone(user, client) {
 
     var userinfo = {
         userId: user.user_name.toLowerCase(),
@@ -64,12 +64,12 @@ function getTimezone(user) {
                 location.lng,
                 function (err, data) {
                     if (err) {
-                        emitProfile(userinfo, '');
+                        emitProfile(userinfo, '', client);
                     } else {
                         emitProfile(userinfo, {
                             name: data.timeZoneId,
                             offset: data.rawOffset
-                        });
+                        }, client);
                     }
                 }
             );
@@ -77,7 +77,7 @@ function getTimezone(user) {
     });
 }
 
-function createSingleData(data) {
+function createSingleData(data, client) {
 
     function createBeerData(data, callback) {
         var user = new User(data.userinfo, data.timezone, data.checkins);
@@ -85,13 +85,13 @@ function createSingleData(data) {
     }
 
     createBeerData(data, function (u) {
-        io.emit('success', { data: u });
+        client.emit('success', { data: u });
     });
 }
 
-function getUserFeed(id, data) {
+function getUserFeed(id, data, client) {
 
-    console.log('getting user data userid----', data.userinfo.userId);
+    console.log('getting user data userid----', data.userinfo.userId, client.id);
 
     var userinfo = data.userinfo;
     var userId = userinfo.userId;
@@ -113,7 +113,7 @@ function getUserFeed(id, data) {
                     //FIXME: often called twice
                     console.log('feed api call---', id);
                     feedCallCount = feedCallCount + 1;
-                    io.emit('progress', {
+                    client.emit('progress', {
                         total: feedCallsNeeded,
                         count: feedCallCount
                     });
@@ -123,44 +123,44 @@ function getUserFeed(id, data) {
                         userinfo: userinfo,
                         timezone: data.name,
                         checkins: _.flatten(checkins)
-                    });
+                    }, client);
                 }
             }
             else {
-                io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
+                client.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
             }
         }, userId, 50, id);
     }
     callUserFeedAPI();
 }
 
-function getUserInfo(userId) {
+function getUserInfo(userId, client) {
 
     untappd.userInfo(function (err, obj) {
-        //console.log(err, obj);
         if (obj && obj.response && obj.response.user) {
             if (obj.response.user.is_private) {
                 console.log('--private id');
-                io.emit('error', { error_detail: userId.toUpperCase() + ' is a private account.', userId: userId });
+                client.emit('error', { error_detail: userId.toUpperCase() + ' is a private account.', userId: userId });
             } else if (obj.response.user.stats.total_checkins === 0) {
-                io.emit('error', { error_detail: 'No check-in data available.', userId: userId });
+                client.emit('error', { error_detail: 'No check-in data available.', userId: userId });
             } else {
                 //get timezone info & emit
                 console.log ('--id found, get timezone info now');
-                getTimezone(obj.response.user);
+                getTimezone(obj.response.user, client);
             }
         } else {
             if (obj.meta.error_detail === 'There is no user with that username.') {
-                io.emit('error', { error_detail: obj.meta.error_detail, userId: userId });
+                client.emit('error', { error_detail: obj.meta.error_detail, userId: userId });
             } else {
-                io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
+                client.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
             }
         }
     }, userId);
 }
 
-function getFriendsList(userId, count) {
+function getFriendsList(userId, count, client) {
 
+    console.log('---getting friendslist', client.id);
     //max 25 feeds per call, upto 100 friends
     var friendCallsNeeded = Math.min(count, 100);
     var friendCallCount = 0;
@@ -179,19 +179,19 @@ function getFriendsList(userId, count) {
                     callFriendsFeedAPI(friendCallCount);
                 }
                 else {
-                    io.emit('friends', { friends: _.flatten(friends).sort() });
+                    client.emit('friends', { friends: _.flatten(friends).sort() });
                 }
             } else if (obj.response.count === 0) {
-                io.emit('error', { error_detail: userId.toUpperCase() + ' doesn\'t have friends', userId: userId });
+                client.emit('error', { error_detail: userId.toUpperCase() + ' doesn\'t have friends', userId: userId });
             } else {
-                io.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
+                client.emit('apiError', { error_detail: obj.meta.error_detail, userId: userId });
             }
         }, userId, 25, offset);
     }
     callFriendsFeedAPI();
 }
 
-io.on('connection', function (socket) {
+io.on('connection', function (client) {
 
     /*TEST: data generating mode
     socket.on('dataset', function (data) {
@@ -208,13 +208,13 @@ io.on('connection', function (socket) {
     });
     */
 
-    socket.on('userId', function (data) {
-        getUserInfo(data.userId.toLowerCase());
+    client.on('userId', function (data) {
+        getUserInfo(data.userId.toLowerCase(), client);
     }).on('timezone', function (data) {
-        getUserFeed(undefined, data);
+        getUserFeed(undefined, data, client);
     }).on('friends', function (data) {
-        getFriendsList(data.userId.toLowerCase(), data.count);
+        getFriendsList(data.userId.toLowerCase(), data.count, client);
     }).on('reset', function () {
-        io.emit('reset');
+        client.emit('reset');
     });
 });
