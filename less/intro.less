@@ -51,20 +51,8 @@ body {
 }
 
 .intro-mobile {
-    padding: @padding;
-    background: url('../images/pattern.png');
     color: @white;
-    .logo {
-        text-align: center;
-        margin: 0 auto;
-        margin-top: -2.2em;
-        width: @headerH * 2;
-        background: url('../images/logo.png') center @headerH * -0.5 no-repeat;
-        height: @headerH * 2 - 2.2em;
-        background-size: @headerH * 2 @headerH * 2;
-    }
     .icons-wrapper {
-        font-size: @small;
         text-align: center;
     }
     .icons {
@@ -206,10 +194,11 @@ body {
         margin-top: @padding/2;
     }
     .half-wrapper {
-        display: flex;
-        flex-flow: space-between;
+        overflow: hidden;
         .half {
-            width: 50%;
+            display: inline-block;
+            float: left;
+            width: 48%;
             h4 {
                 #view-icon-intro;
                 #view-icon;
@@ -244,12 +233,12 @@ body {
             }
         }
         .half-left {
-            padding-right: 3%;
-            border-right: 1px fade(@white, 50%) solid;
+            padding-right: 2%;
+            border-right: 2px fade(@white, 50%) solid;
+            box-sizing: border-box;
         }
         .half-right {
-            padding-left: 3%;
-            /*padding-right: 3%;*/
+            padding-left: 2%;
         }
     }
     .privacy-list {
@@ -281,6 +270,7 @@ body {
         width: 90%;
         padding: 1em 5%;
         margin-top: 1.5em;
+        height: 2em;
         display: flex;
         justify-content: space-between;
         align-items: center;

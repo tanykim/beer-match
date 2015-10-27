@@ -50,7 +50,7 @@ require([
     /* window size first */
     /*********************/
 
-    if ($(document).width() < 400) {
+    if ($(document).width() <= 420) {
         $('.js-pc').addClass('hide');
         $('.js-mobile').removeClass('hide');
     } else {
