@@ -1,18 +1,22 @@
-define(['moment', 'textures'], function (moment, textures) {
+define(['moment', 'textures', 'vis-settings'], function (moment, textures, S) {
 
     'use strict';
 
-    var data;
+    var data, avgCount;
     var unit, colors;
     var svg, dim, margin, xAxis, yAxis, x, y; //frequency
     var block = 12; //calendar
 
-    var setUnit = function (u, c) {
-        unit = u;
-        colors = c;
+    var countScale = function (length) {
+        return S.getChroma(
+            E.colors.calendar, length);
     };
 
-    function drawFreqBlocks(data, maxCount, avgCount) {
+    function setLegendScale() {
+        return S.getChroma(E.colors.calendar, data.frequency[unit].counts.length);
+    }
+
+    function drawFreqBlocks(data, maxCount) {
 
         _.each(data.counts, function (val, i) {
             svg.append('rect')
@@ -32,7 +36,7 @@ define(['moment', 'textures'], function (moment, textures) {
         });
 
         //average line
-        var xPos = x(avgCount / data.gap);
+        var xPos = x(avgCount[unit] / data.gap);
         svg.append('line')
             .attr('x1', xPos)
             .attr('x2', xPos)
@@ -54,7 +58,7 @@ define(['moment', 'textures'], function (moment, textures) {
             .attr('x', xPos)
             .attr('y', -margin.top / 2)
             .attr('dy', margin.top / 6)
-            .text(avgCount)
+            .text(avgCount[unit])
             .attr('class', 'size-large pos-middle fill-white js-freq-block');
     }
 
@@ -73,9 +77,10 @@ define(['moment', 'textures'], function (moment, textures) {
         );
     }
 
-    var transformCount = function (u, c, avgCount) {
+    var transformCount = function (u) {
 
-        setUnit(u, c);
+        unit = u;
+        colors = setLegendScale();
 
         var frequency = data.frequency[unit];
         var maxCount = data.maxCount[unit];
@@ -94,7 +99,7 @@ define(['moment', 'textures'], function (moment, textures) {
         $('.js-freq-lable-y').html('number of ' + unit);
 
         $('.js-freq-block').remove();
-        drawFreqBlocks(frequency, maxCount, avgCount[unit]);
+        drawFreqBlocks(frequency, maxCount);
 
         //calendar
         updateSoberCount();
@@ -108,9 +113,12 @@ define(['moment', 'textures'], function (moment, textures) {
         $('.js-cal-tooltip').hide();
     };
 
-    var drawFrequency = function (vis, frequencyData, avgCount) {
+    var drawFrequency = function (vis, frequencyData, avgCountData, avgUnit) {
 
         data = frequencyData;
+        avgCount = avgCountData;
+        unit = avgUnit;
+        colors = setLegendScale();
 
         var frequency = data.frequency[unit];
         var maxCount = data.maxCount[unit];
@@ -150,7 +158,7 @@ define(['moment', 'textures'], function (moment, textures) {
         E.putAxisLable(svg, -dim.h / 2, 0,
             'number of ' + unit, 'y', 'js-freq-lable-y');
 
-        drawFreqBlocks(frequency, maxCount, avgCount[unit]);
+        drawFreqBlocks(frequency, maxCount);
     };
 
     function getTooltipString(date) {
@@ -330,7 +338,6 @@ define(['moment', 'textures'], function (moment, textures) {
     };
 
     return {
-        setUnit: setUnit,
         drawFrequency: drawFrequency,
         drawCalendar: drawCalendar,
         transformCount: transformCount

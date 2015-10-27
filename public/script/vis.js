@@ -20,22 +20,15 @@ define(['moment', 'vis-settings',
         $('.js-single-svg').empty();
 
         //0--count
-        var countScale = function (length) {
-            return S.getChroma(
-                E.colors.calendar, length);
-        };
         S.changeRadioSelection($('.js-count-period-' + b.avgUnit));
-        Count.setUnit(b.avgUnit, countScale(b.countByPeriod.frequency[b.avgUnit].counts.length));
         S.setVis('frequency', function (vis) {
-            Count.drawFrequency(vis, b.countByPeriod, b.avgCount);
+            Count.drawFrequency(vis, b.countByPeriod, b.avgCount, b.avgUnit);
         });
         Count.drawCalendar(S.setVisNoSVG('calendar'), b.timeRange);
         $('.js-count-period').click(function() {
             var changed = S.changeRadioSelection($(this));
             if (changed) {
-                var unit = $(this).data().value;
-                Count.transformCount(unit,
-                    countScale(b.countByPeriod.frequency[unit].counts.length), b.avgCount);
+                Count.transformCount($(this).data().value);
             }
         });
 
